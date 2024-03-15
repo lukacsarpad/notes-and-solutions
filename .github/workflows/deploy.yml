@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  DeployCV:
+  DeployNotes:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -26,6 +26,21 @@ jobs:
           pdflatex geomphys.tex
           pdflatex geomphysh.tex
           pdflatex geomphysh.tex
+      - name: latex-stat
+        working-directory: ./stat
+        run: |
+          pdflatex barrow.tex
+          pdflatex barrow.tex
+      - name: latex-clfields
+        working-directory: ./ClField
+        run: |
+          pdflatex clfields.tex
+          pdflatex clfields.tex
+      - name: latex-laguerre
+        working-directory: ./laguerre
+        run: |
+          pdflatex laguerre.tex
+          pdflatex laguerre.tex
       - name: Checkout Webpage
         uses: actions/checkout@v2
         env:
@@ -44,6 +59,10 @@ jobs:
           mkdir -p notes
           cp ../geomphys/geomphys.pdf notes
           cp ../geomphys/geomphysh.pdf notes
+          cp ../ClField/clfields.pdf notes
+          cp ../stat/barrow.pdf notes
+          cp ../laguerre/laguerre.pdf notes
+          cp ../compscal/compscal.pdf notes
           echo "ls -lR after"
           ls -lR
       - name: Deploy to page
