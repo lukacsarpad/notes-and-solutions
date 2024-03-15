@@ -42,3 +42,18 @@ jobs:
           name: pdf-notes
           path: stat/barlow.pdf
           retention-days: 2
+      - name: lacheck
+        working-directory: ./geomphys
+        run: |
+          lacheck geomphys.tex
+      - name: latex
+        working-directory: ./geomphys
+        run: |
+          pdflatex geomphys.tex
+          pdflatex geomphys.tex
+      - name: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf-notes
+          path: geomphys/geomphys.pdf
+          retention-days: 2

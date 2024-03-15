@@ -1,0 +1,634 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+%\usepackage[T1]{fontenc}
+\usepackage{floatflt}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{slashed}
+%\usepackage{showkeys}
+\usepackage{hyperref}
+\usepackage{ifthen}
+\usepackage{subcaption}
+\usepackage{epstopdf}
+\usepackage{dutchcal}
+%\usepackage{mathtools}
+
+
+
+\hoffset=-5.0mm
+\voffset=-1.9mm
+%
+\evensidemargin=0cm
+\oddsidemargin=0cm
+\topmargin=0cm%
+\headheight=0cm%
+\headsep=0cm%
+\marginparsep=0cm%
+\marginparwidth=0cm%
+\textheight=24cm
+\textwidth=17cm
+\special{papersize=210mm,297mm}%
+
+\def\d{\mathrm{d}}
+\def\e{\mathrm{e}}
+\def\imagi{\mathrm{i}}
+\def\ellop{\mathop{{\sf L}}}
+\def\forrasfile#1{ (see {\tt #1})}
+\def\lag{{\mathcal{L}}}
+\def\lap{\mathop{\Delta}}
+\def\kihagy#1{}
+\def\sn{\mathop{\text{sn}}}
+\def\cn{\mathop{\text{cn}}}
+\def\dn{\mathop{\text{dn}}}
+\def\zb{\ensuremath{\bar{z}}}
+\def\sign{\mathop{\text{sign}}}
+\def\xii#1{\xi^{(#1)}}
+\def\xij#1#2{{\xi^{(#1)}_{#2}}}
+\def\op#1{{\sf #1}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\renewcommand\Re{\mathop{\text{Re}}}
+\renewcommand\Im{\mathop{\text{Im}}}
+\def\Tr{\ensuremath{\mathop{\rm Tr}}}
+\def\pa{\partial}
+
+
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{DOI: #1}}%
+\newcommand{\doix}[2]{\href{http://dx.doi.org/#2}{#1}}%
+\newcommand{\arxiv}[2][]{%
+  \ifthenelse{\equal{#1}{}}{%
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2}}%
+  }{%
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2 [#1]}}%
+  }%
+}%
+
+
+%opening
+\title{Notes on Geometry of physics by Frankel: some harder to follow derivations}
+\author{Árpád Lukács}
+
+\begin{document}
+
+\maketitle
+
+\section*{9.3. Cartan's exterior covariant derivation}
+
+I think what makes this hard is mixing index and matrix, index and vector notations, writing out some sums and not others.
+
+\subsection*{9.3a. Vector-valued forms}
+A vector valued form is defined as a fully anti-symmetric multi-linear mapping from a vector space to another one, e.g., in the example of the text,
+\[
+A : TM\otimes \dots \otimes TM \to TM\,.
+\]
+Choosing a frame ${\bf e} = \{{\bf e}_i : i=1,\dots, n\}$ in the target space, and basis forms $\sigma^i$ in the dual of the domain, such a mapping can be expanded as
+\[
+A = \sum_i \sum_{\underrightarrow{J}}A^i_{j_1,\dots,j_p} {\bf e}_i \otimes \sigma^{j_1}\wedge\dots\wedge\sigma^{j_p}\,.
+\]
+
+The same set of components belong to a lot of different mappings, e.g., to one $TM\times TM \to TM$ bilinear, one $TM\otimes TM\to TM$ linear, $TM\to TM\otimes T^*M$ linear, etc. These are identified, and often the same letter is used for them.
+
+The example given, the one-form $\d {\bf r}$ is a vector-valued one-form, given as
+\[
+ \d {\bf r} = (\d x^1, \d x^2, \d x^3)^T
+\]
+is in a mixed notation on the RHS: component (matrix) for ${\bf r}=(x^1, x^2, x^3)^T$, and index-free (abstract) for the forms $\d x^i$.
+
+
+The other example is
+\[
+ \d {\bf S} = (\d y \wedge \d z, \d z\wedge\d x, \d x\wedge \d y)^T\,,
+\]
+which is a vector-valued 2-form, $\d {\bf S} \in \Gamma(TM \otimes T^*M \wedge T^*M)$. Its components are
+\[
+ \epsilon^i{}_{jk}\,,
+\]
+which helps us write it as
+\[
+ \d{\bf S} ({\bf A}, {\bf B})=g^{-1}(i_{\bf B} i_{\bf A}{\rm vol})\,,
+\]
+or identifying ${\rm vol}$ as a mapping from $TM\otimes TM\otimes TM \to \mathbb{R}$ and as $TM\otimes TM\to T^*M$, $({\bf A}, {\bf B}) \mapsto {\rm vol}({\bf A}, {\bf B}, \cdot)$, we obtain $\d{\bf S}({\bf A}, {\bf B}) = g^{-1} {\rm vol}({\bf A}, {\bf B}, \cdot)$, so
+\[
+ \d {\bf S} = g^{-1} {\rm vol}\,.
+\]
+
+\subsection*{9.3b. The covariant differential of a vector field}
+
+The first thing introduced is a set of connection one-forms,
+\[
+ \omega^k{}_j = \sum_{r}\omega^k{}_{rj} \sigma^r\,.
+\]
+This is again mixing index and abstract notations, it has indices $k$ and $j$ labelling the one-forms, and they are all one-forms. One could say that on the RHS, 
+$k$ and $j$ are labels, $r$ a (summation) index.
+
+As the covariant derivative of a vector has components (in a coordinate frame)
+\[
+ \nabla_j v^i = \partial_j v^i + \omega^i{}_{jk}v^k\,,
+\]
+or in a general frame
+\[
+ \nabla_j v^i = {\bf e}_k (v^i) + \omega^i{}_{jk}v^k\,,
+\]
+we may obtain the vector field itself,
+\[
+ \nabla_j {\bf v} = \left({\bf e}_k (v^i) + \omega^i{}_{jk}v^k\right) {\bf e}_i\,,
+\]
+or for an arbitrary vector ${\bf X}=X^j {\bf e}_j$,
+\[
+ \nabla_{\bf X}{\bf v} = X^j\left({\bf e}_k (v^i) + \omega^i{}_{jk}v^k\right) {\bf e}_i = \left({\bf e}_k (v^i) + \omega^i{}_{jk}v^k\right) {\bf e}_i \sigma^j({\bf X})\,,
+\]
+i.e.
+\[
+\nabla {\bf v} = \left({\bf e}_k (v^i) + \omega^i{}_{jk}v^k\right) {\bf e}_i \otimes \sigma^j\,,
+\]
+is a vector-valued one-form. In particular, we may apply this to ${\bf e}_j$, whose coordinates are constant,
+\[
+ \nabla {\bf e}_j = \sum_{i, k}\omega^k{}_{ji} {\bf e}_k \otimes \sigma^i\,,
+\]
+which is a vector valued 1-form with a label $j$, whose coefficients, when expandig w.r.t.\ ${\bf e}_k$ are the connection 1-forms,
+\[
+ \nabla{\bf e}_j = \sum_k {\bf e}_k \otimes \omega^k{}_j\,,\quad \omega^k{}_j = \sum_i \omega^k{}_{ij}\sigma^i\,.
+\]
+
+With the connection one-forms, we may write the covariant derivative of an arbitrary vector ${\bf v} = {\bf e}_j v^j$ as
+\[
+ \nabla {\bf v} = \nabla ({\bf e}_j v^j) = \sum_j{\bf e}_j\otimes \d v^j  + \sum_j \nabla {\bf e}_j v^j = \sum_k{\bf e}_k \otimes \left(\d v^k + \sum_k \omega^k{}_j v^k\right)\,,
+\]
+or, in mixed component and abstract notation,
+\[
+ \nabla v^i = \d v^i + \omega^i{}_k v^k\,.
+\]
+
+\subsection*{9.3c. Cartan's structural equations}
+In this section, the notational difficulty is a new notation. The tensor product and the wedge (exterior) products are extended to tensor-matrix and wedge-matrix products, i.e., in eq.\ (9.29) and above
+\[
+ \nabla {\bf e} = {\bf e}\otimes \omega
+\]
+is meant in such a way: ${\bf e} = ({\bf e}_1, \dots, {\bf e}_n)$ is a row vector of vector fields, and
+$\omega = \{ \omega^j{}_k\}$ is a matrix of one-forms. In the equation above, there is a ``tensor-matrix'' product,
+\[
+ \nabla{\bf e} = \nabla ({\bf e}_1, \dots, {\bf e}_n) = (\nabla {\bf e}_1,\dots, \nabla {\bf e}_n) = ({\bf e}_k\otimes \omega^k{}_1,\dots, {\bf e}_k\otimes \omega^k{}_n) = ({\bf e}_k)\otimes (\omega^k{}_j) = {\bf e}\otimes \omega\,.
+\]
+Similarly,
+\[
+ \d \sigma = (\d \sigma^1, \dots, \d \sigma^n)^T = (-\omega^i{}_k \wedge \sigma^k + \tau^i) = -(\omega^i{}_k)\wedge (\sigma^k) + (\tau^i) = -\omega\wedge \sigma + \tau\,.
+\]
+For the last equation in the section
+\[
+ \nabla {\bf v} = \nabla ({\bf e}v) = \nabla\left[ ({\bf e}_i) (v^i)^T\right] = ({\bf e}_i)\otimes (\nabla v^i)^T = ({\bf e}_i) \otimes \left[(\d v^i) +(\omega^i{}_k)^T (v^k)\right] = {\bf e}\otimes(\d v+\omega v)\,.
+\]
+
+\subsection*{9.3d. The exterior covariant differential of a vector-valued form}
+
+The notation is a bit confusing. Why $\otimes_\wedge$ and not $\wedge$? The matrix-tensor product is used in
+\[
+ \nabla \boldsymbol{\alpha} = \sum_i {\bf e}_i \otimes (\d \alpha^i + \sum_r \omega^i{}_r\wedge \alpha^r) = {\bf e}\otimes(\d\alpha + \omega\wedge\alpha)\,.
+\]
+The coordinate-free definition is more clear.
+
+
+
+
+\subsection*{14.3a. Tangential and normal differential forms}
+
+The book \cite{Frankel} defines a form $\alpha^p$ tangent to a submanifols (specially, to the boundary $\partial M$) of a compact Riemannian manifold {\bf normal} iff $\alpha({\bf T}_1, \dots, {\bf T}_p)=0$ for all vector fields ${\bf T}_i$ tangent to $S$.
+
+A form is defined {\bf normal} iff its Hodge dual is tangent, i.e., iff $*\alpha({\bf T}_1, \dots, {\bf T}_{n-p}) = 0$ for all vector fields ${\bf T}_i$ tangent to $S$. I would like to clarify the meaning of this a bit. The Hodge dual is defined as follows,
+\[
+ *\alpha ={\rm vol}(A, \cdots)\,,
+\]
+which is meant as follows: $A$ denotes the upper-index tensor corresponding to $\alpha$,
+\[
+ A^{i_1, \dots, i_p} = g^{i_1, j_1}\cdots g^{i_p, j_p}\alpha_{j1,\dots, j_p}\,,
+\]
+and inserting $A$ into the volume form is the form with components
+\[
+ ({\rm vol}(A, \cdots))^{i_1,\dots,i_{n-p}} = A^{j_1,\dots,j_p}\sqrt{|g|}\epsilon_{j_1,\dots, j_p, i_1, \dots, i_{n-p}}.
+\]
+This is equivalent to expressing $A$ on the basis spanned by some basis ${\bf e}_1,\dots, {\bf e}_k$ tangent to $S$, and ${\bf e}_{k+1}, \dots, e_{n}$ transversal, and
+\[
+ *\alpha({\bf v}_1, \dots, {\bf v}_{n-p}) = A^{i_1,\dots, i_p}{\rm vol}({\bf e}_{i_1}, \dots, {\bf e}_{i_p}, {\bf v}_1, \dots, {\bf v}_{n-p})\,.
+\]
+This being normal to $S$ means that
+\[
+ 0 = *\alpha(({\bf T}_1, \dots, {\bf T}_{n-p}) = A^{i_1,\dots, i_p}{\rm vol}({\bf e}_{i_1}, \dots, {\bf e}_{i_p}, {\bf T}_1, \dots, {\bf T}_{n-p})\,.
+\]
+This means that only those components of $A^{i_1, \dots, i_p}$ may be non-zero, where ${\bf e}_{i_1}$, \dots, ${\bf e}_{i_p}$ forms a linearly dependent set together with any ${\bf e}_{i_{p+1}}$, \dots, ${\bf e}_{i_n}$ arbitrarily chosen basis vectors tangent to $S$. This always holds if $n-p >k$. Otherwise, it suffices to consider $i_1 < i_2 < \dots, i_p$, so we get that {\sl at least}\/ for all $i_1 > k$, $A^{i_1 < i_2 <\dots < i_p} = 0$. More generally, only such components can be nonzero where $i_1,\dots, i_{k-n+p} \le k$. What we see is that in the case $n-p\le k$, being tangent is a bit stronger condition then saying that $g^{-1}\alpha(\cdot, {\bf v}_2, \dots, {\bf v}_{p})$ is tangent to the submanifold.
+
+
+\section*{15.4a. Left-invariant fields generate right translations}
+To proove the title of the chapter, we need to calculate the action of $\phi_t : G\to G$ where $\phi_t$ is the flow of a left-invariant field ${\bf X}$.
+
+The definition of a left-invariant field is that ${\bf X}_g = L_{g*} {\bf X}_e$. Let us represent the vector ${\bf X}_e$ with a curve $g_e$, such that $g_e(0) = e$, $g_e'(0) = {\bf X}_e$. Similarly $g_g$ for ${\bf X}_g$: $g_g(0) = g$ and $g_g'(0) = {\bf X}_g = L_{g*} {\bf X}_e = \d g g_e(0) / \d t|_{t=0}$, so $g_g(t) = g g_e(t)$ is such a curve.
+
+Considering the defintion of $g_e$: $g_e(0) = e$, $\d g_e(t) / \d t|_{t=0} = {\bf X}_e$, one such curve is $g_e(t) = \exp t {\bf X}_e$.
+
+The definiton of flow is that $\phi_t$ is a $G\to G$ mapping for all $t$, and $\phi_0(g) = g$ and $\d \phi_0(g) = {\bf X}_g = \d g g_e(t) / \d t|_{t=0}$. Note that this is also satisfied by $g_g(t)$, so 
+\[
+ \phi_t(g) = g_g(t) = g g_e(t) = g \exp t{\bf X}_e = R_{\exp t {\bf X}_e}(g)\,.
+\]
+
+The vanishing bracket of a left-invariant field ${\bf X}^l$ and a right-invariant one ${\bf Y}_r$ follows from the expression of the bracket,
+\[
+ [{\bf X}^l, {\bf Y}^r ]_g =\mathcal{L}_{\bf X}{\bf Y} = \lim_{t\to 0} \frac{{\bf Y}_{\phi_t(g)} -\phi_{t*} {\bf Y}_g}{t} = 0\,,
+\]
+according to eqs.\ (4.4) and (4.1), and the limit vanishes, as the definition of the right-invariance of ${\bf Y}$ is that ${\bf Y}_g = R_{g*} {\bf Y}_e$, and so $\phi_{t*}{\bf Y}_g = \phi_{t*}R_{g*} {\bf Y}_e$, and $\phi_t(R_g(h)) = h g \exp t{\bf X} = R_{\phi_t(g)}(h)$, so $\phi_{t*}{\bf Y}_g = R_{\phi_t(g)*}{\bf Y}_e = {\bf Y}_{\phi_t(g)}$.
+
+
+Do right-invariant fields generate left-translations? Consider now the curve $\tilde{g}_g(t) = g_e(t) g$. This has the properties $\tilde{g}_g(0) = g$ and ${\tilde{g}_g}'(0) = R_{g*}g_e'(0) = R_{g*}{\bf Y}_e$ if now we choose $g_e(t) = \exp t{\bf Y}_e$.
+
+Let ${\bf Y}$ be a right-invariant vector field, ${\bf Y}_g = R_{g*}{\bf Y}_e$, and let us compare the properties of $\phi_t(g)$ where $\phi_t: G\to G$ is now the flow of the right-invariant vector field ${\bf Y}$, with the properties $\phi_0(g) = g$ and $\d \phi_t(g)/\d t|_{t=0} = {\bf Y}_g = R_{g*}{\bf Y}_e$. Notice that this holds for $\tilde{g}_g(t)$ too,
+\[
+ \phi_t(g) = g_e(t) g = \exp t{\bf Y}_e g = L_{\exp t {\bf Y}_e} g\,.
+\]
+
+This may be used to give another proof of the vanishing of the commutator of right- and left-invariant vector fields, using Theorem (4.12),
+\[
+\begin{aligned}{}
+ [{\bf X}^l, {\bf Y}^r]_g f &= \left.\frac{\d}{\d t} f(\phi^Y_{-\sqrt{t}}(\phi^X_{-\sqrt{t}}(\phi^Y_{\sqrt{t}}(\phi^X_{\sqrt{t}}(g)))))\right|_{t=0}\\
+ &= \left.\frac{\d}{\d t}f( L_{\exp-\sqrt{t}{\bf Y}_e}(R_{\exp-\sqrt{t}{\bf X}_e}(L_{\exp \sqrt{t}{\bf Y}_e}(R_{\exp\sqrt{t}{\bf X}_e}(g)))))\right|_{t=0}\\
+ &= \left.\frac{\d}{\d t}f( \exp(-\sqrt{t}{\bf Y}_e)\exp(\sqrt{t}{\bf Y}_e) g \exp(\sqrt{t}{\bf X}_e)\exp(\sqrt{t}{\bf X}_e))\right|_{t=0}\\
+ &=\left.\frac{\d}{\d t} f(g) \right|_{t=0} = 0\,.
+\end{aligned}
+\]
+
+
+\section*{16.3a. Connection in a vector bundle}
+
+A section of a bundle $\pi:E\to M$ is defined as follows. It is a mapping $\psi : M \to E$, $x \mapsto \psi(x)$ such that $\pi\circ\psi = {\rm id}_M$, i.e., $\pi(\psi(x)) = x$ $p\in M$.
+
+What is then an $E$ valued 1-form? it is a mapping
+${\bf \psi}: M \times (TM)^p$ such that $\pi \circ {\bf \psi} : M \times (TM)^p = {\rm id}_m \otimes 1$, where $1$ here the constant 1 function on $(TM)^n$, i.e., for any $x\in M$, ${\bf v}_1$, \dots, ${\bf v}_p\in T_x M$, $\psi_x({\bf v}_1, \dots, {\bf v}_p)\in \pi^{-1}(x)$.
+
+
+\section*{17.1b. Principal bundles and frame bundles}
+This section is concerned with the definition and properties of the frame bundle. The {\bf principal bundle} is defined as a bundle $\pi : P\to M$ where each fiber is a group $G$, and the transition functions act by left translation, meaning that if
+two local trivialisations $\pi^{-1}(U)\cong U\times G$ and $p^{-1}(V)\cong V\times G$ and $\pi(p)\in U\cap V$ (or, equivalently, $p\in \pi^{-1}(U)\cap \pi^{-1}(V)$), then
+\[
+ P \in p = \phi_U(x, g_U) = \phi_V(x, g_V)
+\]
+and in this case there is a function $c_{VU}: G\to G$ such that $g_U = c_{UV}(x, g_V)$, in the case of a principal bundle this is of the form $g_U = c_{UV}(x) g_V$, $c_{UV}(x)\in G$.
+
+An equivalent defintion could be given using theorem (17.8) in sec.\ 17.1c, that a principal $G$-bundle is such a bundle that the fiber is the group $G$, and that there is a group action
+\[
+ \hat{R}: G \times P \to P\,,\quad (g, p) \mapsto \hat{R}_g(p)
+\]
+such that $\hat{R}_h\circ \hat{R}_h = \hat{R}_{gh}$. In the case of the principal $G$-bundle this action must be transitive and free (no kernel).
+
+
+
+
+
+\section*{17.1c. Action of the structure group on a principal bundle}
+
+Some remarks for the definition of the fundamental vector field: let $(P, M, \pi, G)$ be a principal $G$-bundle.
+
+\paragraph{Theorem (17.8)} could be reformulated as follows. In a local trivialisation of the bundle, $U\subset M$,
+\[
+ \pi^{-1}(U) = \Phi_U(U\times G)\,,
+\]
+it is possible to define left and right actions of $G$ on the bundle {\sl locally}\/ by $g\in G$, $L_g^{\rm loc}: G\to G$, $\Phi_U(x, h)\mapsto \Phi_U(x, gh)$ and
+$R_g^{\rm loc}:G\to G$, $\Phi_U(x, h)\mapsto \Phi_U(hg)$. Theorem (17.8) shows that of these, the right action can be defined {\sl globally}, due to the commutativity of left and right action, and that the sewing functions $c_{UV}$ act from the left.
+
+The fundamental vector fields are defined as the tangent vectors of the curves arising from the composition of the right action of the group with a 1-parameter subgroup of $G$. Let $g(t)\in G$ a one-parameter subgroup, $g(0)=e$, $g(t_1+t_2)=g(t_1)g(t_2)$. In this case, for any $p\in P$, a curve $\gamma_p(t)\in P$ can be defined as $\gamma_p(t) = p g(t)$, for which $\gamma_p(0) = p$ holds.
+
+Let the one-parameter subgroup be $g(t) = \exp(tA)$ for an element of the Lie-algebra of G, $A\in \mathcal{g} $. The tangent to this is the fundamental vector field, the push-forward of $A$ through the right-action and the exponentialisation, for ${\bf f} =\Phi_U(x, h)$ one may define ${\bf f}\e^{tA} = \Phi_U(x, h\e^{tA})$ which is independent of the local trivialisation, and
+\[
+ A^*_{\bf f} := \left.\frac{\d}{\d t}R_{\exp tA} {\bf f}\right|_{t=0} = \left.\frac{\d}{\d t} {\bf f} \exp tA\right|_{t=0}\,.
+\]
+
+Note that as to all elements $A\in\mathcal{g}$ corresponds a left-invariant vector field ${\bf A}$ on $G$, which has the property ${\bf A}_g = L_{g*} {\bf A}_e$, the fundamental vector field has a similar property. In a local trivialisation, there is a section of the bundle
+\[
+ {\bf e}_U = \Phi_U(., e)\,,
+\]
+where $e\in G$ is the unit element. Any point ${\bf f}\in P$ may be written as ${\bf f} = {\bf e}_{U}(\pi(f))) f_U$ where $f_U \in G$. Using these
+\[
+ A^*_{\bf f} = \left.\frac{\d}{\d t} {\bf f}\e^{tA}\right|_{t=0} = \left.\frac{\d}{\d t}{\bf e}_U(x) f_U \e^{tA}\right|_{t=0} = ({\bf e}_U(x)\cdot)_* {\bf A}_{f_U}\,.
+\]
+where $x=\pi({\bf f})$. This is the push-forward of ${\bf A}_{f_U}$ with the map ${\bf e}_U(x)\cdot$, and
+\[
+ {\bf A}_{f_U} = L_{f_U*}{\bf A}_e =: f_U A\,.
+\]
+
+Using the more abstract formulation of the principal $G$-bundle (without frames), where $e_U(x) = \phi_U(x, e)$ is a unit section of the principal bundle $P$, it is possible to coordinatise the tangent of $P$ by $U\times G \times \mathcal{g}$ by assigning to $x, g, A$ the vector
+\[
+ \left.\frac{\d}{\d t} e_{U}(x) g \e^{tA}\right|_{t=0}= \left. \frac{\d}{\d t}\hat{R}_{\e^{tA}}\hat{R}_g e_U \right|_{t=0}
+\]
+at $e_U(x) g = \hat{R}_g(e_U(x))$.
+
+
+
+\section*{18.1a. The Maurer-Cartan form}
+
+The Maurer-Cartan form is defined using a basis ${\bf E}_R\in\mathcal{g}$. These are extended into a basis of left-invariant vector fields on $G$ as
+\[
+ {\bf e}_{Rg} := L_{g*} {\bf E}_R \in T_g G\,.
+\]
+The dual basis is denoted by $\sigma^R$,
+\[
+ \sigma^R({\bf e}_S) = \delta^R_S\,,\quad \sigma^R_g({\bf e}_{Rg})=\delta^R_S\,.
+\]
+The Maurer-Cartan $\mathcal{g}$ valued 1-form is defined as
+\[
+ \Omega := {\bf E}_R \otimes \sigma^R\,.
+\]
+On the basis ${\bf e}_R$ this takes the value
+\[
+ \Omega({\bf e}_R)  = {\bf E}_S \otimes \sigma^S({\bf e}_R) = {\bf E}_S \delta^S_R = {\bf E}_R\,.
+\]
+Note that ${\bf e}_{Rg} = L_{g*} {\bf E}_R$, so
+\[
+ \Omega_g = (L_{g*})^{-1}\,.
+\]
+In the case of a matrix group, $L_g$ acts by matrix multiplication, so $L_{g*}^{-1} = g^{-1}$, and $\d g$ is the unity matrix in $T_g G$, so we may write
+\[
+ L_{g*}^{-1} = g^{-1}\d g\,.
+\]
+Writing out $\d g$ is important when using a parametrisation, as $g=g(\alpha)$, so $g^*\d g = \partial_k g(\alpha) \d\alpha^k$. Usually, $g^*$ is not written out explicitly (see the example in sec.\ 18.1a in the book).
+
+The book mentions the usual proof for matrix groups that $\Omega$ is a left-invariant 1-form. Note that in the modern formulation, this is so by definition. As
+\[
+ \Omega = {\bf E}_R \otimes \sigma^R\,,
+\]
+here only the $\sigma^R$'s are fields, so a pull-back only acts on them, and they are left-invariant,
+\[
+ L_h^* \omega = L_h^* ({\bf E}_R\otimes \sigma^R) = {\bf E}_R \otimes L_h^* \sigma^R = {\bf E}_R \otimes \sigma^R = \Omega\,.
+\]
+
+
+\section*{18.1c. Connections in a principal bundle}
+In the book, connections have been defined using the covariant derivative of a frame,
+\[
+ \boldsymbol{\nabla}_U {\bf e}_U = {\bf e}_U \otimes \omega_U\,,
+\]
+where the frame ${\bf e}_U$ is a row-vector of vectors, and $\omega_U$ a matrix of 1-forms.
+
+To obtain a covariant derivative of a section in the principal bundle ${\bf f}$, in eq.\ (18.12), the covariant derivative of it along a curve is defined. Let $x=x(t)$ define a curve in $M$, and ${\bf f}(t) = {\bf f}(x(t))$ the corresponding curve in the principal bundle. In terms of frames, ${\bf f}$ may be written as ${\bf f}(x) = {\bf e}_U(x) g_U(x)$, to which corresponds a curve in the group by
+\[
+ {\bf f}(t) = {\bf e}_U(x(t)) g_U(x(t)) =: {\bf e}_U(x(t)) g(t)\,.
+\]
+We use this to obtain its covariant derivative, i.e., repeat eq.\ (18.12) without assuming that $G$ is a matrix group. Points in a general principal bundle are coordinatised in a local trivialisation as
+\[
+ p(x, g) = \hat{R}_g e_U(x)\,,
+\]
+where $e_u$ is a unit section, and $\hat{R}$ the right-action on the bundle [see theorem (17.8)]. In this case, the covariant derivative of the curve may be defined as follows. Let ${\bf f}(t) = \hat{R}_{g(t)} e_U(x)$ be a curve in the bundle. In order to define
+\[
+ \frac{\boldsymbol\nabla \bf f}{\d t} = \nabla_{x'(t)}{\bf f} = \boldsymbol\nabla_{\bf X}{\bf f}\,,
+\]
+where ${\bf X}=x'(t)$, one needs a one form taking its value in the tangent space of $P$. Let $\omega$ be a 1-form on $M$ taking its value in $\mathcal{g}$, the Lie algebra of $G$.
+
+As ${\bf f}$ takes its value in the bundle $P$, and ${\bf f}=\hat{R}_g e_U$, the tangent space of $P$ at ${\bf f}(t)$ may be written as $\hat{R}_{g*} T_{e_U(x)}P$, and we may identify a subset of this by $\mathcal{g}$ as follows: to any vector $A\in\mathcal{g}$ we associate $\d(e_u(x) \e^{tA})/\d t|_{t=0}$ and we push this forward to $T_{{\bf f}(x)}P$ by $\hat{R}_g$, which is the value $A^*_{\bf f}(x)$ of the fundamental vector field.
+
+This way, we may associate to $\omega({\bf X})\in\mathcal{g}$ the vector $[\omega({\bf x})]^*_{\bf f}$ in $T_{{\bf f}(x)}P$.
+
+Let us now put this machinery to use.  To obtain $\boldsymbol\nabla_{\bf X}{\bf f}$, where ${\bf f}(x)=\hat{R}_g(x) e_U(x)$ we proceed as follows. 
+
+First, we want to consider the change of $g(t) = g_U(x(t))$. The derivative of such a curve is $g'(t)  \in T_g G = L_{g*} T_e G$, i.e., we may write that as $g'(t) = L_{g(t)*}\Omega(g'(t))$ where $\Omega$ is the Maurer-Cartan 1-form. We now consider the Lie algebra element ${\rm Ad}_{g^{-1}}(\omega_x)({\bf X}) + \Omega_{g(t)}(g'(t))$ and the value of the corresponding fundamental vector field at ${\bf f}_U(x(t))$,
+\[
+ \boldsymbol\nabla_{\bf X}{\bf f}=\left[ \left({\rm Ad}_{g_U(x)^{-1}}(\omega_{g_U(x)})\right)({\bf X}) + \Omega_{g_U(x)}\left( g_{Ux*} {\bf X}\right)\right]_{{\bf f}(x)}^*\,,
+\]
+where $g_{Ux*}{\bf X} = \d g_U(x(t)) / \d t$, and ${\bf X}=x'(t)$,
+or
+\[
+ \frac{\boldsymbol\nabla\bf f}{\d t} = \left[ \left({\rm Ad}_{g(t)^{-1}}(\omega_{g(t)})\right)(x'(t)) + \Omega_{g(t)}\left( g'(t)\right)\right]_{{\bf f}(t)}^*\,.
+\]
+To see that this is the generalisation of eq.\ (18.12), we shall see that in the matrix group case $A^*_{\bf f} = g_U A$, so we get
+\[
+ \boldsymbol\nabla_{\bf X}{\bf f} = g_U\left[ g^{-1}\omega({\bf X}) g + g^{-1}\d g\left({\bf X}(g)\right)\right]\,,
+\]
+and taking the frame bundle as the principal bundle, we may replace $g_U$ before the bracket by ${\bf f}_U$. I think the tensor product sign in eq.\ (18.12) is not necessary.
+
+\section*{18.2a. Associated bundles}
+
+The construction of the associated bundle. Let $\pi: P\to M$ be a principal bundle, and its transition functions be $c$, i.e., if on $U\subset M$ and $V\subset M$ two local trivialisations are given (e.g., by unit sections, $e_U$ and $e_v$, then a point $P \supset \pi^{-1}(U\cap V) = e_U g_U = e_V g_V$), then $c_{UV}: U\cap V \to G$ such that $e_U = e_V c_{UV}$, and therefore $g_V = c_{VU} g_U$.
+
+An associated bundle may be constructed as a quotient space. Let $\rho: G \to {\rm Gl}(X)$ be a representation of $G$ on a vector space $X$. We take a chart of the principal bundle with local trivialisations, to each patch $U$ corresponding a local unit section $e_U$. We want to have a bundle $ \tilde\pi: P_\rho$such that
+\[
+ \tilde\pi{}^{-1}(U) \cong U \times X\,,
+\]
+and the transition functions are $\tilde{c}_{UV} = \rho(c_{UV})$. What is then the total space?
+
+We take for a chart $U_\alpha$, $\cup_\alpha U_\alpha = M$ the following:
+\[
+ P_\rho = \cup_\alpha (U_\alpha \times X)/\sim
+\]
+where the equivalence relation $\sim$ is given by
+\[
+ U\times X \ni (x, \psi_U) \sim (y, \psi_V)\in V\times X\,,\quad\text{iff } \psi_V = \rho(c_{VU})\psi_V\,.
+\]
+
+
+The next step is the association of a bundle to a vector bundle $E\to M$ through a representation $\rho$ of its structure group. I.e., for this bundle $E$, for any two patches $U, V$ and point $x\in U\cap V$, the transition function $c_{UV}(x) \in G \subseteq GL(F)$ where the vector space $F$ is the fiber of the bundle $E$.
+
+This is constructed as follows: first, we note that the frame bundle $P$ may be constructed with fiber $G$, representing sections as ${\bf f}(x) = {\bf e}_U g_U(x)$. Then choosing a representation $\rho: G \to {\rm Gl}(X)$ on a vector space $X$, the vector bundle associated to the principal frame bundle may be constructed. This will be called the bundle associated to the vector bundle through the representation $\rho$, i.e., $E_\rho := P_\rho$.
+
+
+
+\section*{18.2b. Connections in associated bundles}
+
+To the use of the connection form in eq.\ (18.22). We have defined a connection form in a vector bundle as a matrix of 1-forms where the covariant derivative of a frame is defined as
+\[
+ \boldsymbol\nabla {\bf e}_j = {\bf e}_{Uk} \otimes \omega_U^k{}_j\,,\quad\text{or}\quad \boldsymbol\nabla {\bf e}_U = {\bf e}_U\otimes \omega_U\,.
+\]
+Not the covariant derivative of a section ${\bf f}={\bf e}_U f_U$ was defined in order to obey the Leibniz rule as
+\[
+ \boldsymbol\nabla {\bf f} = \boldsymbol\nabla({\bf e}f) = \boldsymbol\nabla({\bf e}_k f^k) = (\nabla {\bf e}_k)f^k + {\bf e}_k \d f^k = {\bf e}_k \otimes (\omega^k{}_jf^j + \d f^k) = {\bf e}\otimes (\d f + \omega f)\,,
+\]
+where we have dropped the index $U$ denoting the patch. We use the notation
+\[
+ \boldsymbol\nabla{\bf f} = {\bf e}_U \otimes \nabla_U f_U\,.
+\]
+Eq.\ (18.22) is this, with the notation $y_U$ for what used to be $f_U$.
+
+
+\section*{18.3a. $r$-form sections of $E$}
+
+An $r$ form section is defined as an anti-symmetric mapping of $r$ vector fields to a section of a bundle $E$, linearly and locally, i.e., an element of
+\[
+ \Gamma(E) \otimes \bigwedge^r M\,.
+\]
+If ${\bf e}_U$ is a frame ($k$ independent local sections) of the bundle $E$, then an r-form can be written in the form
+\[
+ \boldsymbol\phi_U = {\bf e}_U \otimes \phi_U = {\bf e}_R \otimes \phi^R\,.
+\]
+The exterior covariant derivative is defined as
+\[
+ \boldsymbol\nabla\boldsymbol\phi_U = {\bf e}_U \otimes (\d \phi_U + \omega_U \wedge \phi_U) = {\bf e}_R \otimes(\d\phi^R + \omega^R{}_S \wedge \phi^S)\,.
+\]
+
+
+\section*{18.3b. Curvature and the $Ad$ bundle}
+The introduction before theorem (18.40) says, a bit more explicitly, that if $E$ is a vector bundle with transition functions $c_{VU}$, then the curvature forms
+\[
+ \theta_U = \d \omega_U + \frac{1}{2}[\omega_U, \omega_U]
+\]
+are not the local parametrisations of a $\mathcal{g}$ Lie-algebra-valued 2-forms with the same structure group representation as $E$, i.e., not elements of $E\otimes \bigwedge^2 M$, but rather of $E_{\rm Ad}\otimes \bigwedge^2 M$.
+
+\section*{19.3a. The Lorentz group}
+
+When considering how ${\rm SO}(3)$ is a deformation retract of $L_0$ the group of proper (orientation-preserving, $\{B: \det B = 1\}$) isochronous (time-direction preserving $B: B^0_0 \ge 0\{$) Lorentz transformations, there are some concepts useful in physics implicitly at play.
+
+Let
+\[
+ H := {x \in M^4 : x^ix_i = x_0^2 - {\bf x}\cdot{\bf x} = -1}
+\]
+be the hyperboloid of possible velocities of on observer.
+
+For any $u\in H$, there is a {\sl standard}\/ Lorentz transformation, usually denoted $\Lambda_{u \leftarrow u_0}$, that takes the vector $u_0=(1, \boldsymbol 0)^T$, into $u$. There are different ways to choose the standard boost.
+
+The Lorentz tranformatios leaving a given $u\in H$ fixed,
+\[
+ L_u := \{B\in L_0: Bu = u\}\,,
+\]
+make up the {\bf little group} of the given four-velocity. In the case of the standard 4-velocity $(1, \boldsymbol 0)^T$,
+\[
+ L_{u_0} = \begin{pmatrix} 1 & \\ 0 & {\rm SO}(3) \end{pmatrix}\,,
+\]
+and for any other $u\in H$,
+\[
+ L_u = \Lambda_{u\leftarrow u_0}L_{u_0}\Lambda_{u\leftarrow u_0}^{-1}\,.
+\]
+This is often expressed so, that {\sl the little group corresponding to a massive momentum is ${\rm SO}(3)$}, as when choosinf a mass $m$, $m u =p$ is a momentum of a particle with mass m, $p^ip_i = -m^2$. It is also possible to consider the little group of a lightlike vector, which turns out to be the two-dimensional Euclidean group, ${\rm ISO}(2)$.
+
+This yields the homogeneous space structure
+\[
+ H \cong \frac{L_0}{{\rm SO}(3)}\,.
+\]
+
+
+\section*{20.4b. Averaging over a compact Lie group}
+
+In the proof of thm.\ (20.30), the aim is to prove that the left-invariant Haar measure (in this case, volume form), constructed from a left-invariant basis of 1-form fields,
+\[
+ \omega = \sigma^1 \wedge \dots \wedge \sigma^n\,,
+\]
+is bi-invariant on a compact Lie group. Here ${\bf e}$ is a frame of left-invariant vector fields on $G$, and $\sigma$ is its dual.
+
+The proof is indirect, assuming that it is not so, and then constructing a continuous function on $G$ that diverges at some point, which contradicts compactness.
+
+The continuous function on $G$ is
+\[
+ F:G\to\mathbb{R}\,,\quad g\mapsto F(g)= \omega(R_{g^{-1}*}L_{g*}{\bf e}) = \omega(g{\bf e}g^{-1})\,,
+\]
+which is well defined: the scalar field on the right has a constant value, as $L_{g*}{\bf e}={\bf e}$, i.e., it is still a left-invariant field, and so is $\omega$.
+
+To show that this function diverges, it is evaluated along a sequence $g$, $g^2$, \dots. Assuming that $F(g)$ is not constant (i.e., that $\omega$  is not right-invarian), we may choose $g$ such that $F(g) = c\ne F(e)$. Furthermore, we can assume that $c>1$, otherwise replace $g$ with $g^{-1}$. 
+
+As $F(g) = c = c \omega({\bf e})$, it follows that $F(g^2) = c^2$, $F(g^n)=c^n$ and so $F(g^n)=c^n \to \infty$ as $n\to\infty$.
+
+\section*{20.5a. The exterior covariant divergence $\nabla^*$}
+The book gives a coordinate expression. Here, I would like to give an expression relating it to $\d^*$.
+
+First, note that $\d^*$ is defiend as the Hilbert space adjoint of $\d$,
+\[
+ (\d \alpha, \beta) = (\alpha, \d^* \beta)\,.
+\]
+This is so for ordinary forms.
+
+Now for forms in the adjoint bundle, one needs to define the scalar product firs, which is generalised as
+\[
+ (\theta, \phi) = -\int_M \Tr (\theta \wedge * \phi)\,,
+\]
+which is analogous to the formula for ordinary forms, except that here, the exterior product takes its value in the tensor product of the ${\rm Ad}$ bundle with itself. As any bilinear function can be extended to the tensor product, so can the $-\Tr$.
+
+Let us now consider $\nabla \theta$, which is
+\[
+ \nabla \psi = \d\psi + {\rm Ad}_* (\omega) \psi  = \d\psi + [\omega, \psi]\,.
+\]
+Note, that we do know the adjoint of $\d$, its $\d^*$, so
+\[
+ (\nabla\psi, \phi) = (\d\psi + [\omega,\psi], \phi) = (\d\psi, \phi) + ([\omega, \psi], \phi) = (\psi, \d^*\phi) + ([\omega, \psi], \phi)\,.
+\]
+Let us consider the second term,
+\[
+ ([\omega, \psi], \phi) = -\int_M \Tr( [\omega, \psi] \wedge *\phi) = \int_M \Tr(\psi [\omega, \phi]) = -(\psi, [\omega, \phi])\,,
+\]
+where we are using eq.\ (20.35) in the form $\Tr([X,Y],Z) = -\Tr(Y, [X,Z])$, so we arrive at
+\[
+ \nabla^* \phi = \d^*\phi -[\omega, \phi]\,.
+\]
+
+
+\section*{21.1a. Bi-invariant $p$-forms}
+
+The end of the proof,
+\[
+ \alpha^p = \alpha_{\underrightarrow{I}} \sigma^I = \alpha_{\underrightarrow{I}} \tau^I\,,
+\]
+where the $\sigma^i$ are left- and the $\tau^i$ are right-invariant forms, which agree at the identity, $\sigma^i_e = \tau^i_e$.
+
+Accoding to sec.\ 15.4c,
+\[
+ \d\sigma^i = -\frac{1}{2}C^i_{jk}\sigma^j\wedge\sigma^k\,,\quad \d\tau^i = \frac{1}{2}C^i_{jk}\tau^i\wedge\tau^k\,,
+\]
+where $C^i_{jk}$ are the structure constants of the group. On one hand,
+\[
+ \d\alpha = -\frac{1}{2}\alpha_{i_1 < \dots < i_p}\left( C^{i_1}_{jk} \sigma^j\wedge \sigma^k \wedge \sigma^{i_2}\wedge\dots\wedge \sigma^{i_p} - C^{i_2}_{jk}\sigma^{i_1}\wedge\sigma^j\wedge\sigma^k\wedge\sigma^{i_3}\wedge\dots\wedge\sigma^{i_p}+\dots \right)\,,
+\]
+and on the other,
+\[
+ \d\alpha = +\frac{1}{2}\alpha_{i_1 < \dots < i_p}\left( C^{i_1}_{jk} \tau^j\wedge \tau^k \wedge \tau^{i_2}\wedge\dots\wedge \tau^{i_p} - C^{i_2}_{jk}\tau^{i_1}\wedge\tau^j\wedge\tau^k\wedge\tau^{i_3}\wedge\dots\wedge\tau^{i_p}+\dots \right)\,.
+\]
+Note, that the two formulae only differ in the sign, and the replacement $\sigma\mapsto\tau$, so evaluating at $g=e$,
+\[
+ \d\sigma_e = -\d\sigma_e\,,\quad \d\sigma_e=0\,,
+\]
+and as $\sigma$ is invariant, so is $\d\sigma$, so $\d\sigma=0$.
+
+\section*{A.c.\ Symmetry of Cauchy's stress tensor in $\mathbb{R}^3$}
+
+The logic here is as follows: the angular momentum is defined first (5 eqs.\ before A.11), as
+\[
+ - H = \frac{1}{2}\int_{B(t)} {\bf r} \wedge {\bf v}\otimes m\,,
+\]
+i.e., $-{\bf r}\wedge {\bf v}\otimes m$ is defined as the angular momentum density. Its derivative is then obtained (i) {\sl directly}, by inserting Cauchy's equations (A.10) into $\d H / \d t$, and (ii) {\sl with the assumption}, that it agrees with all torques acting on the body. The condition that the two agree is
+\[
+ \int_{B(t)} \d {\bf r}\wedge {\bf t} = 0\,,
+\]
+which is equivalent to the symmetry of Cauchy's stress tensor, or
+\[
+ \d x^r \wedge  \mathcal{t}^s = \d x^s \wedge \mathcal{t}^r\,.
+\]
+
+\section*{E.a.\ The topology of conjugacy orbits}
+
+Let us consider the mapping $F$. It is defined as the mapping of the cosets of $G/C_\sigma$ to $M_\sigma \subset G$ as follows,
+\[
+ F : G/C_\sigma \to M_\sigma \subset G, \quad gC_\sigma \mapsto g\sigma g^{-1}.
+\]
+
+First, let us show that this map is well-defined, i.e., if $g$ and $g'$ are in the same coset, $g' =gh$, $h\in C_\sigma$, then $g' \sigma g'{}^{-1}  = g h \sigma (gh)^{-1} = g h \sigma h^{-1}g^{-1} = g \sigma h h^{-1}g^{-1}=ghg^{-1}$.
+
+Secondly, to show that $F$ is an embedding of the manifold $G/C_\sigma$ in $M_\sigma$, it is necessary to show that $F_*$ is 1:1. This is first fone at $\sigma C_\sigma \in G/C_\sigma$,
+\[
+ F_{* \sigma C_\sigma} : T_{\sigma C_\sigma} (G/C_\sigma) \to T_{\sigma} M_\sigma \subset T_\sigma G\,,
+\]
+using the fact that $\sigma C_\sigma=C_\sigma$ and that curves in $G/C_\sigma$ can be parametrised as $g(t) C_\sigma$ and at $\sigma C_\sigma$, these curves can be taken to be of the form $\e^{Yt}C_\sigma$, which are mapped into $\e^{Yt}\sigma \e^{-Yt}$.
+
+The velocity vector of $\e^{Yt}\sigma \e^{-Yt}$ is $R_\sigma Y - L_\sigma Y$, and if this vanishes, then $L_{\sigma^{-1}}R_\sigma Y = {\rm Ad}_\sigma Y = Y$, as a consequence, $\e^{Yt}$ and $\sigma$ commute, the curve is on $C_\sigma$, i.e., it is a constant in $G/C_\sigma$.
+
+As ${\rm Ad}_g : G\to G$ is a diffeomorphism, it is clear that $F_*$ is 1:1 everywhere, so $F$ is a local embedding everywhere. It can be shown that $M_\sigma$ is globally an embedded submanifold.
+
+Our calculation also shows that the mapping $F_{*C_\sigma}$ mapping $Y\mapsto R_\sigma Y - L_\sigma Y$ is $1:1$ and onto.
+
+
+
+
+
+
+
+
+
+
+\begin{thebibliography}{99}
+\bibitem{Frankel} Theodore Frankel, {\sl ``The geometry of physics''}\/ (Cambridge University Press, Cambridge,
+UK, 1997).
+
+\end{thebibliography}
+
+\end{document}

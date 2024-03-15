@@ -10,6 +10,7 @@ These files are licensed under [CC BY-NC-ND](https://creativecommons.org/share-y
 
 ## Contents
 
+ * `geomphys`: Problem solutions and some notes on T&nbsp;Frankel, The geometry of physics (Cambridge University Press, Cambridge, 1997)
  * `stat` Statistics: currently contains solutions to R.J.&nbsp;Barlow, Statistics (Manchester Physics series, Wiley, 1989)
  * `CLFields` Notes on classical field theory (a choice of signature, normalisation, used to calculate conserved quantities, such as energy, momentum, spin, etc.)
  * `laguerre` Laguerre polynomials. A collection of the notations used by references, to help comparing formulae from different sources.
