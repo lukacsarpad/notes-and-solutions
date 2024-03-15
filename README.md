@@ -11,3 +11,4 @@ These files are licensed under [CC BY-NC-ND](https://creativecommons.org/share-y
 
  * `CLFields` Notes on classical field theory (a choice of signature, normalisation, used to calculate conserved quantities, such as energy, momentum, spin, etc.)
  * `stat` Statistics: currently contains solutions to R.J.&nbsp;Barlow, Statistics (Manchester Physics series, Wiley, 1989)
+ * `laguerre` Laguerre polynomials. A collection of the notations used by references, to help comparing formulae from different sources.

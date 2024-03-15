@@ -1,0 +1,355 @@
+\documentclass[a4paper,12pt,final]{article}
+\usepackage{t1enc}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{floatflt}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{showkeys}
+\usepackage{hyperref}
+\usepackage{ifthen}
+\usepackage{subfigure}
+
+\hoffset=-5.0mm
+\voffset=-1.9mm
+%
+\evensidemargin=0cm
+\oddsidemargin=0cm
+\topmargin=0cm%
+\headheight=0cm%
+\headsep=0cm%
+\marginparsep=0cm%
+\marginparwidth=0cm%
+\textheight=25cm
+\textwidth=17cm
+\special{papersize=210mm,297mm}%
+
+\def\d{\mathrm{d}}
+\def\e{\mathrm{e}}
+\def\imagi{\mathrm{i}}
+\def\ellop{\mathop{{\sf L}}}
+\def\forrasfile#1{ (see {\tt #1})}
+\def\lag{{\mathcal{L}}}
+\def\lap{\mathop{\Delta}}
+\def\kihagy#1{}
+\def\sn{\mathop{\text{sn}}}
+\def\cn{\mathop{\text{cn}}}
+\def\dn{\mathop{\text{dn}}}
+\def\zb{\ensuremath{\bar{z}}}
+\def\sign{\mathop{\text{sign}}}
+\def\xii#1{\xi^{(#1)}}
+\def\xij#1#2{{\xi^{(#1)}_{#2}}}
+\def\op#1{{\sf #1}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\renewcommand\Re{\mathop{\text{Re}}}
+\renewcommand\Im{\mathop{\text{Im}}}
+\def\Tr{\ensuremath{\mathop{\rm Tr}}}
+
+
+
+%opening
+\title{Conventions for Laguerre polynomials}
+\author{Árpád Lukács\\ \small Kavli Institute for Quantum Nanoscience, TU Delft, Lorentzweg 1, Delft, The Netherlands\\
+\small and \\ \small Wigner Research Centre for Physics, Budapest, Hungary}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We compare the conventions used for the generalized Laguerre polynomials used in different sources. We give a Rodrigues formula and the differential equation satisfied by the most commonly used convention (used, e.g., by Abramowitz and Stegun, by the NIST Handbook of mathematical functions and by Gradshteyn and Ryzhik. For the other conventions, we present a link to the most often used one.
+
+Our choice of the sources is somewhat arbitrary. We have compared the notation used in some more widespread textbooks and monographs on quantum mechanics, and some handbooks and textbooks of mathematics often used by physicists.%, e.g., Arfken, Weber, and Harris; Morse and Feshbach and Smirnow.
+\end{abstract}
+
+It seems, that for Laguerre polynomials many different notation conventions are used in physics literature. When using multiple references, e.g., formulae from ones favourite quantum mechanics book, and a table of integrals or a handbook of mathematics, or implementing numerical code using library functions, one may easily run into discrepancies.
+
+The aim of the present note is to clear up the confusion of notation, to help the translation of the formulae of one reference into the other. It has been found, that at least some of the mathematical handbooks, e.g., \cite{AbrSteg, NIST, RG, AWH, Bronshtein, AAR, Askey, Erdelyi, Lebedev, MO, Olver, Prud, SL, Sz}, and the computer algebra package Mathematica \cite{Wolfram} uses a consistent notation, which we shall discuss first, in Sec.\ \ref{sec:AbrSteg}, and in the subsequent sections, relate the notation of other sources to this one.
+
+In the present note, we consider generalized Laguerre polynomials $L_n^m(x)$, where $n$ is an integer.
+
+
+\section{Most often used}\label{sec:AbrSteg}
+The most often used conventions are used by Refs.\ \cite{AbrSteg, NIST, RG, AWH, Bronshtein, AAR, Askey, Erdelyi, Lebedev, MO, Olver, Prud, SL, Sz}\footnote{Ref.\ \cite{Erdelyi} uses $L_n^m(x)$ for Laguerre polynomials, and $L_n^{(m)}(x)$ for Laguerre functions. The latter reduce to $m! L_n^m(x)/(m+n)!$, when $n$ is an integer.} and the computer algebra package \cite{Wolfram}. These correspond to the Rodrigues formulae,
+\begin{equation}\label{eq:Rodrigues}
+\begin{aligned}
+ L_n(x) &= \frac{1}{n!}\e^x \frac{\d^n}{\d x^n} (\e^{-x} x^n)\,,\\
+ L_n^m(x) &= \frac{1}{n!} \e^x x^{-m} \frac{\d^n}{\d x^n}(\e^{-x} x^{n+m})\,.
+\end{aligned} 
+\end{equation}
+See Ref.\ \cite{AbrSteg}, 22.11.6, Ref.\ \cite{NIST}, 18.5.5, and Ref.\ \cite{RG}, 8.970.
+
+Importantly,
+\begin{equation}\label{eq:Generalized}
+ L_n^m(x) = (-1)^m \frac{\d^m}{x^m} L_{n+m}(x)\,,
+\end{equation}
+see, e.g., Ref.\ \cite{AbrSteg}, 22.5.17.
+
+Note, that $L_n(x) = L_n^0(x)$. The functions are given explicitly by the formula
+\begin{equation}\label{eq:explicit}
+L_n^m(x) = \sum_{k=0}^n (-1)^k \begin{pmatrix} n+m \\ n-k \end{pmatrix} \frac{x^k}{k!}\,,
+\end{equation}
+(Ref.\ \cite{AbrSteg}, 22.3.9). They are orthogonal functions,
+\begin{equation}\label{eq:orthogonal}
+ \int_0^\infty \d x \e^{-x}x^m L_n^m(x) L_{n'}^m (x) = \frac{(n+m)!}{n!}\delta_{nn'}\,,
+%\frac{\Gamma(n+m+1)} 
+\end{equation}
+(Ref.\ \cite{AbrSteg}, 22.2.13).
+
+These functions satisfy the differential equation
+\begin{equation}\label{eq:ODE}
+ x {L_n^m}''(x) + (m+1-x){L_n^m}'(x) +n L_n^m(x) =0\,,
+\end{equation}
+(Ref.\ \cite{AbrSteg}, 22.6.15), and the recurrence relation
+\begin{equation}\label{eq:recursion}
+ (n+1)L_{n+1}^m(x) = (2n+m+1 - x) L_n^m(x) -(n+m)L_{n-1}^m(x)\,,
+\end{equation}
+(Ref.\ \cite{AbrSteg}, 22.7.12). Their generating function is
+\begin{equation}\label{eq:generating}
+ \sum_{n=0}^\infty L_n^m(x) s^n = \frac{\exp\left(\frac{xs}{s-1}\right)}{(1-s)^{m+1}}\,,
+\end{equation}
+(Ref.\ \cite{AbrSteg}, 22.9.15), and
+\begin{equation}
+ \label{eq:generating2}
+ \sum_{n=0}^\infty L_n^{m-n}(x)s^n = \e^{-sx}(1+s)^n\,,
+\end{equation}
+(Ref.\ \cite{MO}, Sec.\ 5.5.2), and the relation $L_n^{-m}(x) = (-x)^m (n-m)! L_{n-m}^m(x)/n!$ holds \cite{MO}.
+
+Ref.\ \cite{PZ} does not give a definition for $L_n^m(x)$, however, in their derivation where Laguerre polynomials are used, a Taylor expansion is performed, equivalent to the generating function relation (\ref{eq:generating2}), with the replacement of $s$ by $-s$.
+
+
+The relation of the Laguerre polynomials to the confluent hypergeometric functions is
+\begin{equation}
+ \label{eq:hyp}
+ L_n^m(x) = \begin{pmatrix} n+m \\ n \end{pmatrix} M(-n,m+1,x)\,,
+\end{equation}
+where $M$ is Kummer's hypergeometric function (\cite{AbrSteg}, 22.5.54). This formula is also used by Refs.\ \cite{Flugge, Mahan}.
+
+Note, that many Refs., e.g., \cite{AbrSteg, NIST, RG, AWH}, give many more useful formulae, but for our purposes, i.e., comparison among the references, these suffice.
+In what follows, we shall use the notations, that we reserve the symbols $L_n$ and $L_n^m$ for the functions defined by Eq.\ (\ref{eq:Rodrigues}), and use the notations ${\tilde L}_n$ and ${\tilde L}_n^m$ for functions defined in other sources (and separate different ones in different sections).
+
+\section{Blokhintsev, A.~Bohm, D.~Bohm, Landau and Lifshitz, Sakurai, Courant and Hilbert}
+In Ref.\ \cite{LL}, the eigenfunctions of the hydrogen atom are considered. The radial functions are expressed with Laguerre polynomials ${\tilde L}_n^m(x)$, which satisfy the differential equation
+\begin{equation}
+x {\tilde L }_n^m{}''(x) + (m+1-x){\tilde L}_n^m{}'(x) + (n-m) {\tilde L}_n^m (x) =0\,, 
+\end{equation}
+which already tells us that the lower index is shifted by $-m$ relative to the conventions used in Sec.\ \ref{sec:AbrSteg}. The Reudrigues formulae are also given, as
+\begin{equation}
+ \label{eq:LLRodrigues}
+ \begin{aligned}
+  {\tilde L}_n (x) &= \e^x \frac{\d^n}{\d x^n}(\e^{-x} x^n)\,,\\
+  {\tilde L}_n^m (x) &= (-1)^m \frac{n!}{(n-m)!} \e^x x^{-m}\frac{\d^{n-m}}{\d x^{n-m}}(\e^{-x}x^n)\,,
+ \end{aligned}
+\end{equation}
+which can be compared with Eq.\ (\ref{eq:Rodrigues}) to yield
+\begin{equation}
+ \label{eq:LLidentify}
+ {\tilde L}_n^m(x) = (-1)^m n! L_{n-m}^m(x)\,,\quad\quad L_n^m(x) = \frac{(-1)^m}{(n+m)!} {\tilde L}_{n+m}^m (x)\,.
+\end{equation}
+The relation to confluent hypergeometric functions is
+\begin{equation}
+ \label{eq:LLhyp}
+ {\tilde L}_n^m(x) = (-1)^m \frac{[n!]^2}{m! (n-m)!}M(-(n-m),m+1,z)\,.
+\end{equation}
+Eq.\ (\ref{eq:LLhyp}) can also be obtained by substituting Eq.\ (\ref{eq:hyp}) into formula (\ref{eq:LLidentify}). Note, that Ref.\ \cite{LL} uses the notation $F(\alpha, \beta,z)$ for the hypergeometric function $M(\alpha,\beta,z)$, but gives its differential equation and first two Taylor coefficients, which can be compared with, e.g., Eqs.\ 13.1.1 and 13.1.2 of Ref.\ \cite{AbrSteg}.
+
+Refs.\ \cite{Blokhintsev, DBohm, Sakurai, CH} gives the following formulae,
+\begin{equation}\label{eq:SAGeneralized}
+ {\tilde L}_n^m(x) = \frac{\d^m}{\d x^m}{\tilde L}_n(x)\,,
+\end{equation}
+and
+\begin{equation}\label{eq:SARodrigues}
+ {\tilde L}_n(x) = \e^x \frac{\d^n}{\d x^n} (\e^{-x} x^n)\,.
+\end{equation}
+Note, that the latter agrees with the Rodrigues formula used by Ref.\ \cite{LL}, and differs from the one in Sec.\ \ref{sec:AbrSteg} by the lack of a normalisation $1/n!$, yieding again Eq.\ (\ref{eq:LLidentify}).
+
+Ref.\ \cite{ABohm} gives the Rodrigues formula in the form
+\begin{equation}
+ \label{eq:SCHRodrigues}
+ {\tilde L}_n^m (x) = \frac{\d^m}{\d x^m} \e^n \frac{\d^n}{\d x^n} (\e^{-x}x^n)\,,
+\end{equation}
+equivalent with Eqs.\ (\ref{eq:SAGeneralized}) and (\ref{eq:SARodrigues}).
+
+
+
+\section{Schiff}
+Ref.\ \cite{Schiff} gives the differential equation of Laguere functions the same way as Ref.\ \cite{LL}, the normalisation, however, differs. The generating function is given as
+\begin{equation}
+ \label{eq:SCHgenerating}
+ \sum_{n=m}^\infty {\tilde L}_n^m(x) s^n = \frac{(-s)^n \exp\left(\frac{x s}{s-1}\right)}{(1-s)^{m+1}}\,,
+\end{equation}
+the comparison of which with Eq.\ (\ref{eq:generating}) yields
+\begin{equation}
+ \label{eq:SCHidentify}
+ {\tilde L}_n^m (x) = (-1)^m L_{n-m}^m(x)\,,\quad\quad L_n^m(x) = (-1)^m L_{n+m}^m(x)\,.
+\end{equation}
+Note, that this differs by the lack of a multiplier $n!$ from the definition used by Ref.\ \cite{LL}.
+
+Note, that the functions used in Ref.\ \cite{Schiff} satisfy
+\begin{equation}
+ \label{eq:SCHGeneralized}
+ L_n^m(x) = \frac{\d^m}{\d x^m} L_n(x)\,.
+\end{equation}
+
+
+
+\section{Griffiths, Messiah, Merzbacher, Morse and Feshbach, Shankar, Byron and Fuller}
+In Ref.\ \cite{MF}, the differential euquation is
+\begin{equation}
+ \label{eq:MFODE}
+ x {\tilde L}_n^m {}''(x) +(m+1-x){\tilde L}_n^m {}'(x) + n{\tilde L}_n^m {}(x)=0\,,
+\end{equation}
+in agreement with Sec.\ \ref{sec:AbrSteg}. The Rodrigues formula for the Laguerre polynomials is given as
+\begin{equation}
+ \label{eq:MFRodrigues}
+ \begin{aligned}
+  {\tilde L}_n(x) &= \e^x \frac{\d^n}{\d x^n} (\e^{-x} x^n)\,,\\
+  {\tilde L}_n^m(x) &= \frac{(n+m)!}{n!} \e^x x^{-m} \frac{\d^n}{\d x^n} (\e^{-x} x^{n+m})\,,
+ \end{aligned}
+\end{equation}
+which, compared with Eqs.\ (\ref{eq:Rodrigues}), yields
+\begin{equation}
+ \label{eq:MFidentify}
+ \begin{aligned}
+  {\tilde L}_n (x) &= n! L_n(x)\,,\quad\quad\quad\quad\quad L_n(x) = {\tilde L}_n(x)/n!\,,\\
+  {\tilde L}_n^m(x) &= (n+m)! L_n^m(x)\,,\quad\quad L_n^m(x) = {\tilde L}_n^m(x)/(n+m)!\,.
+ \end{aligned}
+\end{equation}
+These notations are also used by Refs.\ \cite{Griffiths, Messiah, Merzbacher, Shankar}, who gives the Rodrigues formula (\ref{eq:MFRodrigues}) for ${\tilde L}_n$, and the recursion (\ref{eq:Generalized}).
+
+Ref.\ \cite{BF} gives the Rodrigues formula (\ref{eq:MFRodrigues}) for the Laguerre polynomial ${\tilde L}_n$, and the one for the generalised Laguerre polynomial ${\tilde L}_n^m$ with an unspecified coefficient $D_n^m$.
+
+
+\section{Baym, Fock, Smirnow, Takhtadjan}
+Ref.\ \cite{Baym} gives an explicit formula for ${\tilde L}_{n+\ell}^{2\ell+1}(x)$, equivalent to $n!$ times the one in Eq.\ (\ref{eq:explicit}).
+In Refs.\ \cite{Fock, S, Takhtadjan}, the Rodrigues formula is given as
+\begin{equation}
+ \label{eq:SRodrigues}
+ {\tilde L}_n^m(x) = \e^x x^{-m} \frac{\d^n}{\d x^n}(\e^{-x}x^{n+m})\,,
+\end{equation}
+which differs by a factor $n!$ from Eq.\ (\ref{eq:Rodrigues}), therefore
+\begin{equation}
+ \label{eq:Sidentify}
+ {\tilde L}_n^m(x) = n! L_n^m(x)\,,\quad\quad L_n^m(x) = \frac{1}{n!}{\tilde L}_n^m(x)\,.
+\end{equation}
+
+
+\section{Frank and von~Mises}
+Ref.\ \cite{FM} defines Laguerre polynomials by orthonormalisation,
+\begin{equation}
+ \label{eq:FMorthogonal}
+ \int_0^\infty \e^{-x}x^m{\tilde L}_n^m(x) {\tilde L}_{n'}^m(x) = \delta_{nn'}\,,
+\end{equation}
+which, upon comparison with Eq.\ (\ref{eq:orthogonal}) yields ${\tilde L}_n (x)= L_n(x)$ and
+\begin{equation}
+ \label{eq:FMidentify}
+ {\tilde L}_n^m(x) = \sqrt\frac{n!}{(n+m)!} L_n^m(x)\,,\quad\quad L_n^m(x) = \sqrt\frac{(n+m)!}{n!} {\tilde L}_n^m(x)\,.
+\end{equation}
+
+
+
+
+
+
+\begin{thebibliography}{99}
+\def\refttl#1{{\it ``#1''}, }
+%\def\refttl#1{}
+\bibitem{AbrSteg} M.~Abramowitz and I.A.~Stegun, {\it ``Handbook of mathematical functions''}, National Bureau of Standards, Washington, 1964.
+\bibitem{NIST} F.W.J.~Olver, D.W.~Lozier, R.F.~Boisvert, and C.W.~Clark, ({\it eds.}), {\it ``NIST Handbook of mathematical functions''}, NIST and Cambridge University Press, Cambridge, 2010.
+\bibitem{RG} I.S.~Gradshteyn and I.M.~Ryzhik, D.~Zwillinger and V.~Moll ({\it eds.}), {\it ``Table of integrals, series, and products''}, Academic Press, New York, 2015.
+\bibitem{AWH} G.B.~Arfken, H.J.~Weber, and F.E.~Harris, {\it ``Mathematical methods for physicists''}, Academic Press, Amsterdam, 2013.
+\bibitem{Bronshtein} I.N.~Bronshtein, K.A.~Semendyayev, G.~Musiol, and H.~Muehlig, {\it ``Handbook of mathematics''}, Springer-Verlag, Berlin, Heidelberg, 2007.
+\bibitem{AAR} G.E.~Andrews, R.~Askey, and R.~Roy, {\it ``Special functions''}, Cambridge University Press, Cambridge, 1999.
+\bibitem{Askey} R.~Askey, {\it ``Orthogonal polynomials and special functions''}, SIAM, Philadelphia, Pennsylvania, 1975.
+\bibitem{Brychkov} Yu.A.~Brychkov, {\it ``Special function -- Derivatives, integrals, series and other formulas''}, CRC Press, Boca Raton, 2008.
+\bibitem{Erdelyi} The Bateman manuscript project, A.~Erdélyi (ed.){\it ``Higher transcendental functions''}, R.E.~Krieger Publishing Co., Malabar, FL., 1953.
+\bibitem{Lebedev} N.N.~Lebedev, {\it ``Special functions and their applications''}, Prentice-Hall Inc., Englewood Cliffs, NJ, 1965.
+\bibitem{MO} W.~Magnus, F.~Oberhettinger, and R.P.~Soni, {\it ``Formulas and theorems for the special functions of mathematical physics''}, Springer-Verlag, Heidelberg, 1966.
+\bibitem{Olver} F.W.J.~Olver, {\it ``Asymptotics and special functions''}, Academic Press, New York, 1974.
+\bibitem{Prud} A.P.~Prudnikov, Yu.A.~Brychkov, and O.I.~Marichev, {\it ``Integrals and series, vol.\ 2, Special functions''}, Gordon and Breach Science Publishers, New York, London, 1986.
+\bibitem{SL} S.Yu.~Slavyanov and W.~Lay, {\it ``Special functions -- A unified treatment based on singularities''}, Oxford University Press, Oxford, 2000.
+\bibitem{Sz} G.~Szegő, {\it ``Orthogonal polynomials''}, AMS, Providence, Rhode Island, 1939.
+\bibitem{Wolfram} Wolfram Mathematica, see \url{http://www.wolfram.com/}, see also \url{http://functions.wolfram.com} and \url{http://mathworld.wolfram.com/}.
+\bibitem{PZ} A.M.~Perelomov and Ya.B.~Zeldovich, {\it ``Quantum mechanics -- Selected topics''}, World Scientific, Singapore, 1998.
+\bibitem{Flugge} S.~Flügge, {\it ``Practical quantum mechanics''}, Springer-Verlag, Berlin, Heidelberg, 1999.
+\bibitem{Mahan} G.D.~Mahan, {\it ``Quantum mechanics in a nutshell''}, Princeton University Press, Princeton and Oxford, 2009.
+\bibitem{LL} L.D.~Landau and E.M.~Lifshitz, {\it ``A course of theoretical physics, vol.\ 3.: Quantum mechanics -- Non-relativistic theory''}, Pergamon Press, Oxford, 1977.
+\bibitem{Blokhintsev} D.I.~Blokhintsev, {\it ``Quantum mechanics''}, D.~Reidel, Dordrecht, Holland, 1964.
+\bibitem{DBohm} D.~Bohm, {\it ``Quantum theory''}, Prentice-Hall Inc., Englewood Cliffs, 1951.
+\bibitem{Sakurai} J.J.~Sakurai and J.~Napolitano, {\it ``Modern quantum mechanics''}, Addison-Wesley, Boston, 2011.
+\bibitem{CH} R.~Courant and D.~Hilbert, {\it ``Methods of mathematical physics''}, Interscience Publishers, New York, 1953.
+\bibitem{ABohm} A.~Bohm, {\it ``Quantum mechanics -- Foundations and applications}, Springer-Verlag, New York, 1993.
+\bibitem{Schiff} L.I.~Schiff, {\it ``Quantum mechanics''}, McGraw-Hill Book Co., New York, 1968.
+\bibitem{MF} P.M.~Morse and H.~Feshbach, {\it ``Methods of theoretical physics''}, McGraw-Hill Book Co., New York, 1953.
+\bibitem{Griffiths} D.J.~Griffiths, {\it ``Introduction to quantum mechanics''}, Prentice-Hall, Upper Saddle River, NJ, 1995.
+\bibitem{Messiah} A.~Messiah, {\it ``Quantum mechanics''}, Noth-Holland Publishing Co., Amsterdam, 1961.
+\bibitem{Merzbacher} E.~Merzbacher, {\it ``Quantum mechanics''}, John Wiley and Sons, New York, 1970.
+\bibitem{Shankar} R.~Shankar, {\it ``Principles of quantum mechanics''}, Plenum, New York, 1994.
+\bibitem{BF} D.W.~Byron, Jr.\ and R.W.~Fuller, {\it ``Mathematics of classical and quantum physics, vol. I''}, Addison-Wesley, Reading, Mass., 1969.
+\bibitem{Baym} G.~Baym, {\it``Lectures on quantum mechanics''}, W.A.~Benjamin Inc., New York, 1969.
+\bibitem{Fock} V.A.~Fock, {\it ``Fundamentals of quantum mechanics''}, Mir, Moscow, 1978.
+\bibitem{S} W.I.~Smirnow, {\it ``Lehrgang der höheren Mathematik, Teil III,2''}, VEB Deutscher Verlag der Wissenschaften, Berlin, 1963.
+\bibitem{Takhtadjan} L.A.~Takhtadjan, {\it ``Quantum mechanics for mathematicians''}, AMS, Providence, Rhode Island, 2008.
+\bibitem{FM} Ph.~Frank and R.~von~Mises~(eds.), {\it ``Die Differential- und Integralgleichungen der Mechanik und Physik''}, Vieweg, Braunschweig, 1961.
+\end{thebibliography}
+
+
+\end{document}
+
+\section{D.~Bohm, Sakurai, A.~Bohm}
+Refs.\ \cite{DBohm, Sakurai} gives the following formulae,
+\begin{equation}\label{eq:SAGeneralized}
+ {\tilde L}_n^m(x) = \frac{\d^m}{\d x^m}{\tilde L}_n(x)\,,
+\end{equation}
+and
+\begin{equation}\label{eq:SARodrigues}
+ {\tilde L}_n(x) = \e^x \frac{\d^n}{\d x^n} (\e^{-x} x^n)\,.
+\end{equation}
+Note, that the latter agrees with the Rodrigues formula used by Ref.\ \cite{LL}, and differs from the one in Sec.\ \ref{sec:AbrSteg} by the lack of a normalisation $1/n!$, therefore,
+\begin{equation}
+ \label{eq:Sidentify1}
+ {\tilde L}_n (x) = n! L_n(x)\,,\quad\quad L_n(x) = {\tilde L}_n(x)/n!\,,
+\end{equation}
+and comparing with Eq.\ (\ref{eq:Generalized}), we obtain
+\begin{equation}
+ \label{eq:Sidentify}
+ {\tilde L}_n^m = (-1)^m (n-m)! L_{n-m}^m (x)\,,\quad L_n^m(x) = (-1)^m L_{n+m}^m (x)/(n+m)!\,.
+\end{equation}
+This agrees with the notations used by Ref.\ \cite{LL}, see Eq.\ (\ref{eq:LLidentify}).
+
+Ref.\ \cite{ABohm} gives the Rodrigues formula in the form
+\begin{equation}
+ \label{eq:SCHRodrigues}
+ {\tilde L}_n^m (x) = \frac{\d^m}{\d x^m} \e^n \frac{\d^n}{\d x^n} (\e^{-x}x^n)\,,
+\end{equation}
+equivalent with Eqs.\ (\ref{eq:SAGeneralized}) and (\ref{eq:SARodrigues}).
+
+
+%\section{Messiah}
+%
+%\section{Diu, Cohen-Tannoudji, and Lalo\"e}
+
+\section{Courant and Hilbert}
+Ref.\ \cite{CH} introduces Laguerre polynomials with the Rodrigues formula,
+\begin{equation}
+ \label{eq:CHRodrigues}
+ {\tilde L}_n(x) = \e^x \frac{\d^n}{\d x^n}(\e^{-x}x^n)\,,
+\end{equation}
+and the generalised Laguerre polynomials with
+\begin{equation}
+ \label{eq:CHGeneralized}
+ {\tilde L}_n^m = \frac{\d^m}{\d x^m}L_n(x)\,.
+\end{equation}
+Comparison of Eqs.\ (\ref{eq:CHRodrigues}) and (\ref{eq:Rodrigues}), and Eqs.\ (\ref{eq:Generalized}) and (\ref{eq:CHGeneralized}) yields
+\begin{equation}
+ \label{eq:CHidentify}
+ \begin{aligned}
+ {\tilde L}_n(x) &= n! L_n(x)\,,\quad\quad\quad\quad\quad\quad L_n(x) = \frac{{\tilde L}_n(x)}{n!}\,,\\
+ {\tilde L}n^m(x) &= n! (-1)^m L_{n-m}^m(x)\,, \quad\quad L_n^m(x) = \frac{(-1)^m}{(n+m)!}{\tilde L}_{n+m}^m(x)\,,
+ \end{aligned}
+\end{equation}
+i.e., the conventions of Refs.\ \cite{CH} and \cite{LL} agree.
