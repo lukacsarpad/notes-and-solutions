@@ -1,0 +1,16 @@
+texlive
+texlive-base
+texlive-binaries
+texlive-font-utils
+texlive-fonts-extra
+texlive-fonts-extra-links
+texlive-fonts-recommended
+texlive-lang-european
+texlive-latex-base
+texlive-latex-extra
+texlive-latex-recommended
+texlive-pictures
+texlive-plain-generic
+texlive-publishers
+lacheck
+
