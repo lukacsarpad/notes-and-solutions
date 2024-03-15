@@ -1,0 +1,60 @@
+name: ci_deploy
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  DeployCV:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          xargs -a packages.txt sudo apt-get install
+      - name: latex-geomphys
+        working-directory: ./geomphys
+        run: |
+          pdflatex geomphys.tex
+          pdflatex geomphys.tex
+          pdflatex geomphysh.tex
+          pdflatex geomphysh.tex
+      - name: Checkout Webpage
+        uses: actions/checkout@v2
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.TOKEN_TO_WEBPAGE }}
+        with:
+          repository: lukacsarpad/lukacsarpad.github.io
+          path: ./githubpage
+          ref: deploy
+      - name: Copy files
+        working-directory: ./githubpage
+        run: |
+          echo "ls -lR"
+          ls -lR
+          echo "ls -lR .."
+          ls -lR ..
+          mkdir -p notes
+          cp ../geomphys/geomphys.pdf notes
+          cp ../geomphys/geomphysh.pdf notes
+          echo "ls -lR after"
+          ls -lR
+      - name: Deploy to page
+        uses: cpina/github-action-push-to-another-repository@target-branch
+        env:
+#          API_TOKEN_GITHUB: ${{ secrets.TOKEN_TO_WEBPAGE }}
+          SSH_DEPLOY_KEY: ${{ secrets.KEY_TO_WEBPAGE }}
+        with:
+          source-directory: githubpage/
+          destination-repository-name: lukacsarpad.github.io
+          target-branch: "deploy"
+          destination-github-username: "lukacsarpad"
+          user-email: "lukacs.arpad@gmail.com"
+          commit-message: "updated documents"
