@@ -29,8 +29,8 @@ jobs:
       - name: latex-stat
         working-directory: ./stat
         run: |
-          pdflatex barrow.tex
-          pdflatex barrow.tex
+          pdflatex barlow.tex
+          pdflatex barlow.tex
       - name: latex-clfields
         working-directory: ./ClField
         run: |
@@ -60,7 +60,7 @@ jobs:
           cp ../geomphys/geomphys.pdf notes
           cp ../geomphys/geomphysh.pdf notes
           cp ../ClField/clfields.pdf notes
-          cp ../stat/barrow.pdf notes
+          cp ../stat/barlow.pdf notes
           cp ../laguerre/laguerre.pdf notes
           cp ../compscal/compscal.pdf notes
           echo "ls -lR after"
