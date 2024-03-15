@@ -1,0 +1,558 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+%\usepackage[T1]{fontenc}
+\usepackage{floatflt}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{slashed}
+%\usepackage{showkeys}
+\usepackage{hyperref}
+\usepackage{ifthen}
+\usepackage{subcaption}
+\usepackage{epstopdf}
+
+
+
+\hoffset=-5.0mm
+\voffset=-1.9mm
+%
+\evensidemargin=0cm
+\oddsidemargin=0cm
+\topmargin=0cm%
+\headheight=0cm%
+\headsep=0cm%
+\marginparsep=0cm%
+\marginparwidth=0cm%
+\textheight=24cm
+\textwidth=17cm
+\special{papersize=210mm,297mm}%
+
+\def\d{\mathrm{d}}
+\def\e{\mathrm{e}}
+\def\imagi{\mathrm{i}}
+\def\ellop{\mathop{{\sf L}}}
+\def\forrasfile#1{ (see {\tt #1})}
+\def\lag{{\mathcal{L}}}
+\def\lap{\mathop{\Delta}}
+\def\kihagy#1{}
+\def\sn{\mathop{\text{sn}}}
+\def\cn{\mathop{\text{cn}}}
+\def\dn{\mathop{\text{dn}}}
+\def\zb{\ensuremath{\bar{z}}}
+\def\sign{\mathop{\text{sign}}}
+\def\xii#1{\xi^{(#1)}}
+\def\xij#1#2{{\xi^{(#1)}_{#2}}}
+\def\op#1{{\sf #1}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\renewcommand\Re{\mathop{\text{Re}}}
+\renewcommand\Im{\mathop{\text{Im}}}
+\def\Tr{\ensuremath{\mathop{\rm Tr}}}
+\def\pa{\partial}
+
+
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{DOI: #1}}%
+\newcommand{\doix}[2]{\href{http://dx.doi.org/#2}{#1}}%
+\newcommand{\arxiv}[2][]{%
+  \ifthenelse{\equal{#1}{}}{%
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2}}%
+  }{%
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2 [#1]}}%
+  }%
+}%
+
+
+%opening
+\title{Some notes on classical fields}
+\author{Árpád Lukács}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+In this note we shall be concerned with the basics of classical field theory. The starting point will be to extend Par.\ 32 of Ref.\ \cite{LL2} to include the spin tensor, conservation of angular-momentum and the Belinfante-Rosenfeld procedure, following Ref.\ \cite{wentzel}. For Dirac matrix notations, we follow Ref.\ \cite{BD, itzykson}
+
+We shall assume that the fields $\phi_a$ (this may include components of vectors, covectors, tensors, spinors, etc.) satisfy field equations stemming from the principle of least action, with an action as the integral of the Lagrangian,
+\begin{equation}\label{eq:action}
+ S = \int \d^d x \lag\,, \lag=\lag(\partial_\mu \phi_a, \phi_a)\,,
+\end{equation}
+and in what follows, exploit the symmetries of the action.
+
+The field equations are derived using the usual procedure, of demanding that the functional derivative of the action $S$ vanish. The latter is obtained by adding a small variation to the fields, $\delta\phi_a$, and calculating the linear contribution to $S$, $\delta S$, performing partial integration, and dropping boundary terms, yielding
+\begin{equation}\label{eq:fieldeq}
+ \partial_\mu \overline{\frac{\partial \lag}{\partial \partial_\mu \phi_a}} = \overline{\frac{\partial\lag}{\partial \phi_a}}\,.
+\end{equation}
+Eq.\ (\ref{eq:fieldeq}) holds for all $a$.
+
+Note about notation: we shall use the conventions of Ref.\ \cite{LL2}, with the role of Greek and Latin indices reversed. The metric is $\mathop{\rm diag}(+,-,-,-)$ and Greek indices run from 0 to $d-1$. The index $a$ in Eq.\ (\ref{eq:fieldeq}) runs over all field components, but we shall also use latin indices running over $1,\dots, d-1$ (spatial dimensions).
+
+Another useful notation that is usually omitted in Eq.\ (\ref{eq:fieldeq}) is the overline. Here, it denotes taking the composition of the function with a solution of the field equations, e.g.,
+\begin{equation}
+ \overline\lag = \lag(\partial_\mu \phi_a, \phi_a)\,,
+\end{equation}
+which, in a modern mathematical notation would be $\overline{\lag} = \lag \circ(D\phi,\phi)$, and for Eq.\ (\ref{eq:fieldeq}),
+\begin{equation}\label{eq:fieldeqBourbaki}
+ D [ D_1 \lag \circ (D\phi, \phi)] = D_2 \lag \circ (D\phi, \phi)\,.
+\end{equation}
+
+
+
+\section{Internal symmetries}\label{sec:int}
+Let us first demonstrate how internal symmetries yield conservation laws. Internal symmetries are symmetries that transform the field $\phi_a$ in such a way, that the new field values only depend on the old ones at the same point. 
+
+We shall demonstrate here, how to each one-parameter subgroup of the internal symmetries of the theory corresponds a conserved current. An element of a one parameter subgroup, corresponding to a small parameter $\epsilon$ transforms the fields as
+\begin{equation}\label{eq:IntSP}
+ \delta \phi_a = \epsilon M_a{}^b \phi_b\,,
+\end{equation}
+and what we shall do is assume that the Lagrangian is invariant under the transformation. Let us now take the derivative,
+\begin{equation}\label{eq:DLIS}
+ 0=\partial_\epsilon \overline{\lag}=M_a{}^b\left[\overline{\frac{\partial{\lag}}{\partial\partial_\lambda\phi_a} }\partial_\lambda\phi_b + \overline{\frac{\partial\lag}{\partial\phi_a}}\phi_b\right] = M_a{}^b \partial_\lambda\left[\overline{\frac{\partial{\lag}}{\partial\partial_\lambda\phi_a}}\phi_b\right]=\partial_\lambda J^\lambda\,,
+\end{equation}
+where we have used the field equations (\ref{eq:fieldeq}) in the last step;
+\begin{equation}\label{eq:JIS}
+ J^\mu = M_a{}^b\overline{\frac{\partial{\lag}}{\partial\partial_\lambda\phi_a}}\phi_b\,.
+\end{equation}
+
+Conservation of the current: consider the integral
+\begin{equation}\label{eq:Jcons}
+ Q = \int \d^3 x Q^0\,, \dot{Q} = \int \d^2 x \dot{Q^0} = -\int\d^3 x \partial_i J^i = 0\,,
+\end{equation}
+which is seen by using Gauss' theorem to turn the last integral into a surface integral over a large sphere, and assuming that the fields vanish far away.
+
+
+\section{Canonical energy momentum tensor}\label{sec:EMcan}
+The canonical energy-momentum tensor is derived from the fact that the Lagrangian does not depend \emph{explicitly} on the position. This means, that of course, $\overline{\lag}$ does depend on time, but $\lag$ itself not, i.e., it is a two-variable function (one variable is to be replaced by $\partial_\mu\phi_a$ and one by $\phi_a$), i.e., $\overline{\lag}=\lag(\partial_\mu\phi_a, \phi_a)$ and not $\lag(\partial_\mu\phi_a, \phi_a, x)$. Therefore, we may calculate the derivative of $\overline{\lag}$ as follows,
+\begin{equation}\label{eq:DST}
+ \partial_\mu \overline{\lag} = \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}} \partial_\mu\partial_\lambda\phi_a + \overline{\frac{\partial\lag}{\partial\phi_a}}\partial_\mu \phi_a = 
+ \partial_\lambda\left[ \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}} \partial_\mu\phi_a\right]\,,
+\end{equation}
+or, brought on one side,
+\begin{equation}\label{eq:DST0}
+ 0 =  \partial_\lambda\left[ \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}} \partial_\mu\phi_a -\delta^\lambda_\mu \overline{\lag}\right] =\partial_\lambda\Theta^\lambda{}_\mu\,,
+\end{equation}
+where the latter is the canonical stress-energy (or energy-momentum) tensor,
+\begin{equation}\label{eq:EMcan}
+ \Theta^\mu{}_\nu = \overline{\frac{\partial\lag}{\partial\partial_\mu\phi_a}} \partial_\nu\phi_a -\delta^\mu_\nu \overline{\lag}\,.
+\end{equation}
+
+The interpretation of $\Theta^\mu{}_\nu$ is that there are a set of conserved quantities,
+\begin{equation}\label{eq:momcons}
+ P_\mu = \int \d^3 x \Theta^0{}_\mu\,,
+\end{equation}
+which are interpreted as energy and momentum. The conservation is shown the same way as for the charge, see eq.\ (\ref{eq:Jcons}) in sec.\ \ref{sec:int}.
+
+\section{Angular momentum and spin}\label{eq:angmom}
+We shall consider angular momentum, or more generally, the conserved quantities corresponding to Lorentz invariance of the action. Angular momentum is the part of the result corresponding to rotations.
+
+To proceed we must first consider the change of fields upon applying a Lorentz transformation. First, scalars, vectors, tensors, {\sl etc.}.
+
+What is a Lorentz transformation? A transformation of Minkowski space that preserves the scalar product, i.e.,
+\begin{equation}\label{eq:Lorentz}
+ x^\mu{}'=\Lambda^\mu_\nu x^\nu\,,\quad x_1^\mu{}' x_{2,\mu}' = x_1^\mu x_{2,\mu}\,,
+\end{equation}
+or, introducing the metric, $g={\rm diag}(+,-,-,-)$, a transformation such that
+\begin{equation}\label{eq:Lorentz2}
+ g_{\mu\nu}\Lambda^\mu{}_\sigma \Lambda^\nu{}_\rho = g_{\sigma\rho}\,.
+\end{equation}
+Consider now an ``infinitesimal'' Lorentz transformation, i.e., one for which
+\begin{equation}\label{eq:InfiLorentz}
+ \Lambda^\mu_\nu = \delta^\mu_\nu + \omega^\mu_\nu + \dots\,,
+\end{equation}
+and expand the condition (\ref{eq:Lorentz2}), yielding
+\begin{equation}\label{eq:InfiLorentz2}
+ \omega_{\mu\nu}+\omega_{\nu\mu} = 0\,,
+\end{equation}
+i.e., ``infinitesimal'' Lorentz transformations are obtained by raising one index of an antisymmetric matrix.
+
+On some indexed quantities, Lorentz transformations are represented, i.e., they may act linearly,
+\begin{equation}\label{eq:rep}
+ v_a' = D_a{}^b(\Lambda)v_b\,,
+\end{equation}
+and, for infinitesimal transformations, this may again be expanded,
+\begin{equation}
+ \delta v_a = \omega_{\mu\nu}D^{\mu\nu}{}_a{}^b v_b\,,
+\end{equation}
+where the $D$ may be chosen such that it is antisymmetric in the indices $\mu$ and $\nu$.
+
+Of course, for scalars $D^{\mu\nu} = 0$.
+
+Let us determine this matrix for a vector! We already know how a vector transforms, just need to factor $\omega_{\mu\nu}$:
+\begin{equation}\label{eq:vectrf}
+ \delta v^\alpha = \omega^\alpha{}_\beta v^\beta = g^{\alpha\mu}\omega_{\mu\nu}\delta^\nu_\beta v^\beta = \omega_{\mu\nu}\frac{1}{2}\left( g^{\mu\alpha}\delta^\nu_\beta - g^{\nu\alpha}\delta^\mu_\beta\right) v^\beta\,,
+\end{equation}
+and we may conclude that
+\begin{equation}\label{eq:DefRep}
+ D^{\mu\nu\alpha}{}_\beta = \frac{1}{2}\left( g^{\mu\alpha}\delta^\nu_\beta - g^{\nu\alpha}\delta^\mu_\beta\right)\,,
+\end{equation}
+which is also termed the \emph{defining representation} of the Lorentz group.
+
+For Dirac spinors,
+\begin{equation}\label{eq:DiracRep}
+ D^{\mu\nu}_{\rm D}\psi = -\frac{\imagi}{4} \sigma^{\mu\nu}\psi\,,
+\end{equation}
+where $\sigma^{\mu\nu}=(\imagi/2)[\gamma^\mu,\gamma^\nu]=(\imagi/2)(\gamma^\mu\gamma^\nu-\gamma^\nu\gamma^\mu)$, and $[,]$ denotes the commutator, $\{,\}$ the anticommutator, and $\gamma^{\mu}$ the Dirac matrices, i.e., four $4\times 4$ matrices that satisfy $\{\gamma^\mu,\gamma^\nu\}=2g^{\mu\nu}$.
+
+For the adjoint Dirac spinor, $\bar{\psi}=\psi^\dagger \gamma^0$, using the usual normalisation of the Dirac matrices, $\gamma^{\mu\dagger}=\gamma^0 \gamma^\mu \gamma^0$, we obtain
+\begin{equation}\label{eq:AdjDiracRep}
+ D^{\mu\nu}_{\rm aD} \bar{\psi} = \frac{\imagi}{4}\bar{\psi} \sigma^{\mu\nu}\,.
+\end{equation}
+
+
+The transformation of \emph{fields} is calculated from their tensorial character and space-time dependece,
+\begin{equation}\label{eq:fieldtrf}
+ \phi_a(x') ' = D_a{}^b(\Lambda) \phi_b(x)\,,
+\end{equation}
+which may be linearised to yield
+\begin{equation}\label{eq:InfFieldtrf}
+ \delta \phi_a = \omega_{\mu\nu}\left[ D^{\mu\nu}{}_a{}^b \phi_b - D^{\mu\nu\alpha}{}_{\beta}x^\beta \partial_\alpha \phi_a \right]\,.
+\end{equation}
+
+Let us now turn to deriving the quantities corresponding to Lorentz invariance of the action (\ref{eq:action}). Lorentz invariance is manifested by the fact, that the Lagrangian is a scalar,
+\begin{equation}\label{eq:LorentzDeltaL}
+ \delta\lag = -\omega_{\mu\nu}D^{\mu\nu\alpha}{}_\beta x^\beta \partial_\alpha\overline{\lag}\,.
+\end{equation}
+On the other hand, we may use the chain rule, yielding
+\begin{equation}\label{eq:LorentzDeltaLChain}
+\begin{aligned}
+ \delta\lag &= \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\delta\partial_\lambda\phi_a + \overline{\frac{\partial\lag}{\partial\phi_a}}\delta\phi_a\\
+ &= 
+ \omega_{\mu\nu}\left[\overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}} \left( D^{\mu\nu}{}_a{}^b \partial_\lambda\phi_b -D^{\mu\nu\alpha}{}_\beta x^\beta \partial_\alpha \partial_\lambda\phi_a + D^{\mu\nu}{}_\lambda{}^\beta \partial_\beta \phi_a\right)
+ \right.\\
+ &\quad\quad\left.
+ +\overline{\frac{\partial\lag}{\partial\phi_a}}\left(D^{\mu\nu}{}_a{}^b \phi_b-D^{\mu\nu\alpha}{}_\beta x^\beta\partial_\alpha \phi_a\right)
+ \right] \\
+ &= \omega_{\mu\nu}\left[-D^{\mu\nu\alpha}{}_\beta x^\beta \partial_\lambda \left( \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\partial_\alpha\phi_a\right)+D^{\mu\nu}{}_a{}^b \partial_\lambda \left( \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\phi_b\right)\right]\,.
+\end{aligned}
+\end{equation}
+Let us now take the difference of eqs.\ (\ref{eq:LorentzDeltaL}) and (\ref{eq:LorentzDeltaLChain}), yielding
+\begin{equation}\label{eq:LorentzDeltaL0}
+\begin{aligned}
+ 0 &= \omega_{\mu\nu}\left[-D^{\mu\nu\alpha}{}_\beta x^\beta \partial_\lambda \left( \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\partial_\alpha\phi_a-\delta^\lambda_\alpha \overline{\lag}\right)
+ %
+ +D^{\mu\nu}{}_{\alpha}{}^\beta \overline{\frac{\partial\lag}{\partial\partial_\alpha\phi_a}}\partial_\beta \phi_a
+ %
+ +D^{\mu\nu}{}_a{}^b \partial_\lambda \left( \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\phi_b\right)\right]\,,\\
+ &=\omega_{\mu\nu}\left[
+ \frac{1}{2} D^{\mu\nu}{}_{\alpha\beta}\left( x^\alpha \partial_\lambda \Theta^{\lambda\beta}-x^\beta\Theta^{\lambda\alpha}+\Theta^{\alpha\beta}-\Theta^{\beta_\alpha}\right)
+ +D^{\mu\nu}{}_a{}^b \partial_\lambda \left( \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\phi_b\right)
+ \right]\\
+ &= \omega_{\mu\nu}\frac{1}{2}\partial_\lambda \left(M^{\lambda\mu\nu}_{\rm o}+S^{\lambda\mu\nu}\right)\,,
+ \end{aligned}
+\end{equation}
+where we noticed, that the first expression in round brackets is the canonical stress-energy tensor $\Theta^\lambda{}_\alpha$! Next, we have raised and lowered indices to factorise the $D^{\mu\nu}{}_{\alpha\beta}$, and antisymmetrised. The resulting tensors $M_{\rm o}$ and $S$ are the \emph{orbital angular momentum} and \emph{spin} tensors, respectively. Here
+\begin{equation}\label{eq:OrbAM}
+ M_{\rm o}^{\lambda\mu\nu} = D^{\mu\nu}{}_{\alpha\beta}\left(x^\alpha\Theta^{\lambda\beta}-x^\beta\Theta^{\lambda\alpha}\right) = x^\mu \Theta^{\lambda\nu} - x^\nu\Theta^{\lambda\mu}\,,
+\end{equation}
+which is interpreted as orbital angular momentum density, as from eq.\ (\ref{eq:EMcan}), $\Theta^{0\mu}$ is interpreted as momentum density, and therefore $x^\mu\Theta^{0\nu}- x^\nu\Theta^{0\mu}$ is orbital angular momentum. The other term in the angular momentum is spin,
+\begin{equation}\label{eq:SpinAM}
+ S^{\lambda\mu\nu} = 2D^{\mu\nu}{}_a{}^b \overline{\frac{\partial\lag}{\partial\partial_\lambda\phi_a}}\phi_b\,.
+\end{equation}
+For future reference, we note that $S^{\lambda\mu\nu}=-S^{\lambda\nu\mu}$,
+and
+\begin{equation}\label{eq:DivSAM}
+ \partial_\lambda S^{\lambda\mu\nu} =-\partial_\lambda M_{\rm o}^{\lambda\mu\nu}= 
+ -\left( \Theta^{\mu\nu} - \Theta^{\nu\mu}\right)\,.
+\end{equation}
+We also introduce the notion of the total angular momentum density,
+\begin{equation}\label{eq:AM}
+ M^{\lambda\mu\nu} = M_{\rm o}^{\lambda\mu\nu}+S^{\lambda\mu\nu}\,,
+\end{equation}
+which is conserved, from eq.\ (\ref{eq:LorentzDeltaL0}),
+\begin{equation}\label{eq:AMcons}
+\partial_\lambda M^{\lambda\mu\nu} = 0\,.
+\end{equation}
+
+
+
+\section{Symmetrised stress-energy tensor}
+We now intend to construct the Belinfante-Rosenfeld symmetric stress-energy tensor, following Ref.\ \cite{wentzel}. This tensor should satisfy the following criteria: (i) its integral should be the momentum
+\begin{equation}\label{eq:BRc1}
+ \int T^{0\mu}\d^3 x = P^\mu = \int \Theta^{0\mu} \d^3 x\,,
+\end{equation}
+(ii) it should be symmetric,
+\begin{equation}\label{eq:BRc2}
+ T^{\mu\nu} = T^{\nu\mu}\,
+\end{equation}
+and (iii) it should be conserved,
+\begin{equation}\label{eq:BRc3}
+ \partial_\mu T^{\mu\nu} = 0\,.
+\end{equation}
+
+We can fulfill the first condition, eq.\ (\ref{eq:BRc1}) if the Belinfante-Rosenfeld tensor differs from the canonical stress-energy tensor by a four-divergence,
+\begin{equation}\label{eq:BRc1sol}
+ T^{\mu\nu} = \Theta^{\mu\nu}+ \partial_\lambda \psi^{\lambda\mu\nu}\,.
+\end{equation}
+%As our aim is to symmetrise $\Theta$, we may assume $\psi^{\lambda\mu\nu} = -\psi^{\lambda\nu\mu}$. -- lófaszt.
+
+If eq.\ (\ref{eq:BRc1sol}) holds, the integral of $\partial\psi$ in eq.\ (\ref{eq:BRc1}) is a surface term, which vanishes if the fields decay rapidly enough. Eq.\ (\ref{eq:BRc2}) is satisfied if
+\begin{equation}\label{eq:BRc2sol}
+\partial_\lambda \left(\psi^{\lambda\mu\nu}-\psi^{\lambda\nu\mu}\right) = -\left(\Theta^{\mu\nu}-\Theta^{\nu\mu}\right)\,.
+\end{equation}
+
+Conservation of $T^{\mu\nu}$, eq.\ (\ref{eq:BRc3}), holds, as $\Theta^{\mu\nu}$ is conserved [see eq.\ (\ref{eq:momcons})], if
+\begin{equation}\label{eq:BRc3a}
+ \partial_\mu\partial_\lambda \psi^{\lambda\mu\nu} = 0\,,
+\end{equation}
+which may be guaranteed if
+\begin{equation}\label{eq:BRc3sol}
+ \psi^{\lambda\mu\nu} = -\psi^{\mu\lambda\nu}\,.
+\end{equation}
+
+Let us notice, that eq.\ (\ref{eq:BRc2sol}) is satisfied if
+\begin{equation}\label{eq:BRc2sol2}
+ \psi^{\lambda\mu\nu}-\psi^{\lambda\nu\mu} = S^{\lambda\mu\nu}\,,
+\end{equation}
+and this, together with antisymmetry in the first two indices, determines $\psi$ uniquely,
+\begin{equation}\label{eq:BRsol}
+ \psi^{\lambda\mu\nu} = \frac{1}{2}\left(S^{\lambda\mu\nu} -S^{\mu\lambda\nu}+S^{\nu\mu\lambda}\right)\,.
+\end{equation}
+
+
+It is possible to introduce an angular momentum density using the symmetrised stress-energy tensor $T^{\mu\nu}$ as
+\begin{equation}\label{eq:angmomBR}
+ M^{\lambda\mu\nu}_{\rm BR} = x^\mu T^{\lambda\nu} - x^\nu T^{\lambda\mu}\,.
+\end{equation}
+The difference between $M^{0\mu\nu}_{\rm BR}$ and $M^{0\mu\nu}$ is $\partial_\lambda(x^\mu \psi^{\lambda0\nu} - x^\nu \psi^{\lambda0\mu})$, using the atisymmetry of $\psi$ in the first two indices, this is seen to be a surface term, therefore, the angular momentum densities (\ref{eq:angmomBR}) and (\ref{eq:AM}) yield the same integrated angular momentum, provided that the fields decay rapidly enough at large distances.
+
+
+\section{Applications}\label{sec:appl}
+\subsection{Real scalar field}\label{ssec:scalar}
+A real scalar field interacting with a source $\sigma$ is described by the Klein-Gordon Lagrangian
+\begin{equation}\label{eq:LagSc}
+ \lag_{\rm KG} = \frac{1}{2}\partial_\mu \phi \partial^\mu \phi -\frac{1}{2}m_s^2 \phi^2 -\sigma\phi\,.
+\end{equation}
+The field equation is the Klein-Gordon equation,
+\begin{equation}\label{eq:KGe}
+ \partial_\mu \partial^\mu \phi + m_s^2 \phi = -\sigma\,.
+\end{equation}
+In this case, the spin tensor vanishes, and the canonical energy-momentum tensor is symmetric,
+\begin{equation}\label{eq:EMcanSc}
+ T^\mu_{\rm KG}{}_\nu = \Theta^\mu_{\rm KG}{}_\nu =\partial^\mu \phi \partial_\nu \phi - \delta^\mu_\nu \lag_{\rm KG}\,,
+\end{equation}
+and the spin tensor vanishes, $S^{\lambda\mu\nu}_{rm KG} = 0$.
+
+
+\subsection{Complex scalar field}\label{ssec:cscalar}
+A complex scalar field may be considered simply two real ones with a global $U(1)=SO(2)$ symmetry, $\phi=\phi_1+\imagi\phi_2$, and therefore, its Lagrangian is also just the sum of the Lagrangians of the two componets, which may be written as
+\begin{equation}\label{eq:LagCSc}
+ \lag_{\rm cs}=\partial_\mu \phi^* \partial^\mu\phi -m_s^2 \phi^*\phi-\sigma\phi^*-\sigma^*\phi\,.
+\end{equation}
+Equations of motion are derived with the usual fashion, or, by using Wirtinger calculus, often referred to as ``treating $\phi$ and $\phi^*$ as independent variables'',  defining $\partial/\partial\phi = (\partial/\partial\phi_1 - \imagi\partial/\partial\phi_2)/2$ and $\partial/\partial\phi^* = (\partial/\partial\phi_1 + \imagi\partial/\partial\phi_2)/2$, and using these for variational calculus\footnote{Note, that the condition for complex differentiability, the Cauchy-Riemann relations for a function $f(z)$ may be written as $\partial f(x)/\partial z^*=0$, and, e.g., $|z|^2=z^*z$ is not complex differentiable, but, of course, $\mathbb{R}^2$-differentiable, $\partial (z^*z)/\partial z^*=z$, $\partial (z^*z)/\partial z=z^*$.}, yielding
+\begin{equation}\label{eq:cKGe}
+ \partial_\mu\partial^\mu \phi -m_s^2\phi=-\sigma\,,\quad
+ \partial_\mu\partial^\mu \phi^* -m_s^2\phi^*=-\sigma^*\,.
+\end{equation}
+Again, the canonical and the symmetrised stress-energy tensors agree,
+\begin{equation}\label{eq:EMcanCSc}
+ \Theta^{\mu\nu}_{\rm cs} = T^{\mu\nu}_{\rm cs}= \partial^\mu\phi^*\partial^\nu\phi + \partial^\mu\phi\partial^\nu\phi^*-g^{\mu\nu}\lag_{cs}\,,
+\end{equation}
+which is also the sum of the stress-energy tensors of the components. The only novelty is the conserved current corresponding to the symmetry $\phi\to \e^{i\alpha}\phi$ ($\alpha$ real), under an infinitesimal transformation $\alpha=\epsilon$, $\delta\phi=\imagi\epsilon\phi$, $\delta\phi^*=-\imagi\epsilon\phi^*$, or, $M^._. = \imagi$ $M^*_*=-\imagi$, yielding
+\begin{equation}\label{eq:JISCSc}
+ j_{{\rm cs}\,\mu} = \imagi(\phi\partial_\mu\phi^* - \phi^*\partial_\mu\phi)\,.
+\end{equation}
+
+Let us also consider derivative coupling, we shall couple $j^{{\rm cs}\,\mu}$ to a vector field $A^\mu$, with the interaction Lagrangian $-ej_{{\rm cs}\,\mu}A^\mu+2e^2\phi^*\phi A_\mu A^\mu$. This form corresponds to replacing the partial derivatives in the current (\ref{eq:JISCSc}) with gauge covariant derivatives, and coupling that to $A^\mu$ as $-e A_\mu j^\mu_{{\rm cs}\,\partial \to D}$, where we have introduced the \emph{gauge covariant derivative} $D_\mu \phi = (\partial_\mu-\imagi e A_\mu)\phi$.
+
+In this case, there is an addition to $\Theta^\mu_{{\rm sc}\,\nu}$, $\imagi e A^\mu \phi^*\partial_\nu \phi + c.c.$, yielding an asymmetric canonical energy-momentum tensor,
+\begin{equation}\label{eq:EMcanCScE}
+ \Theta^\mu_{{\rm cs,i}\,\nu} = D^\mu\phi^*\partial_\nu\phi + D^\mu\phi\partial_\nu\phi^* -\delta^\mu_\nu \lag_{\rm cs,i}\,,
+\end{equation}
+where $\lag_{\rm cs,i} = \lag_{\rm cs}-e A_\mu j^\mu_{\rm cs,i}$, and $j^\mu_{\rm cs,i}=j^\mu_{\partial \to D}$.
+
+Taking into account the modification to $\partial_\lambda \psi^{\lambda\mu\nu}$ in the case of the electromagnetic stress-energy tensor, we obtain
+\begin{equation}\label{eq:SymmCSci}
+ T^{\mu\nu}_{\rm cs,i} = D^\mu\phi^* D^\nu\phi + D^\mu\phi D^\nu\phi^* - g^{\mu\nu}\lag_{\rm cs,i}\,,
+\end{equation}
+and for the full system, we need to add $T^{\mu\nu}_{\rm em}$ without the modifications due to the interaction. The same result holds for interaction with massive electrodynamics (Proca field).
+
+
+
+
+
+\subsection{Electrodynamics}\label{ssec:eldyn}
+The Lagrangian of the Maxwell field is
+\begin{equation}\label{eq:LagM}
+ \lag_{\rm em} = -\frac{1}{4}F_{\mu\nu}F^{\mu\nu} -j_\mu A^\mu\,,\quad F_{\mu\nu}=\partial_\mu A_\nu - \partial_\nu A_\mu\,,
+\end{equation}
+where $j^\mu$ is a source vector field, which we shall assume to be conserved, $\partial_\mu j^\mu =0$.
+
+Field equations are Maxwell's equations,
+\begin{equation}\label{eq:Maxwell4}
+ \partial_\mu F^{\mu\nu} = j^\nu\,,\quad\text{or}\quad \partial_\nu F^{\mu\nu}=-j^\mu\,.
+\end{equation}
+The canonical stress-energy tensor is then for pure (source free) Maxwell field ($j^\mu=0$)
+\begin{equation}\label{eq:EMcanM}
+ \Theta^\mu_{\rm em}{}_\nu = -F^{\mu\lambda}\partial_\nu A_\lambda +\frac{1}{4}\delta^\mu_\nu F_{\lambda\rho}F^{\lambda\rho}\,.
+\end{equation}
+For the spin tensor one obtains
+\begin{equation}\label{eq:SpinAMM}
+S^{\lambda\mu\nu}_{\rm em}  = A^\mu F^{\lambda\nu}-A^\nu F^{\lambda\mu}\,.
+\end{equation}
+The Belinfante-Rosenfeld tensor is thus from eq.\ (\ref{eq:BRsol})
+\begin{equation}\label{eq:BRsolM}
+ \psi_{\rm em}^{\lambda\mu\nu} = A^\nu F^{\mu\lambda}\,,
+\end{equation}
+which, when added to the canonical tensor in eq.\ (\ref{eq:EMcanM}) yields
+\begin{equation}\label{eq:SymmM}
+ T^{\mu\nu} = -F^{\mu\lambda}F_{\nu\lambda} +\frac{1}{4}g^{\mu\nu} F_{\lambda\rho}F^{\lambda\rho}\,,
+\end{equation}
+as $\partial_\lambda \psi^{\lambda\mu\nu} = \partial_\lambda A^\nu F^{\mu\lambda}$, as $\partial_\lambda F^{\mu\lambda}=0$ for source-free electromagnetic fields. (Note the typo here in Ref.\ \cite{LL2}.)
+
+In the case when sources are included, $\delta^\mu_\nu j_\lambda A^\lambda$ is added to $\Theta^{\mu}_{\rm em}{}_\nu$ and $-A^\nu j^\mu +g^{\mu\nu} j_\lambda A^\lambda$ to $T^{\mu\nu}_{\rm em}$. (Note, that our calculation was based on the assumption that the Lagrangian is translation-independent, i.e., we are assuming here, that the sources also satisfy some field equations originating from a translation-invariant Lagrangian.)
+
+\subsection{Proca field}\label{ssec:Proca}
+Proca theory is massive electrodynamics, with the Lagrangian
+\begin{equation}\label{eq:LagP}
+ \lag_{\rm P} = -\frac{1}{4}F_{\mu\nu}F^{\mu\nu} +\frac{1}{2}m_A^2 A_\mu A^\mu -j_\mu A^\mu\,,\quad F_{\mu\nu}=\partial_\mu A_\nu - \partial_\nu A_\mu\,,
+\end{equation}
+where $j^\mu$ is a source vector field, which we shall assume to be conserved, $\partial_\mu j^\mu =0$.
+
+The field equations are Maxwell's equations modified by the mass term,
+\begin{equation}\label{eq:Proca4}
+ \partial_\mu F^{\mu\nu} + m_A^2 A^\nu= j^\nu\,,\quad\text{or}\quad \partial_\nu F^{\mu\nu}-m_A^2 A^\mu=-j^\mu\,.
+\end{equation}
+
+The canonical stress-energy tensor is then
+\begin{equation}\label{eq:EMcanP}
+ \Theta^\mu_{\rm P}{}_\nu = -F^{\mu\lambda}\partial_\nu A_\lambda +\frac{1}{4}\delta^\mu_\nu F_{\lambda\rho}F^{\lambda\rho} - \frac{1}{2}\delta^\mu_\nu m_A^2 A_\lambda A^\lambda\,.
+\end{equation}
+The spin tensor is the same as in electrodynamics
+\begin{equation}\label{eq:SpinAMP}
+S^{\lambda\mu\nu}_{\rm P}  = A^\mu F^{\lambda\nu}-A^\nu F^{\lambda\mu}\,,
+\end{equation}
+and, therefore, so is the Belinfante-Rosenfeld tensor,
+\begin{equation}\label{eq:BRsolP}
+ \psi_{\rm em}^{\lambda\mu\nu} = A^\nu F^{\mu\lambda}\,,
+\end{equation}
+which, when added to the canonical tensor in eq.\ (\ref{eq:EMcanP}) yields
+\begin{equation}\label{eq:SymmP}
+ T^{\mu\nu} = -F^{\mu\lambda}F_{\nu\lambda}+m_A^2 A^\mu A^\nu +\frac{1}{4}g^{\mu\nu} F_{\lambda\rho}F^{\lambda\rho}- \frac{1}{2}g^{\mu\nu} m_A^2 A_\lambda A^\lambda\,,
+\end{equation}
+as $\partial_\lambda \psi^{\lambda\mu\nu} = \partial_\lambda A^\nu F^{\mu\lambda}+m_A^2 A^\nu A^\mu$, as $\partial_\lambda F^{\mu\lambda}=m_A^2 A^\lambda$ for source-free electromagnetic fields.
+
+An interesting feature of the energy density of the Proca field is that the coefficient of $A_0^2$ in the canonical energy density $\Theta^{00}$ is negative, $-m_A^2/2$. In the Belinfante-Rosenfeld energy density, $T^{00}$ it is positive $m_A^2/2$. Thus, definiteness of energy (the integral) is proven, ad the integral of the canonical and the symmetrised energy-momentum densities agree. This also shows, that Belinfante-Rosenfeld symmetrisation is not simply algebraic symmetrisation.
+
+
+In the case when sources are included, $\delta^\mu_\nu j_\lambda A^\lambda$ is added to $\Theta^{\mu}_{\rm P}{}_\nu$ and $-A^\nu j^\mu +g^{\mu\nu} j_\lambda A^\lambda$ to $T^{\mu\nu}_{\rm P}$. The remarks when considering interaction terms in Sec.\ \ref{ssec:eldyn} apply here as well.
+
+
+\subsection{Gauge kinetic mixing}\label{ssec:gkm}
+Let us consider now a theory with two gauge fields, $A_1^\mu$, $A_2^\mu$. A possible interaction is the gauge kinetic mixing, proposed in Ref.\ \cite{holdom},
+\begin{equation}\label{eq:laggkm}
+ \lag_{\rm GKM} = \frac{\sin\epsilon}{2}F_{1,\mu\nu}F_2^{\mu\nu}\,,
+\end{equation}
+where $F_{i}$ are the field strenght tensors corresponding to $A_i$ with the usual formulae. We shall assume that the gauge fields both appear in the Lagrangian as $A^\mu$ in Eq.\ (\ref{eq:LagM}).
+
+The canonical stress-energy tensor, in addition to the separate contributions of the two fields receives a contribution
+\begin{equation}\label{eq:EMcanGKM}
+\Theta^\mu_{{\rm GKM}\,\nu}  = \sin\epsilon (F^{\mu\lambda}_1 \partial_\nu A_{2,\lambda} + F^{\mu\lambda}_2 \partial_\nu A_{1,\lambda}) -\delta^\mu_\nu \lag_{\rm GKM}\,.
+\end{equation}
+Similarly, the spin tensor receives the correction
+\begin{equation}\label{eq:SpinGKM}
+ S^{\lambda\mu\nu}_{\rm GKM} = -\sin\epsilon(A^\mu_1 F^{\lambda\nu}_2 -A^\nu_1 F^{\lambda\mu}_2 + (1\leftrightarrow 2))\,.
+\end{equation}
+and
+\begin{equation}\label{eq:BRGKM}
+\psi_{\rm GKM}^{\lambda\mu\nu} = -\sin\epsilon(A^\nu_1 F_2^{\mu\lambda}+A^\nu_2 F_1^{\mu\lambda})\,, 
+\end{equation}
+and, finally,
+\begin{equation}\label{eq:SymmGKM}
+ T^{\mu\nu}_{\rm GKM} = \sin\epsilon ( F^{\mu\lambda}_1 F^\nu_{2,\lambda} +F^{\mu\lambda}_2 F^\nu_{1,\lambda})-g^{\mu\nu}\lag_{\rm GKM}\,.
+\end{equation}
+
+
+
+
+
+
+
+
+
+\subsection{The Dirac field}\label{ssec:Dirac}
+The Dirac field satisfies field quations derived from the Lagrangian
+\begin{equation}\label{eq:LagD}
+ \lag_{\rm D} =\bar{\psi}(\imagi\overleftrightarrow{\slashed{\partial}}-m)\psi\,,
+\end{equation}
+where $\slashed{\partial}=\partial_\mu\gamma^\mu$, $\gamma^\mu$ are the Dirac matrices (in some representation), $\bar\psi=\psi^\dagger\gamma^0$, and $f\overleftrightarrow{\partial_\mu}g = (1/2)(f\,\partial_\mu g-\partial_\mu f\,g)$. In what follows, we shall pay attention not to change ordering of Dirac fields, so that the results remain valid for ordinary spinors and anticommuting fields.
+
+The field equations corresponding to the Lagrangian (\ref{eq:LagD}) are, by varying independently w.r.t.\ $\psi$ and $\psi^\dagger$, using $(\gamma^0)^2=1$,
+\begin{equation}\label{eq:Dirac}
+ (\imagi\slashed{\partial}-m)\psi=0\,,\quad\quad \bar{\psi}(-\imagi\overleftarrow{\slashed{\partial}}-m)=0\,,
+\end{equation}
+where $f\overleftarrow\partial=\partial f$.
+
+The canonical stresss-energy tensor is
+\begin{equation}\label{eq:EMcanD}
+\Theta^\mu_{{\rm D}\nu}= \imagi \bar{\psi} \gamma^\mu \overleftrightarrow{\partial}_\nu\psi -\delta^\mu_\nu \lag_{\rm D}\,.
+ \end{equation}
+Note, that on shell, i.e., using the field equation (\ref{eq:Dirac}), the Lagrangian vanishes.
+ 
+The spin tensor is
+\begin{equation}\label{eq:SpinD}
+ S^{\lambda\mu\nu}_{\rm D} = \frac{1}{4}\bar{\psi}\left\{\sigma^{\mu\nu},\gamma^\lambda\right\}\psi = 2\varepsilon^{\sigma\mu\nu\lambda}\bar{\psi}\gamma_\sigma \gamma^5\psi\,,
+\end{equation}
+where $\gamma^5=\imagi \gamma^0\gamma^1\gamma^2\gamma^3$, and $\epsilon^{\mu\nu\lambda\rho}$ is the fully antisymmetric unit tensor, normalised as $\epsilon^{0123}=1$.
+
+The spin tensor (\ref{eq:SpinD}) yields the Belinfante-Rosenfeld tensor
+\begin{equation}\label{eq:BRsolD}
+ \psi^{\lambda\mu\nu}_{\rm D} = \frac{1}{2}S^{\lambda\mu\nu}_{\rm D}
+\end{equation}
+for the Dirac field, which can be shown, e.g., by using the properties of the $\varepsilon$ tensor.
+
+The calculate the divergence of the Belinfante-Rosenfeld tensor, we write out the anti-commutator, and use the commutator
+\[
+\left[ \sigma^{\mu\nu},\gamma^\lambda \right] = 2\imagi\left( g^{\lambda\nu}\gamma^\mu - g^{\lambda\mu}\gamma^{\nu}\right)
+\]
+in all terms where the $\partial_\lambda$ derivative is not next to $\gamma^\lambda$, and the Dirac and adjoint Dirac equations (\ref{eq:Dirac}), to cancel thos terms, remaining
+\[
+ \partial_\lambda \psi^{\lambda\mu\nu}_{\rm D} = \frac{\imagi}{4}(-\partial^\mu \bar{\psi} \gamma^\nu \psi + \partial^\nu \bar{\psi}\gamma^\mu\psi + \bar{\psi}\gamma^\nu \partial^\mu \psi -  \bar{\psi}\gamma^\mu \partial^\nu \psi)\,,
+\]
+adding which to the canonical stress-energy tensor (\ref{eq:EMcanD}) yields
+\begin{equation}\label{eq:SymmD}
+ T^{\mu\nu}_{\rm D} = \frac{\imagi}{2}\left( \bar{\psi} \gamma^\mu \overleftrightarrow{\partial}{}^\nu \psi + \bar{\psi} \gamma^\nu \overleftrightarrow{\partial}{}^\mu \psi\right)\,.
+\end{equation}
+
+It is also possible to couple the Dirac field to the electromagnetic field via minimal coupling, replacing $\partial_\mu$ by $D_\mu = \partial_\mu -\imagi e A_\mu$ in the Dirac Lagangian (\ref{eq:LagD}). Firstly, this couples the electromagnetic field to the Dirac current,
+\begin{equation}
+j^\mu_{\rm D} = -e \bar{\psi}\gamma^\mu \psi\,,
+\end{equation}
+which is also the Noether current corresponding to the $U(1)$ symmetry of the Lagrangian (\ref{eq:LagD}) w.r.t.\ the transformation $\psi \to \exp(\imagi e \alpha)\psi$, $\bar\psi \to \exp(-\imagi e \alpha)\bar\psi$.
+The interaction Lagrangian is then $\lag_{\rm int} = -j^\mu_{\rm D}A_\mu$.
+
+Due to the fact, that no derivative of the Dirac field is coupled to the electromagnetic potential, the canonical stress-energy tensor (\ref{eq:EMcanD}) is unchanged upon adding the coupling. From the $\partial_\lambda \psi^{\lambda\mu\nu}$ term, a new contribution arises,
+\[
+ T^{\mu\nu}_{\rm D,int} = \frac{1}{2}A^\nu j^\mu_{\rm D}-\frac{1}{2}A^{\mu}j^\nu_{\rm D}\,,
+\]
+which, together with the correction to the same term in the electromagnetic case, $-A^\nu j^\mu$, yieds a symmetric contribution, $-(1/2)(A^\mu j^\nu_{\rm D} + j^\mu_{\rm D}A^\nu)$. The sum agrees with $T^{\mu\nu}_{\rm em}+T^{\mu\nu}_{{\rm D},\partial\to D}$, i.e., replacing derivatives with covariant derivatives in the symmetric Dirac stress-energy tensor (and using $\overleftrightarrow{\slashed{D}} = (\overleftrightarrow{\partial}_\mu -\imagi e A_\mu)\gamma^\mu$).
+
+
+%Quite remarkably, the stress-energy tensor of the interacting Maxwell-Dirac system is
+
+
+
+%using $\partial_\lambda \psi^{\lambda\mu\nu}=(\imagi/2)\partial^\nu \left(\bar{\psi}\gamma^\mu\psi\right)$, deriving which we have used the Dirac equation and its adjoint, eqs.\ (\ref{eq:Dirac}).
+
+
+
+
+
+\begin{thebibliography}{99}
+\bibitem{LL2} L.D.~Landau and E.M.~Lifshitz, \emph{Course of theoretical physics 2: The classical theory of fields} (Pergamon Press, Oxford, UK, 1975).
+
+\bibitem{wentzel} G.~Wentzel, \emph{Quantum theory of fields} (Interscience Publishers, New York, USA, 1949).
+
+\bibitem{BD} J.D.~Bjorken and S.D.~Drell, \emph{Relativistic quantum mechanics} (McGraw-Hill Book Co., New York, NY, USA, 1964).
+
+\bibitem{itzykson} C.~Itzykson and J.-B.~Zuber, \emph{Quantum field theory} (Dover Publications, Mineola, NY, USA, 2005).
+
+\bibitem{holdom} B.~Holdom, \emph{Two $U(1)$'s and $\epsilon$ charge shifts}, {\sl Phys.\ Lett.} {\bf 166B}, 196-199 (1986).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,44 @@
+name: ci_make
+
+on:  push
+
+jobs:
+  BuildLatex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          xargs -a packages.txt sudo apt-get install
+      - name: lacheck
+        working-directory: ./ClField
+        run: |
+          lacheck clfields.tex
+      - name: latex
+        working-directory: ./ClField
+        run: |
+          pdflatex clfields.tex
+          pdflatex clfields.tex
+      - name: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf-notes
+          path: ClField/clfields.pdf
+          retention-days: 2
+      - name: lacheck
+        working-directory: ./stat
+        run: |
+          lacheck barlow.tex
+      - name: latex
+        working-directory: ./stat
+        run: |
+          pdflatex barlow.tex
+          pdflatex barlow.tex
+      - name: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf-notes
+          path: stat/barlow.pdf
+          retention-days: 2
