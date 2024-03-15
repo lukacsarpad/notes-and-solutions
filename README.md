@@ -18,4 +18,4 @@ These files are licensed under [CC BY-NC-ND](https://creativecommons.org/share-y
 
 ## Feedback
 
-Should you find mistakes please do report an issue through Github or contact me in e-mail. Comments, recommendations for extension also welcome.
+Should you find mistakes please do open an issue through Github or contact me in e-mail. Comments, recommendations for extension also welcome.
