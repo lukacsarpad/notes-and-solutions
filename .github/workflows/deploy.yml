@@ -41,6 +41,11 @@ jobs:
         run: |
           pdflatex laguerre.tex
           pdflatex laguerre.tex
+      - name: latex-compscal
+        working-directory: ./compscal
+        run: |
+          pdflatex compscal.tex
+          pdflatex compscal.tex
       - name: Checkout Webpage
         uses: actions/checkout@v2
         env:
