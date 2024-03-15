@@ -1,0 +1,225 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{t1enc}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbold}
+\usepackage{hyperref}
+\usepackage{ifthen}
+
+\hoffset=-5.0mm
+\voffset=-1.9mm
+%
+\evensidemargin=0cm
+\oddsidemargin=0cm
+\topmargin=0cm%
+\headheight=0cm%
+\headsep=0cm%
+\marginparsep=0cm%
+\marginparwidth=0cm%
+\textheight=25cm
+\textwidth=17cm
+\special{papersize=210mm,297mm}%
+
+\def\d{\mathrm{d}}
+\def\e{\mathrm{e}}
+\def\ellop{\mathop{{\sf L}}}
+\def\forrasfile#1{ (see {\tt #1})}
+\def\lag{{\mathcal{L}}}
+\def\lap{\mathop{\triangle}}
+\def\kihagy#1{}
+\def\sn{\mathop{\text{sn}}}
+\def\cn{\mathop{\text{cn}}}
+\def\dn{\mathop{\text{dn}}}
+\def\zb{\ensuremath{\bar{z}}}
+\def\xii#1{\xi^{(#1)}}
+\def\xij#1#2{{\xi^{(#1)}_{#2}}}
+\def\op#1{{\sf #1}}
+\renewcommand\Re{\mathop{\text{Re}}}
+\renewcommand\Im{\mathop{\text{Im}}}
+
+\newcommand{\arxiv}[2][]{
+  \ifthenelse{\equal{#1}{}}{
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2}}
+  }{
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2 [#1]}}
+  } 
+}
+
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{DOI: #1}}
+
+
+
+\title{How to teach complex variational problems}
+\author{Árpád Lukács\textsuperscript{2}\\
+{\small {}\textsuperscript{2}MTA Wigner RCP RMKI, H1525 Budapest 114, POB 49}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+In most field theory textbooks, variational principles are explained first for real scalar fields, and then the reader is told, that for complex fields,
+one shall either work with real and imaginary parts separately, or follow the same procedure, treating the complex fields and their components independently.
+In this short note, we would like to spell out the mathematics behind ``treating a complex field component and its conjugate independently'', to alleviate the confusion caused
+in some mathematically minded students.
+\end{abstract}
+
+\paragraph{Introduction}
+In most field theory textbooks (e.g., see Ref.\ \cite{PS}), the variational principle governing a real scalar field is spelled out in detail (including the variational procedure
+for deriving the field equations from the Lagrangian). However, for complex fields, the reader is told, that one should either work with the real and imaginary parts of the fields separately,
+or, consider the field and its conjugate independent, and vary both. This might give the reader a feeling of insecurity. The question arises naturally: 'How would it be possible to treat a complex
+field $\phi$ and its conjugate, $\phi^*$ as independent? If I know one of them, I know both!' (\cite{MF}). One refreshing exception is Morse and Feshbach's famous monograph \cite{MF}, where this question
+is addressed, and the reader is told, that knowing the relation between a complex number $z$ and its conjugate, $z^*$ is equivalent to knowing where the real ($x$) axis lies.
+However, at least us, this did not completely alleviate the feeling of insecurity
+
+In the present paper, we would like to spell out explicitly the meaning of treating $z$ and $z^*$ independently. The outline of the paper is as follows: in Section \ref{sec:wirt} we introduce the necessary
+mathematical background, {\sl Wirtinger} or $\mathbb{CR}$ calculus. In Section \ref{sec:cosca} we apply the results of the preceding section to the variational principles of a complex scalar field,
+and obtain the well known results. %We conclude the paper with an application in Section \cite{sec:AB}.
+
+This set of notes is a more detailed expansion of the ideas of in the unpublished notes \cite{Foster}.
+
+\section{Wirtinger calculus}\label{sec:wirt}
+A complex number, $z=x+i y$ ($x,y$ real) differs from a pair of real numbers only in the fact, that for complex numbers, an product is introduced, $z_1 z_2 = (x_1+iy_1)(x_2+iy_2):=x_1 x_2 - y_1 y_2 +i(x_1 y_2+x_2 y_1)$.
+In complex function is merely a function mapping pairs of real numbers to pairs of real numbers. For such functions, a notion of differentiability at a point $(x_0,y_0)$ is straightforward, it demands the existence of a
+$2\times 2$ matrix $f'(x_0,y_0)$ such that
+\begin{equation}
+  \label{eq:realdiff}
+  f(x,y) = f(x_0,y_0) + f'(x_0,y_0)\cdot (x-x_0,y-y_0)^T + h(x-x_0,y-y_0)\,,
+\end{equation}
+such that the remaining term, $h$ is a ``small o'' function, i.e., it vanishes more rapidly than $|x-x_0,y-y_0|$. Complex differentiability at a point $z_0 = x_0 + iy_0$, in contrast, demands the existence of a complex
+number $f'(z_0)$ such that
+\begin{equation}
+  \label{eq:compdiff}
+  f(z) = f(z_0) + f'(z)(z-z_0) + h(z-z_0)\,,
+\end{equation}
+where, again, $h$ is a ``small o'' function. Let $f'(z) = u+iv$, $f'(x_0,y_0) = \begin{pmatrix}a &b \\ c & d\end{pmatrix}$. Then
+$f'(x_0,y_o)(\xi,\eta) = (a\xi+b\eta,c\xi+d\eta)$ ($\xi=x-x_0, \eta=y-y_0$) and $f'(z_0)(\xi+i\eta) = u\xi-v\eta+i(u\eta+v\xi)$. Comparing the two
+yields the famous {\sl Cauchy--Riemann} relations
+\begin{equation}
+  \label{eq:CR}
+  \frac{\partial f_1}{\partial x} = \frac{\partial f_2}{\partial y}\,,\quad \frac{\partial f_1}{\partial y} = -\frac{\partial f_2}{\partial x}\,,
+\end{equation}
+where $f=f_1+if_2$. Equations (\ref{eq:CR}) simply state the fact, that the derivative matrix the function $f(x,y)=(f_1,f_2)$ can be represented by a complex number; complex differentiability
+is real differentiability plus the Cauchy--Riemann relations.  Note also, that from the above calculations,
+\begin{equation}
+  \label{eq:compder}
+  f' = \frac{1}{2}\left( \frac{\partial f}{\partial x} - i\frac{\partial f}{\partial y}\right)\,.
+\end{equation}
+This motivates the introduction of the following operators,
+\begin{equation}
+  \label{eq:wirtinger}
+  \partial_{z}=\partial=\frac{\partial_x -i\partial_y}{2}\,,\quad \partial_{z*}=\partial^*=\frac{\partial_x +i\partial_y}{2}\,,
+\end{equation}
+which act on all complex valued functions, that are at least differentiable in the real sense, as in eq.\ (\ref{eq:realdiff}). These are obviously differential operators, i.e., they
+are linear, and follow the Leibniz rule. It is easy to verify, that on any polynomial in $z$ and $z^*$, they act {\sl just like if $z$ and $z^*$ were independent variables},
+\begin{equation}
+  \label{eq:poly}
+    \partial z^n (z^*)^m = n z^{n-1} (z^*)^m\,,\quad \partial^* z^n (z^*)^m = m z^n (z^*)^{m-1}\,.
+\end{equation}
+Also, for a {\sl real differentiable function} $f$,
+\begin{equation}
+  \label{eq:taylor}
+  f(z) = f(z_0) + \partial_z f(z_0) (z-z_0) + \partial_{z*} f(z_0)(z-z_0) + h(z-z_0)\,,
+\end{equation}
+i.e.\ a Taylor expansion also {\sl looks like if $z$ and $z^*$ were independent variables} (for higher orders, use induction).
+In Section \ref{sec:cosca}, we shall see that using the expansion (\ref{eq:taylor}) in the variational problem is what is meant by varying $\phi$ and $\phi^*$ separately.
+
+Note also, that the Cauchy--Riemann relations can be recast as $\partial^* f=0$, i.e.\ ``a function is complex differentiable if it does not depend on the conjugate variable''.
+A real function of a complex variable, by the Cauchy--Riemann relations, can be complex differentiable only if it is constant. Also, for $f$ real,
+\begin{equation}
+  \label{eq:realf}
+  \partial^* f = (\partial f)^*\,.
+\end{equation}
+
+In most usual treatments of complex function theory, the operators $\partial$ and $\partial^*$ are not introduced. An exception is Ref.\ \cite{remmert}. In multi-variate complex
+analysis, they are essential tools \cite{SC}. For Wirtinger's original paper introducing $\partial$ and $\partial^*$, see Ref.\ \cite{wirt}.
+
+\section{The variational principle of a complex scalar field}\label{sec:cosca}
+Let us now consider the following variational problem:
+\begin{equation}
+  \label{eq:vari}
+  \delta S=0\,,\quad S=\int_{t_1}^{t_2} \d t \int \d^d x \mathcal{L}(\phi,\dot{\phi}, \partial_i \phi)\,,
+\end{equation}
+where $\phi$ is a complex field, $x=(x^1,\dots,x^d)$ are space coordinates, $\partial_i=\partial/\partial x^i$, $t$ denotes the time, the dot denotes $\partial/\partial t$, and $\mathcal{L}$ is the Lagrangian,
+a real function of its (complex) arguments. By a quick look at the Cauchy--Riemann relations, eq.\ (\ref{eq:CR}), it becomes obvious, that a real function of complex arguments can be 
+only real differentiable, and never complex differentiable, unless it is a constant.
+
+Let us now use the expansion (\ref{eq:taylor}) in eq.\ (\ref{eq:vari}), applied in the variables $\phi$, $\dot{\phi}$ and $\partial_i \phi$. In $x^i$, let us also use the Gauss theorem, and in $t$ partial integration,
+as in the usual derivation of field equations from a variational principle (see e.g., \cite{MF, LL}). This way, we get two terms,
+\begin{equation}
+  \label{eq:vari2}
+  \delta S= \int_{t_1}^{t_2} \d t \int \d^d x  \left( \frac{\delta S}{\delta \phi} \delta\phi + \frac{\delta S}{\delta \phi^*} \delta\phi^* \right)\,,
+\end{equation}
+where
+\begin{equation}
+  \label{eq:vari2a}
+  \begin{aligned}
+    \frac{\delta S}{\delta \phi} &= \frac{\partial \lag}{\partial \phi} - \partial_i \frac{\partial \lag}{\partial\partial_i\phi} - \frac{\partial}{\partial t}\frac{\partial \lag}{\partial \dot{\phi}}\,,\\
+    \frac{\delta S}{\delta \phi^*} &= \frac{\partial \lag}{\partial \phi^*} - \partial_i \frac{\partial \lag}{\partial\partial_i\phi^*} - \frac{\partial}{\partial t}\frac{\partial \lag}{\partial {\dot{\phi}}^*}\,,\\
+  \end{aligned}
+\end{equation}
+where the derivatives w.r.t.\ $\phi,\phi^*$, etc., are defined in the Wirtinger sense, as in eq.\ (\ref{eq:wirtinger}). Obviously, for $\delta S=0$, both
+\begin{equation}
+  \label{eq:fieldeq}
+  \frac{\delta S}{\delta\phi} =0\,,\quad \frac{\delta S}{\delta\phi^*} =0
+\end{equation}
+have to hold. As $\mathcal{L}$ is a real function, the two are merely complex conjugates of each other.
+
+
+\section{Conclusions}%\label{sec:AB}
+In the above paper, we have spelled out explicitly, what ``considering $\phi$ and $\phi^*$ independent'' means, when discussing the variational principle of complex fields.
+While the results are obviously not new, we think that the explicit reference to Wirtinger calculus might make understanding easier for a mathematically minded student,
+or at least it made it more clear to the author.
+
+%Using Wirtinger calculus again, to obtain the variation of the Lagrangian under a translation, can be used to derive the momentum conservation for
+%a complex scalar field (when $\partial\lag/\partial x^i=0$). This can be used assigned to students as an exercise. When applied for the Schrödinger or the Klein--Gordon equations,
+%in scattering situations, the result agrees with the force obtained from average momentum transfer (for a nice application, see \cite{FLR}). 
+
+\section*{Acknowledgements} The work of Á.L.\ has been supported by OTKA grant no.\ K101709.
+
+\def\refttl#1{#1, }
+%\def\refttl#1{}
+\begin{thebibliography}{999}
+\bibitem{PS} Michael E.~Peskin and Daniel V.~Schroeder, {\sl An introduction to Quantum Field Theory} (Perseus Books, 1995)
+\bibitem{MF} Philip M.~Morse and Herman Feshbach, {\sl Methods of Theoretical Physics} (McGraw--Hill, 1953).
+\bibitem{Foster} Chris Foster, {\sl ``Lagrangians and complex derivatives''},  \url{http://www.physics.uq.edu.au/people/foster/nonanalytic\_derivs.pdf}
+\bibitem{remmert} Reinhold Remmert, {\sl Theory of Complex Functions} (Springer, GTM122, 1991).
+\bibitem{SC} see e.g., R.~Gunning and H.~Rossi, {\sl Analytic Functions of Several Complex Variables} (Prentice-Hall, 1965);
+Steven G.~Krantz, {\sl Function Theory of Several Complex Variables} (AMS, 2001).
+\bibitem{wirt} W.~Wirtinger, \refttl{Zur formalen Theorie der Funktionen von mehr komplexen Ver\"anderlichen}{\sl Math.\ Ann.} 97 (1): 357–375 (1926),
+\doi{10.1007/BF01447872}.
+\bibitem{LL} L.D.~Landau and E.M.~Lifshitz, {\sl The Classical Theory of Fields} (Butterworth-Heinemann, 1980).
+%\bibitem{FLR} Forgács,P., Lukács,Á., Roma\'nczukiewicz,T., \refttl{Plane waves as tractor beams}{\sl Phys.\ Rev.} \textbf{D88} (2013), 125007, \doi{10.1103/PhysRevD.88.125007}, \arxiv[hep-th]{1303.3237}.
+\end{thebibliography}
+
+
+\end{document}
+
+As a simple application, let us discuss the conservation of momentum in a complex scalar theory. Let us consider the function
+\begin{equation}
+  \label{eq:La}
+  \Lambda(x^i,t) = \lag(\phi(x^i,t), \dot{\phi}(x^i,t), \partial_i\phi(x^i,t))\,.
+\end{equation}
+We shall assume, that $\partial\lag/\partial x^i=0$, i.e., that the Lagrangian does not depend on the coordinate explicitly. Then, to obtain
+$\partial_i\Lambda$, one needs to use the chain rule, and when taking derivatives by $\phi$, Wirtinger calculus, yielding
+$\partial_i \Lambda = \frac{\partial\lag}{\partial\phi}\partial_i \phi + \frac{\partial\lag}{\partial\phi^*}\partial_i \phi^*
++ \frac{\partial\lag}{\partial\partial_j\phi}\partial_i \partial_j\phi + \frac{\partial\lag}{\partial\partial_j\phi^*}\partial_i \partial_j\phi^*
+\frac{\partial\lag}{\partial\dot{\phi}}\partial_i \dot{\phi} + \frac{\partial\lag}{\partial{\dot{\phi}}^*}\partial_i {\dot{\phi}}^*$,
+where, using the field equations (\ref{eq:fieldeq}), yields
+\begin{equation}
+  \label{eq:momcons}
+  \dot{\mathcal P}_i = -\partial_j S_{ji}\,,
+\end{equation}
+i.e., conservation of momentum, where
+\begin{equation}
+  \label{eq:momdns}
+  {\mathcal P_i} = -\frac{\partial\lag}{\partial\dot{\phi}}\partial_i \phi - \frac{\partial\lag}{\partial{\dot{\phi}}^*}\partial_i \phi^*
+\end{equation}
+is the momentum density, and
+\begin{equation}
+  \label{eq:stress}
+  S_{ij} = -\frac{\partial \lag}{\partial\partial_i\phi}\partial_j \phi -\frac{\partial \lag}{\partial\partial_i\phi^*}\partial_j^* \phi\,.
+\end{equation}
