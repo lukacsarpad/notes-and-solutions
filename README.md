@@ -1,5 +1,6 @@
-# notes-and-solutions
-This repository contains notes I take on topics of interest to me (mostly physics and mathematics), and solutions to problems in textbooks I use to brush up my knowledge on some topics.
+# Notes and solutions
+
+This repository contains notes I took on topics of interest to me (mostly physics and mathematics), and solutions to problems in textbooks I use to brush up my knowledge on some topics.
 
 The text of the problems is not included in the solutions due to copyright reasons.
 
