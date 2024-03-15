@@ -9,7 +9,11 @@ These files are licensed under [CC BY-NC-ND](https://creativecommons.org/share-y
 
 ## Contents
 
- * `CLFields` Notes on classical field theory (a choice of signature, normalisation, used to calculate conserved quantities, such as energy, momentum, spin, etc.)
  * `stat` Statistics: currently contains solutions to R.J.&nbsp;Barlow, Statistics (Manchester Physics series, Wiley, 1989)
+ * `CLFields` Notes on classical field theory (a choice of signature, normalisation, used to calculate conserved quantities, such as energy, momentum, spin, etc.)
  * `laguerre` Laguerre polynomials. A collection of the notations used by references, to help comparing formulae from different sources.
  * `compscal` Complex scalar fields. Very old notes on what it means to take derivatives independently w.r.t. the field and its conjugate.
+
+## Feedback
+
+Should you find mistakes please do report an issue through Github or contact me in e-mail. Comments, recommendations for extension also welcome.
