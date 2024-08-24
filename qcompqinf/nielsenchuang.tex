@@ -1,0 +1,3415 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+%\usepackage[T1]{fontenc}
+\usepackage{floatflt}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{bbm}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{slashed}
+%\usepackage{showkeys}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{xurl}
+%\usepackage{hyperref}
+\usepackage{ifthen}
+\usepackage{subcaption}
+\usepackage{epstopdf}
+\usepackage{enumerate}
+\usepackage{dutchcal}
+\usepackage{centernot}
+\usepackage{tikz}
+\usetikzlibrary{quantikz2}
+\usetikzlibrary{external} %%include library
+\tikzexternalize[prefix=figures/,figure list=true] %%active the command
+
+% When editing a figure, add
+%   \tikzexternaldisable
+% in a scope containing the figure
+
+
+
+\hoffset=-5.0mm
+\voffset=-1.9mm
+%
+\evensidemargin=0cm
+\oddsidemargin=0cm
+\topmargin=0cm%
+\headheight=0cm%
+\headsep=0cm%
+\marginparsep=0cm%
+\marginparwidth=0cm%
+\textheight=24cm
+\textwidth=17cm
+\special{papersize=210mm,297mm}%
+
+\def\d{\mathrm{d}}
+\def\e{\mathrm{e}}
+\def\imagi{\mathrm{i}}
+\def\ellop{\mathop{{\sf L}}}
+\def\forrasfile#1{ (see {\tt #1})}
+\def\lag{{\mathcal{L}}}
+\def\lap{\mathop{\Delta}}
+\def\kihagy#1{}
+\def\sn{\mathop{\text{sn}}}
+\def\cn{\mathop{\text{cn}}}
+\def\dn{\mathop{\text{dn}}}
+\def\zb{\ensuremath{\bar{z}}}
+\def\sign{\mathop{\text{sign}}}
+\def\xii#1{\xi^{(#1)}}
+\def\xij#1#2{{\xi^{(#1)}_{#2}}}
+\def\op#1{{\sf #1}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\def\tphi{\ensuremath{\tilde{\phi}}}
+\renewcommand\Re{\mathop{\text{Re}}}
+\renewcommand\Im{\mathop{\text{Im}}}
+\def\Tr{\ensuremath{\mathop{\rm Tr}}{}}
+\def\Rank{\ensuremath{\mathop{\rm Rank}}}
+\def\pa{\partial}
+
+
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{DOI: #1}}%
+\newcommand{\doix}[2]{\href{http://dx.doi.org/#2}{#1}}%
+\newcommand{\arxiv}[2][]{%
+  \ifthenelse{\equal{#1}{}}{%
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2}}%
+  }{%
+    \href{http://arxiv.org/abs/#2}{\texttt{arXiv:#2 [#1]}}%
+  }%
+}%
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Ex.}[section]
+\newtheorem{problem}{Pr.}[section]
+
+
+%opening
+\title{Solutions of problems of Quantum computation and quantum information by M.A.~Nielsen and I.L.~Chuang}
+\author{Árpád Lukács}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+ See also the github repository for the \LaTeX source files and computer algebra (Reduce) calculations.
+\end{abstract}
+
+
+\part{Fundamental concepts}\label{sec:fundamentalConcepts}
+
+\section{Introduction and overview}\label{sec:introductionAndOverview}
+
+\begin{exercise} Let us generate $k$ uniformly distributed random values of $x$ and evaluate $f(x)$. If all the values are the same, we assume that the function is constant, otherwise, that it is balanced. If it is indeed constant, there is no possibility of making and error and claiming it to be balanced. If it is balanced, the probability of all values being of one type is $\varepsilon = 2 \times (1/2^k)$m which tells us that the number of necessary attempts is $k = 1-\log_2 \varepsilon$.
+\end{exercise}
+
+
+\begin{exercise} Let us create the operator $D$ acting as follows: $D|\psi\rangle = |0\rangle$ and $D|\phi\rangle = |1\rangle$, the matrix of which is solved from the equations
+\[
+ \begin{aligned}
+  D_{00}\psi_0 + D_{01}\psi_1 = 1\,,&\quad\quad D_{10}\psi_0 + D_{11}\psi_1 = 0\,,\\
+  D_{00}\varphi_0 + D_{01}\varphi_1 = 0\,,&\quad\quad D_{10}\varphi_0 + D_{11}\varphi_1 = 1\,,\\
+ \end{aligned}
+\]
+or in matrix form
+\[
+ D\begin{pmatrix} \psi_0 & \varphi_0 \\ \psi_1 & \varphi_1 \end{pmatrix} = I\,,
+\]
+yielding
+\[
+ D = \frac{1}{\psi_0\varphi_1 - \varphi_0\psi_1}
+ \begin{pmatrix} \varphi_1 & -\varphi_0 \\ -\psi_1 & \psi_0\end{pmatrix}\,.
+\]
+Let us now apply $(D^{-1}\otimes D^{-1}) CNOT (D\otimes I)$ to $|\psi\rangle \otimes |0\rangle$ or $|\varphi\rangle\otimes |0\rangle$. The result is a clone. Where does this fail? $D$ is not unitary, unless the states are orthogonal.
+
+Conversely, if we could clone states, then making many copies and measuring in a basis orthogonal to, say, $\psi$, and then measure half of them in a basis $\Psi=(\psi,\psi')$ where $\langle \psi,\psi'\rangle=0$, and half of them in the analogous basis to $\varphi$. If we made enough copies, only for either $\psi$ or $\psi'$ will the result never be the primed one, and that is the input state.
+\end{exercise}
+
+\section{Introduction to quantum mechanics}\label{ssec:IntroductionToQM}
+
+\subsection{Linear algebra}\label{ssec:linearAlgebra}
+
+\begin{exercise}
+\[
+ \begin{pmatrix} 1 \\ -1 \end{pmatrix}
+ + \begin{pmatrix} 1 \\ 2 \end{pmatrix}
+ - \begin{pmatrix} 2 \\ 1 \end{pmatrix} = 0\,.
+\]
+\end{exercise}
+
+\begin{exercise} In the basis $|0\rangle, |1\rangle$, the matrix representation is
+\[ (A_{ij}) = 
+ \begin{pmatrix}
+ 0 & 1 \\ 1 & 0 
+ \end{pmatrix}\,.
+\]
+If we chose different input or output bases, the matrix would change, e.g., choosing the same input bases, but the output basis $|1\rangle, |0\rangle$ would yield
+\[
+ A' = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}\,.
+\]
+\end{exercise}
+
+
+
+\begin{exercise}
+ If $A:V\to W$ is an operator, then
+ \[
+  A \sum_k v_k|k\rangle = \sum_{jk} A_{jk} v_k |j\rangle\,,
+ \]
+ and similarly for $B:W\to X$,
+ \[
+  B\sum_j w_j |j\rangle = \sum_{ij}B_{ij}|i\rangle\,.
+ \]
+ Let now $w=Av$, so $w_j = \sum_k A_{jk}v_k$, yielding
+ \[
+  B A v = \sum_{ijk} B_{ij}A_{jk}v_k |i\rangle\,,
+ \]
+ where we can recognise the matrix product
+ \[
+  (BA)_{ik} = \sum_j B_{ij}A_{jk}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The definition of the identity operator is that it takes all vectors into themselves, including those of a given basis,
+ \[
+  I |j\rangle = |j\rangle\,.
+ \]
+We may write the left hand side as $\sum_i I_{ij}|i\rangle$, and the right hand side as $\sum_i \delta_{ij}|j\rangle$, from which we may read off the matrix elements of $I$, $I_{ij} = \delta_{ij}$, which are the elements of a matrix with 1 in the diagonal and 0 elsewhere.
+\end{exercise}
+
+\begin{exercise}
+ The mapping $(\cdot,\cdot):\mathbb{C}^n\to\mathbb{C}$ is an inner product:
+ \begin{enumerate}[(1)]
+  \item $(v, \sum \lambda_i w_i) = \sum_j v_j^* \sum_i \lambda_i (w_i)_j =\sum_i\lambda_i\sum_j v_j^* (w_i)_j = \sum_i \lambda_i (v, w_j)$\,,
+  \item $(v, w) = \sum_i v_i^* w_i = (\sum_i v_i w_i^*)^* = (w, v)^*$\,,
+  \item $(v, v) = \sum_i v_i^* v_i = \sum_i |v_i|^2\ge 0$, and there is equality only if all $v_i=0$, i.e., if $v=0$.
+ \end{enumerate}
+\end{exercise}
+
+\begin{exercise}
+ $(\sum_i \lambda_i v_i, w) = (w, \sum_i\lambda_i v_i)^* = \left[ \sum_i \lambda_i (w, v_i)\right]^*= \sum_i \lambda_i^* (w, v_i)^* = \sum_i \lambda_i^* (v_i, w)$.
+\end{exercise}
+
+\begin{exercise}
+ $\left\langle \begin{pmatrix} 1\\ 1\end{pmatrix} , \begin{pmatrix} 1 \\ -1\end{pmatrix}\right\rangle = (1, 1)\begin{pmatrix}1 \\ -1\end{pmatrix} = 0$. To calculate norms, we use the formula derived in the previous exercise, showing that both vectors have a norm of $\sqrt{2}$, and so they can both be normalised by multiplying them with $1/\sqrt{2}$.
+\end{exercise}
+
+\begin{exercise}
+ The vectors obtained using the Gram-Schmidt procedure are all normalised. Orthogonality is shown as follows:
+ \[
+  \langle v_j| v_k\rangle = \frac{1}{N_k}\left\langle
+  v_j \left|
+  w_k - \sum_{i=1}^{k-1} \langle v_i | w_k\rangle v_i 
+  \right.\right\rangle =
+  \frac{1}{N_k}\left(
+  \langle v_j| w_k \rangle
+  - \sum_{i=1}^{k-1} \langle v_i | w_k\rangle \langle v_j | v_i\rangle
+  \right)\,,
+ \]
+ where $N_k$ denotes the denominator used when normalising $v_k$ [see eq.\ (2.17) in the book].
+ 
+ To proceed further, we shall assume without loss of generality that $j <k$, and prove by induction, first for $k=j+1$, in which case we obtain
+ \[
+  \langle v_j | v_{j+1}\rangle = \frac{1}{N_k}\left( \langle v_j | w_{j+1}\rangle - \sum_{i=1}^j \langle v_i| w_{j+1}\rangle \langle v_j | v_i\rangle\right) = \frac{1}{N_k}( \langle v_j | w_{j+1}\rangle - \langle v_j | w_{j+1} \rangle ) = 0\,,
+ \]
+ where we have used that for $i< j+1$ $\langle v_j| v_i\rangle = \delta_{i,j}$. Second, the induction step, using the same intermediate:
+ \[
+  \langle v_j | v_{k+1}\rangle = \frac{1}{N_{k+1}}\left(
+    \langle v_j | w_{k+1} \rangle - \sum_{i=1}^k \langle v_i| w_k\rangle \langle v_j | v_i\rangle
+  \right) = \frac{1}{N_{k+1}}\left(
+  \langle v_j| w_{k+1} - \langle v_j | w_k \rangle
+  \right) = 0\,.
+ \]
+\end{exercise}
+
+\begin{exercise} The outer product representation of any operator may be obtained using eq.\ (2.25) of the book,
+ \[
+  \begin{aligned}
+   \sigma_0 &= I = |0\rangle \langle 0| + |1\rangle\langle 1|\,,\quad\quad
+   \sigma_1 = |0\rangle\langle1| + |1\rangle\langle0|\,,\\
+   \sigma_2 &= -\imagi |0\rangle\langle 1| +\imagi |1\rangle\langle 0|\,,\quad\quad\ \,
+   \sigma_3 = |0\rangle\langle 0| - |1\rangle\langle 1|\,.
+  \end{aligned}
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Let $A=|v_j\rangle\langle v_k|$. The matrix representation of this operator is
+ \[
+  A_{i\ell} = \langle v_i | A | v_\ell\rangle = \langle v_i | v_j\rangle \langle v_k | v_\ell\rangle = \delta_{ij}\delta_{k\ell}\,,
+ \]
+ where in the last step we used the orthonormality of the basis. The result is a matrix with a 1 in the $jk$ element ($j$th row $k$th column) and 0 everywhere else.
+\end{exercise}
+
+\begin{exercise}\label{ex:pauliEig}
+ For the 0 and 3 Pauli matrices, see the previous one. For all Pauli matrices, the characteristic polynomial is $c(\lambda)=\lambda^2-1$, with solutions $\lambda=\pm 1$. The corresponding eigenvectors are easily read off:
+ \[
+  \sigma_1 = \begin{pmatrix}0& 1 \\ 1& 0 \end{pmatrix}\,,\quad \sigma_0-1 = \begin{pmatrix}-1 & 1 \\ 1 & -1 \end{pmatrix}\,,\quad \sigma_0+1 = \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}\,,
+ \]
+ from where
+ \[
+  |1\rangle_1 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\ 1\end{pmatrix} = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\,,\quad\quad |-1\rangle_1 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\ -1\end{pmatrix} = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\,.
+ \]
+ Similarly,
+\[
+  \sigma_2 = \begin{pmatrix}0& -\imagi \\ \imagi& 0 \end{pmatrix}\,,\quad \sigma_0-1 = \begin{pmatrix}-1 & -\imagi \\ \imagi & -1 \end{pmatrix}\,,\quad \sigma_0+1 = \begin{pmatrix} 1 & -\imagi \\ \imagi & 1 \end{pmatrix}\,,
+ \]
+ leading to
+ \[
+  |1\rangle_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1\\\imagi\end{pmatrix} = \frac{1}{\sqrt{2}}(|0\rangle + \imagi |1\rangle)\,,\quad 
+  |-1\rangle_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1\\-\imagi\end{pmatrix} = \frac{1}{\sqrt{2}}(|0\rangle - \imagi |1\rangle)\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The characteristic polynomial of the matrix is
+ \[
+  c(\lambda)=\det\begin{pmatrix} 1 & 0 \\ 1 & 1\end{pmatrix}-\lambda = x^2-2x+1=(x-1)^2\,,
+ \]
+ i.e., the (degenerate) eigenvalue is 1. The matrix which should annihilate the eigenvectors is
+ \[
+  \begin{pmatrix} 1 & 0 \\ 1 & 1\end{pmatrix}-1=\begin{pmatrix} 0 & 0 \\ 1 & 0\end{pmatrix}\,,
+ \]
+ and as this has the sole normalised solution $(0, 1)^T$, the corresponding eigenspace is 1 dimensional, and the eigenspaces do not span $\mathbb{C}^2$.
+\end{exercise}
+
+\begin{exercise}
+ The adjoint of a dyad $|v\rangle\langle w|$:
+ \[
+ \left\langle x\left| \left(|v\rangle\langle w|\right) y\right.\right\rangle = \left\langle\left. \left(|v\rangle\langle w|\right)^\dagger x \right| y\right\rangle\,,
+ \]
+ and evaluating the left hand side,
+ \[
+  \left\langle x\left| \left(|v\rangle\langle w|\right) y\right.\right\rangle = \langle x | v\rangle \langle w | y \rangle =
+  \left\langle\left. \left( |w\rangle \langle v|\right) x \right| y \right\rangle\,,
+ \]
+ which, compared with the right hand side of the first equation yields that
+\[
+ \left(|v\rangle\langle w|\right)^\dagger = |w\rangle\langle v|\,.
+\]
+\end{exercise}
+
+\begin{exercise}
+ \[\begin{aligned}
+  \left\langle \left. \left( \sum_i a_i A_i\right)^\dagger v \right| w\right\rangle &= \left\langle v \left| \left(\sum_i a_i A_i\right) w\right.\right\rangle = \sum_i a_i \left\langle v | A_i w\right\rangle = \sum_i a_i \left\langle \left. A_i^\dagger v \right| w\right\rangle\\ &= \left\langle \left. \left( \sum_i a_i^* A_i^\dagger\right) v\right| w\right\rangle\,,
+ \end{aligned}\]
+ which tells us that
+ \[
+  \left( \sum_i a_i A_i\right)^\dagger = \sum_i a_i^* A_i^\dagger\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ \[
+  \left\langle \left. \left(A^\dagger\right)^\dagger v \right| w\right\rangle = \left\langle v \left| A^\dagger w\right.\right\rangle = \left\langle \left. A^\dagger w \right| v\right\rangle^* = \left\langle w\left| A v\right.\right\rangle^* = \left\langle \left. A v \right| w\right\rangle\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Using the orthonormality of the basis, $\langle i | j\rangle=\delta_{ij}$,
+ \[
+  P^2 = \left(\sum_{i=1}^k |i\rangle\langle i|\right) \left(\sum_{j=1}^k |j\rangle\langle j|\right)=\sum_{i,j=1}^k |i\rangle\langle i| |j\rangle\langle j| = \sum_{i,j=1}^k \langle i|j\rangle |i\rangle \langle j| = \sum_{i=1}^k |i\rangle\langle i| = P\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Using the spectral decomposition of the normal matrix, and the adjoint of a dyad,
+ \[
+  \left( \sum_i \lambda_i |i\rangle\langle i|\right)^\dagger = \sum_i \lambda^* |i\rangle\langle i|\,,
+ \]
+ which agrees with the original operator iff $\lambda_i=\lambda_i^*$ for all $i$.
+\end{exercise}
+
+\begin{exercise}
+ Again, use the spectral decomposition,
+ \[
+  \left( \sum_i \lambda_i |i\rangle\langle i|\right)^\dagger \sum_j \lambda_j |j\rangle\langle j| = \sum_i \lambda_i^*\lambda_i |i\rangle\langle i|\,,
+ \]
+ and that the identity operator is $\sum_i |i\rangle\langle i|$, from which we may read off that unitarity is equivalent to $|\lambda_i|^2 = \lambda_i^*\lambda_i = 1$ for all $i$, or $\lambda_i = \exp i\alpha_i$, $\alpha_i$ real.
+\end{exercise}
+
+\begin{exercise}
+ Direct calculation,
+ \[
+  \begin{aligned}
+   \sigma_0^\dagger &= I^\dagger = I = \sigma_0\,,\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\ \,
+   \sigma_1^\dagger = a\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}^\dagger = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}^T = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} = \sigma_1\,,\\
+   \sigma_2^\dagger &= \begin{pmatrix} 0 & -\imagi\\ \imagi & 0 \end{pmatrix}^\dagger = \begin{pmatrix} 0 & \imagi \\ -\imagi & 0 \end{pmatrix}^T = \begin{pmatrix} 0 & -\imagi \\ \imagi & 0 \end{pmatrix} = \sigma_2\,,\quad \sigma_3^\dagger = \begin{pmatrix} 1 & \\ & -1 \end{pmatrix}^\dagger = \begin{pmatrix} 1 & \\ 0 & -1 \end{pmatrix} = \sigma_3\,.
+  \end{aligned}
+ \]
+To verify unitarity, again, calculate directly
+\[
+ \sigma_i^\dagger\sigma_i = (\sigma_i)^2 = I\,.
+\]
+\end{exercise}
+
+\begin{exercise}
+ The matrix elements of an operator are obtained as $A'_{ij}=\langle v_i | A|v_j\rangle$, so, using the completeness relation,
+ \[
+  A = \sum_{ij}|v_i\rangle\langle v_i |A|v_j\rangle\langle v_j| = \sum_{ij}A'_{ij}|v_i\rangle\langle v_j|\,.
+ \]
+ Calculating the matrix elements in another basis yields
+ \[
+  A''_{ij} = \langle w_i | A | w_j\rangle = \sum_{k\ell} \langle w_i | |v_k\rangle\langle v_k | A | v_\ell\rangle\langle v_\ell || w_j\rangle = \sum_{k\ell}\langle w_i | v_k\rangle \langle v_k | A| v_\ell \rangle \langle v_\ell|w_j\rangle = \sum_{k\ell} U_{k i}^* A'_{k\ell} U_{\ell j}\,,
+ \]
+ or in matrix form, $A''=U^\dagger A' U$, where $U$ is a matrix whose elements are $U_{ij} = \langle v_i|w_j\rangle$, unitary due to both bases being orthonormal.
+\end{exercise}
+
+\begin{exercise}
+ The following simplifications of the proof are possible: 1) $QMP=(PMQ)^\dagger = 0$. 2) The self-adjointness of $QMQ$ is a direct consequence of $(QMQ)^\dagger= Q^\dagger M^\dagger Q^\dagger = QMQ$.
+\end{exercise}
+
+\begin{exercise}
+Let $M=M^\dagger$, and $M|1\rangle = \lambda_1 |1\rangle$ and $M|2\rangle=\lambda_2 |2\rangle$, $\lambda_1\ne\lambda_2$. In this case,
+\[
+ \langle 1 | M | 2 \rangle = \left\langle 1 \left| (M |2\rangle)\right.\right\rangle = \langle 1 | \lambda_2 | 2\rangle = \lambda_2 \langle 1|2 \rangle\,,
+\]
+and similarly
+\[
+ \langle 1 | M |2\rangle = \langle M^\dagger 1 | 2\rangle = \lambda_1 \langle 1 | 2\rangle\,,
+\]
+where we have used the fact that the eigenvalues of a self-adjoint operator are real, and so
+\[
+ (\lambda_1 - \lambda_2) \langle 1 | 2\rangle = 0\,.
+\]
+\end{exercise}
+
+\begin{exercise}
+ In the eigenbasis of the operator, $P=\sum_i |i\rangle \langle i|$, and also
+ \[
+  P^2 = \left(\sum_i \lambda_i |i\rangle \langle i|\right)^2 = \sum_i \lambda_i^2 |i\rangle\langle i|\,,
+ \]
+ where we have used the fact that the basis is orthonormal. All eigenvalues are real and satisfy $\lambda_i^2=\lambda_i$, so $\lambda_i\in\{0,1\}$.
+\end{exercise}
+
+\begin{exercise}
+ Let $A$ a positive operator, and $B=(A+A^\dagger)/2$ and $C=(A-A^\dagger)/(2\imagi)$. This way, $A=B+\imagi C$. For any vector,
+ \[
+  \langle x | A | x\rangle = \langle x | B | x\rangle + \imagi \langle x | C | x\rangle\,,
+ \]
+ and this is a real, positive number. As
+ \[
+  \langle x | B| x\rangle = \langle x| B^\dagger |x\rangle^* = \langle x | B |x\rangle^*\,,
+ \]
+ $\langle x| B|x\rangle$ is always real, and so is $\langle x | C|x\rangle$.  As $\langle x|A|x\rangle$ is also real, this is only possible if for all vectors of $x$, $\langle x|C|x\rangle =0$.
+
+ If for an operator $C$ $\langle x|C| x\rangle = 0$ for all $x$, $C=0$. Let us consider two vectors, $x$, $y$, and for such an operator
+ \[
+  0=\langle x + \alpha y | C| x+\alpha y\rangle = \langle x| C|\alpha y\rangle + \langle \alpha y | C | x\rangle = \alpha \langle x | C | y \rangle + \alpha^* \langle y | C|x\rangle\,,
+ \]
+ and now adding this equation with $\alpha=1$ to $-\imagi$ times this equation with $\alpha=\imagi$ yields $\langle x | C|y\rangle=0$, i.e., all matrix elements of $C$ vanish, therefore so does $C$. As a result, $A=B$ and $B=B^\dagger$, so $A$ is self-adjoint.
+\end{exercise}
+
+\begin{exercise} Take an arbitrary vector $x$,
+ \[
+  \langle x | A^\dagger A | x \rangle = \langle A x|A x\rangle = \|A x\|^2 \ge 0\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Let $\psi=(|0\rangle + |1\rangle)/\sqrt{2}$. Then
+ \[
+  \begin{aligned}
+   \psi^{\otimes 2} &= \frac{1}{2}(|0\rangle+|1\rangle)\otimes (|0\rangle+|1\rangle) = \frac{1}{2}(|00\rangle + |01\rangle + |10\rangle+|11\rangle)\,,\\
+   \psi^{\otimes 3} &= \psi^{\otimes2}\otimes\psi = \frac{1}{2^{3/2}}(|00\rangle + |01\rangle + |10\rangle+|11\rangle)\otimes (|0\rangle+|1\rangle)\\
+   &= \frac{1}{2^{3/2}}(|000\rangle + |001\rangle + |010\rangle + |011\rangle + |100\rangle + |101\rangle + |110\rangle + |111\rangle)\,.
+  \end{aligned}
+ \]
+ To do the same in terms of the Kronecker product, we shall use $\psi=(1, 1)^T/\sqrt{2}$, and so
+ \[
+  \begin{aligned}
+   \psi^{\otimes 2} &= \frac{1}{2}\begin{pmatrix} 1 \\ 1\end{pmatrix}\otimes\begin{pmatrix} 1 \\ 1\end{pmatrix} = \frac{1}{2}\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1\end{pmatrix}\,,\\
+   \psi^{\otimes 3} &= \frac{1}{2^{3/2}} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1\end{pmatrix} \otimes \begin{pmatrix} 1 \\ 1\end{pmatrix} = \begin{pmatrix} 1 \\ 1\\ 1\\ 1\\ 1\\ 1\\ 1\\ 1\end{pmatrix}\,.
+  \end{aligned}
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Tensor products of Pauli operators:
+ \[
+  X\otimes Z = \begin{pmatrix} & 1\\ 1 & \end{pmatrix} \otimes \begin{pmatrix} 1 & \\ & -1 \end{pmatrix} = \begin{pmatrix} 0 & Z \\ Z & 0 \end{pmatrix} = \begin{pmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \\ 1 & 0 & 0 & 0 \\ 0 & -1 & 0 & 0 \end{pmatrix}\,,
+ \]
+and
+\[
+ I \otimes X = \begin{pmatrix} 1 & \\ & 1 \end{pmatrix} \otimes \begin{pmatrix} & 1 \\ 1 & \end{pmatrix} = \begin{pmatrix} X & \\ & X \end{pmatrix} = \begin{pmatrix} 0 & 1 & & \\ 1 & 0 & & \\ & & 0 & 1 \\ & & 1 & 0 \end{pmatrix}\,,
+\]
+and similarly
+\[
+ X \otimes I = \begin{pmatrix} & 1 \\ 1 & \end{pmatrix} \otimes \begin{pmatrix} 1 & \\ & 1 \end{pmatrix} = \begin{pmatrix} & I \\ I & \end{pmatrix} = \begin{pmatrix} & & 1 & 0 \\ & & 0 & 1\\ 1 & 0 & & \\ 0 & 1 & & \end{pmatrix}\,.
+\]
+As we can see, $I\otimes X \ne X\otimes I$, the tensor product is non-commutative.
+\end{exercise}
+
+\begin{exercise}
+ As the matrix elements of the tensor product are given by eq.\ (2.50) in the book,
+ \[
+  (A\otimes B)^* = \begin{pmatrix} A_{11} B & A_{12} B & \dots & A_{1n} B\\ A_{21} B & A_{22}B & \dots & A_{2n}B \\ \ldots & \ldots & \ddots & \vdots\\ A_{m1}B & A_{m2}B & \dots & A_{mn}B\end{pmatrix}^*
+  = \begin{pmatrix} A^*_{11} B^* & A^*_{12} B^* & \dots & A^*_{1n} B^*\\ A^*_{21} B^* & A^*_{22}B^* & \dots & A^*_{2n}B^* \\ \ldots & \ldots & \ddots & \vdots\\ A^*_{m1}B^* & A^*_{m2}B^* & \dots & A^*_{mn}B^*\end{pmatrix} = A^*\otimes B^*\,,
+ \]
+Similarly,
+ \[
+  (A\otimes B)^T = \begin{pmatrix} A_{11} B & A_{12} B & \dots & A_{1n} B\\ A_{21} B & A_{22}B & \dots & A_{2n}B \\ \ldots & \ldots & \ddots & \vdots\\ A_{m1}B & A_{m2}B & \dots & A_{mn}B\end{pmatrix}^T
+  = \begin{pmatrix} A_{11} B^T & A_{21} B^T & \dots & A_{m1} B^T\\ A_{12} B^T & A_{22}B^T & \dots & A_{m2}B^T \\ \ldots & \ldots & \ddots & \vdots\\ A_{1n}B^T & A_{2n}B^T & \dots & A_{nm}B^T\end{pmatrix} = A^T \otimes B^T\,,
+ \]
+ and $(A\otimes B)^\dagger = A^\dagger\otimes B^\dagger$ already follows from $X^\dagger=(X^T)^*$.
+\end{exercise}
+
+\begin{exercise} If $U^\dagger U=I=V^\dagger V$, then
+ \[
+  (U\otimes V)^\dagger (U\otimes V) = (U^\dagger\otimes V^\dagger)(U\otimes V) = U^\dagger U \otimes V^\dagger V=I\otimes I = I\,,
+ \]
+ and similarly with taking the adjoint of the second operator in stead of the first.
+\end{exercise}
+
+\begin{exercise} If $H_i^\dagger=H_i$, $i=1,2$, then
+ \[
+  (H_1\otimes H_2)^\dagger = H_1^\dagger\otimes H_2^\dagger = H_1\otimes H_2\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Let us choose on the two spaces the eigenbasis of the operators $A$, $B$, then, using eq.\ (2.50) from the book,
+ \[
+  A\otimes B = \begin{pmatrix} \lambda_1 \mu_1 &0 &\dots & 0 \\ 0 & \lambda_2\mu_2 &\dots & 0\\ \vdots &  & \ddots & \vdots \\ 0 & \dots &  & \lambda_n \mu_m \end{pmatrix}\,,
+ \]
+ where $\lambda_i$ and $\mu_j$ are the eigenvalues of $A$ and $B$, respectively. This is a positive matrix as all its eigenvalues are real and positive.
+\end{exercise}
+
+\begin{exercise}
+ Let $P,Q$ be projectors, $P^2=P$, $Q^2=Q$, then
+ \[
+  (P\otimes Q)^2 = P^2\otimes Q^2=P\otimes Q\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The formula clearly holds for $n=1$. Then
+ \[\begin{aligned}
+  H^{\otimes n} &= \frac{1}{2^n}\sum_{x,y}(-1)^{x\cdot y} |x\rangle\langle y| \otimes \left[\left( |0\rangle +|1\rangle\right)\langle 0| + \left(|0\rangle -|1\rangle\right)\langle 1|\right]\\
+  &=\frac{1}{2^n}\sum_{x,y}(-1)^{x\cdot y} \left[ \left(|x 0\rangle + |x 1\rangle\right)\langle y0|\ + \left( |x 0\rangle - |x 1\rangle\right) \langle y 1|\right]\\
+  &= \frac{1}{2^n}\sum_{x'y'} = (-1)^{x'\cdot y'} |x'\rangle\langle y'|\,.
+ \end{aligned}\]
+ For the $4\otimes 4$ case, we need
+ \[
+  H = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}\,,
+ \]
+yielding, using eq.\ (2.50)
+ \[
+  H^{\otimes 2} =
+  \begin{pmatrix}
+   1 & 1    &  1 & 1 \\
+   1 & -1   &  1 & -1 \\
+%
+   1 & 1    & -1 & -1 \\
+   1 & -1   & -1 & 1
+  \end{pmatrix}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The characteristic polynomial of the matrix is $p(\lambda)=(4-\lambda)^2-9=(7-\lambda)(1-\lambda)$, so the eigenvalues are 7 and 1, so
+ \[
+  A = \begin{pmatrix} 4 & 3 \\ 3 & 4\end{pmatrix}
+  = \frac{1}{2}\begin{pmatrix} 1 \\ -1\end{pmatrix} (1, -1) + \frac{7}{2}\begin{pmatrix} 1 \\ 1\end{pmatrix} (1, 1)\,.
+ \]
+ Using this, the square root is
+ \[
+  \sqrt{A} = \frac{1}{2}\begin{pmatrix} 1 \\ -1\end{pmatrix} (1, -1) + \frac{\sqrt{7}}{2}\begin{pmatrix} 1 \\ 1\end{pmatrix} (1, 1) = \frac{1}{2}\begin{pmatrix} \sqrt{7}+1 & \sqrt{7}-1\\ \sqrt{7}-1 & \sqrt{7}+1\end{pmatrix}\,,
+ \]
+and the logarithm,
+\[
+ \log A = \frac{\log 7}{2} \begin{pmatrix} 1 \\ 1\end{pmatrix} (1, 1) = \frac{\log 7}{2}\begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}\,.
+\]
+\end{exercise}
+
+\begin{exercise}\label{ex:PauliExponential}
+ For all the Pauli matrices, $A^2=I$ holds. Elementary algebra shows that $\sigma_i\sigma_j = \delta_{ij} + \imagi\varepsilon_{ijk}\sigma_k$, so for any unit vector $\vec{v}$, $(\vec{v}\vec{\sigma})^2=I$ holds, and splitting the power series of the exponential for $n=2k$ and $n=2k+1$,
+ \[
+  \exp(i\theta \vec{v}\vec{\sigma})=\sum_n \frac{i^n \theta^n (\vec{v}\vec{\sigma})^n}{n!} = \sum_k \frac{\theta^{2k}}{(2k)!}I + \sum_k \frac{\imagi (-1)^{k}\theta^{2k+1}}{(2k+1)!}\vec{v}\vec{\sigma}=\cos\theta I + \imagi \sin\theta (\vec{v}\vec{\sigma})\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The trace of the Pauli matrices, $\Tr A = \sum_i A_{ii}$, so
+ \[\begin{aligned}
+  \Tr \sigma_0 &= \Tr I = 2\,,\quad
+  \Tr\sigma_1 = \Tr \begin{pmatrix}  & 1 \\ 1 &  \end{pmatrix} = 0\,,\\
+  \Tr \sigma_2 &= \Tr \begin{pmatrix}  & -\imagi \\ \imagi & \end{pmatrix} =0\,,\quad
+  \Tr \sigma_3 = \Tr \begin{pmatrix} 1 & \\ & -1\end{pmatrix}=0\,.
+ \end{aligned}\]
+\end{exercise}
+
+\begin{exercise}
+ For any matrices $A$, $B$,
+ \[
+  \Tr (AB) = \sum_{ij}A_{ij}B_{ji} = \sum_{ij}B_{ji}A_{ij}=\Tr(BA)\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ For any matrices $A$, $B$,
+ \[
+  \Tr(A+B) = \sum_{i}(A+B)_{ii} = \sum_i (A_ii+B_ii) = \Tr A + \Tr B\,,
+ \]
+ and for any number $z$,
+ \[
+  \Tr (zA) = \sum_i (zA)_ii=\sum_i zA_{ii} = z\sum_i A_{ii}=z\Tr A\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Proving the scalar product nature of the Hilbert-Schmidt product requires linearity in the second argument,
+ \[
+  (A, B+C) = \Tr A^\dagger(B+C) = \Tr A^\dagger B + \Tr A^\dagger C=(A, B)+(A, C)\,,
+ \]
+ and
+ \[
+  \Tr(A, zB) = \Tr A^\dagger z B = z\Tr A^\dagger B=z(A, B)\,,
+ \]
+ and the exchange property,
+ \[
+  (B, A) = \Tr B^\dagger A = \sum_{ij}B^*_{ji}A_{ij} = \left(\sum_{ij}A_{ji}^*B_{ij}\right)^* = (A, B)^*\,,
+ \]
+ and positivity,
+ \[
+  (A, A) = \sum_{ij}A_{ji}^* A_{ji} = \sum_{ij}|A_{ij}|^2\,.
+ \]
+ A nice orthogonal basis is $E^{(ij)}$ having matrix elements $(E^{(ij)}_{k\ell} = \delta_{ik}\delta_{k\ell}$ as clearly any matrix has $A=\sum_{ij}A_{ij}E^{(ij)}$, and $(E^{(ij)}E^{(k\ell)} = \sum_{no}E^{(ij)}_{on}E^{(k\ell)}_{on} = \sum_{on}\delta_{io}\delta_{jn}\delta_{ko}\delta_{\ell n}=\delta_{ik}\delta_{j\ell}$.
+\end{exercise}
+
+\begin{exercise}
+ Perform matrix multiplications (see {\tt ex.2.40.red} for computer algebra). A concise result is
+ \[
+  \sigma_i \sigma_j = \delta_{ij}I + \imagi \epsilon_{ijk}\sigma_k\,,
+ \]
+ where there is an implicit summation over the repeated index $k$.
+\end{exercise}
+
+\begin{exercise}
+ See previous one.
+\end{exercise}
+
+\begin{exercise}
+ \[
+  \frac{[A, B]+\{A, B\}}{2} = \frac{AB-BA+AB+BA}{2}=AB\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ See Ex.\ 2.40.
+\end{exercise}
+
+\begin{exercise}
+ If both commutators vanish, $AB=[A, B]+\{A, B\}=0$, which, multiplied by $A^{-1}$ yields $B=A^{-1}AB=A^{-1}([A, B]+\{A, B\}) = A^{-1}0=0$.
+\end{exercise}
+
+\begin{exercise}
+ $[A, B]^\dagger = (AB-BA)^\dagger = (AB)^\dagger - (BA)^\dagger = B^\dagger A^\dagger - A^\dagger B^\dagger = [B^\dagger, A^\dagger]$.
+\end{exercise}
+
+\begin{exercise}
+ $[A, B] = AB-BA$ and  $[B, A]=BA-AB$, so $[A, B]=-[B, A]$.
+\end{exercise}
+
+\begin{exercise}
+ If $A=A^\dagger$ and $B=B^\dagger$, then $(\imagi [A, B])^\dagger = -\imagi [A, B]^\dagger = -\imagi [B^\dagger, A^\dagger] =\imagi [A^\dagger, B^\dagger]=\imagi [A, B]$.
+\end{exercise}
+
+\begin{exercise}
+ Let $P$ be a positive matrix, then there exist $Q$, such that $P=Q^\dagger K$. Its polar decomposition is $P=UJ$ where $J=\sqrt{P^\dagger P} = \sqrt{Q^\dagger Q Q^\dagger Q}=Q^\dagger Q=P$. In this case, $U=I$. Similarly, $K=P$.\\
+ %
+ For a unitary matrix $U$, $J=\sqrt{U^\dagger U}=I$ and $K=\sqrt{UU^\dagger}=I$.\\
+ %
+ For a Hermitean matrix, $H$ and $H^\dagger H$ share an eigensystem, so $U=I$ and $K=J=|H|$.
+\end{exercise}
+
+\begin{exercise}
+ Let $N$ be normal, then $N=\sum_i \lambda_i |i\rangle\langle i|$ (by the spectral decomposition theorem). In this case, $N^\dagger N=\sum_{ij}\lambda_i^* \lambda_j |i\rangle\langle i|\,|j\rangle\langle j| = \sum_{i} |\lambda_i|^2 |i\rangle\langle i|$ and the resulting operator $J = \sum_i |\lambda_i| |i\rangle\langle i|$. The corresponding unitary operator is $U = \sum_i \lambda_i/|\lambda_i|\,|i\rangle\langle i|$ (and extended to zero eigenvalue subspaces). Due to $UJ=JU$, $K=J$.
+\end{exercise}
+
+\begin{exercise}
+ Let
+ \[
+  A = \begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix}\,,\quad
+  A^\dagger A = \begin{pmatrix} 2 & 1 \\ 1 & 1 \end{pmatrix}\,,\quad J=\sqrt{A^\dagger A}=\frac{1}{\sqrt{5}}\begin{pmatrix} 3 & 1 \\ 1 & 2\end{pmatrix}\,,\quad
+  K=\sqrt{AA^\dagger}=\frac{1}{\sqrt{5}}\begin{pmatrix}2 & 1\\ 1& 3\end{pmatrix}\,,
+ \]
+ and so
+ \[
+  U=A J^{-1}= \frac{1}{\sqrt{5}}\begin{pmatrix} 2 & -1 \\ 1 & 2\end{pmatrix}
+  =K^{-1}A\,.
+ \]
+\end{exercise}
+
+\subsection{The postulates of quantum mechanics}\label{ssec:thePostulatesOfQM}
+
+\begin{exercise}
+ For the Hadamard gate $H$ holds
+ \[
+  H=\frac{1}{\sqrt{2}}\begin{pmatrix}1 & 1 \\ 1 & -1 \end{pmatrix} = H^\dagger = H^T\,,
+ \]
+ so this exercise is equivalent to the next one.
+\end{exercise}
+
+\begin{exercise} Using $H$ from the previous exercise,
+ \[
+ H^2 = \frac{1}{2}\begin{pmatrix}1 & 1 \\ 1 & -1 \end{pmatrix}^2 = I\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The characteristic polynomial is $p(\lambda)=\lambda^2-1$, so $\lambda=\pm 1$ with eigenvectors $(1, \sqrt{2}-1)^T$ and $(-1, \sqrt{2}+1)^T$.
+\end{exercise}
+
+\begin{exercise}
+ If $A$ and $B$ are commuting operators, we may diagonalise them on the same basis, $A=\sum_i a_i |i\rangle\langle i|$ and $B=\sum_i b_i |i\rangle\langle i|$. In this basis,
+ \[
+  \exp A = \sum_i \e^{a_i} |i\rangle\langle i|\,,\quad
+  \exp B = \sum_i \e^{b_i} |i\rangle\langle i|\,,
+ \]
+ and
+ \[
+  A+B = \sum_i(a_i+b_i)|i\rangle\langle i|\,,\quad
+  \exp(A+B) = \sum_i \e^{a_i+b_i}|i\rangle\langle i|\,,
+ \]
+ and
+ \[
+  \exp A \exp B = \sum_i \e^{a_i}|i\rangle\langle i| \sum_j \e^{b_j}|j\rangle\langle j| = \sum_{ij}\e^{a_i + b_j}|i\rangle\langle i | j \rangle \langle j| = \sum_i \e^{a_i + b_i} |i\rangle\langle i|\,,
+ \]
+ where we have used $\langle i | j\rangle = \delta_{ij}$.
+\end{exercise}
+
+\begin{exercise}
+ Let $U$ be defined as in eq.\ (2.91). Then, using the power series of the exponential and that $H^\dagger = H$,
+ \[
+  U(t_1, t_2)^\dagger = \exp \frac{\imagi H(t_2-t_1)}{\hbar}\,,
+ \]
+ and the solution of 2.54 to get
+ \[
+  U(t_1, t_2)^\dagger U(t_1, t_2) = \exp \frac{\imagi H(t_2-t_1)}{\hbar} \exp \frac{-\imagi H(t_2-t_1)}{\hbar} = \exp 0 = I\,.
+ \]
+ The product of the other order is done in the same way.
+\end{exercise}
+
+\begin{exercise}
+ Let $U$ be unitary, then
+ \[
+  U = \sum_i \e^{\imagi\kappa_i} |i\rangle\langle i|
+ \]
+ with $\kappa_i$ real, in some basis $|i\rangle$. The logarithm is computed as
+ \[
+  \log U = \sum_i \log\e^{\imagi \kappa_i} |i\rangle\langle i| =
+  \sum_i \imagi \kappa_i |i\rangle\langle i|\,,
+ \]
+ so
+ \[
+  K = -\imagi \log U = \sum_i \kappa_i |i\rangle\langle i|
+ \]
+ is a normal (diagonalisable) operator with real eigenvalues, so it is self-adjoint (Hermitean).
+\end{exercise}
+
+\begin{exercise}
+ After the measurement described by the set of operators $\{ L_\ell\}$, the system is in the state given by eq.\ (2.93) with a probability $p(\ell)$ given by eq.\ (2.92). A further measurement, described by the operators $\{ M_m\}$ from this state brings the system to state
+ \[
+  \frac{M_m L_\ell \psi}{\sqrt{\langle \psi | L_\ell^\dagger M_m^\dagger M_m  L_\ell^\dagger | \psi \rangle} \sqrt{\langle \psi | L_\ell^\dagger L_\ell |\psi\rangle}}\,,
+ \]
+ with a probability
+ \[
+  p(m | \ell) p(\ell) = 
+  p_\ell(m)p(\ell) = \frac{\langle \psi| L_\ell^\dagger M_m^\dagger M_m L_\ell |\psi\rangle}{\langle \psi | L_\ell^\dagger L_\ell |\psi\rangle} \langle \psi | L_\ell^\dagger L_\ell | \psi\rangle =  \langle \psi| L_\ell^\dagger M_m^\dagger M_m L_\ell |\psi\rangle \,,
+ \]
+ where $p(m|\ell)$ denotes the conditional probability of the system ending up with the measured value $m$ provided that the first measurement yielded value $\ell$.
+ 
+ A measurement given by the operators $\{ N_{\ell m} \}$, $N_{\ell m} = M_m L_\ell$ takes the system into state
+ \[
+  \frac{N_{\ell m} \psi}{\sqrt{\langle \psi | N_{\ell m}^\dagger N_{\ell m}\psi\rangle}} = \frac{N_m L_\ell \psi}{\sqrt{\langle \psi | L_\ell^\dagger M_m^\dagger M_m L_\ell | \psi\rangle}}
+ \]
+ with probability
+ \[
+  p(\ell, m) = \langle \psi | N_{\ell m}^\dagger N_{\ell m} |\psi\rangle = \langle \psi | L_\ell^\dagger M_m^\dagger M_m L_\ell | \psi\rangle\,.
+ \]
+ We shall now consider the consequences of the completeness relation,
+ \[
+  \sum_{\ell m} N_{\ell m}^\dagger N_{\ell m} = \sum_{\ell m} L_\ell^\dagger M_m^\dagger M_m L_\ell = \sum_\ell L_\ell^\dagger \sum_m M_m^\dagger M_m L_\ell = \sum_\ell L_\ell^\dagger L_\ell = I\,.
+ \]
+ As we can see, the two are physically equivalent, as they only differ in the normalisation of the output vector.
+\end{exercise}
+
+\begin{exercise}
+ Let $|m\rangle$ be an eigenvector of $M$, $M|m\rangle =m|m\rangle$, then the expectation value is
+ \[
+  {\bf E}(M) = \langle M \rangle = \langle m | M | m \rangle = \langle m | m | m\rangle = m \langle m | m \rangle = m\,,
+ \]
+ if $|m\rangle$ is normalised. The standard deviation is $\Delta^2(M) = \langle M^2 \rangle - \langle M \rangle^2$, and the first one is
+ \[
+  \langle M^2 \rangle = \langle m | M^2 | m \rangle = \langle m | m \cdot m |m\rangle = m^2\,,
+ \]
+ where we have used the for the adjoint $\langle m | M = \langle m | M^\dagger = (M |m\rangle)^\dagger = (m|m\rangle)^\dagger = m\langle m |$ as for a self-adjoint observable $m$ is real. This shows that $\Delta(M) = 0$ in an eigenstate.
+\end{exercise}
+
+\begin{exercise}
+ The expectation value is
+ \[
+  \langle X\rangle = \langle 0 | X | 0 \rangle = (1, 0) \begin{pmatrix} & -\imagi \\ \imagi & \end{pmatrix} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = 0\,,
+ \]
+ and as $X^2=I$, the standard deviation $\Delta^2(X) = \langle X^2\rangle-\langle X\rangle^2 = \langle X^2 \rangle =1$.
+\end{exercise}
+
+\begin{exercise}
+ Assuming $v^2=1$, the matrix $\vec{v}\cdot\vec{\sigma}$ satisfies $(\vec{v}\cdot\vec{\sigma})^2=I$ using $\sigma_i \sigma_j = \delta_{ij}I+\imagi\epsilon_{ijk}\sigma_k$. Therefore, its eigenvalues must satisfy $\lambda^2=1$. As the Pauli matrices do not commute, $\vec{v}\cdot\vec{\sigma}$ cannot be $\pm I$, so its eigenvalues must be $\lambda_1=1$ and $\lambda_2=-1$. The fact that the operators $P_{\pm} = (I\pm \vec{v}\cdot\vec{\sigma})/2$ act as the projectors on the eigenstates is easily verified in this basis.
+\end{exercise}
+
+\begin{exercise}
+ The probability of measuring $+1$ is the same as the expectation value of the projector, i.e.,
+ \[
+  p(1) = \frac{1}{2}\langle 0 | I + \vec{v}\cdot\vec{\sigma}|0\rangle = \frac{1}{2}+\langle 0 | \vec{v}\cdot\vec{\sigma}|0\rangle = \frac{1+v_3}{2}\,,
+ \]
+ as the 1, 1 component of all Pauli matrices except the third one vanishes. If the result 1 is obtained, the new state after the measurement is
+ \[
+\frac{P_+ |0\rangle}{\sqrt{\langle 0 | P_+ |0\rangle}}  = \frac{(I+\vec{v}\cdot\vec{\sigma})|0\rangle}{\sqrt{2(1+v_3)}} = \frac{1}{\sqrt 2\sqrt{1+v_3}}\begin{pmatrix} 1+v_3 \\ \imagi v_1 + v_2\end{pmatrix}\,.
+ \]
+\end{exercise}
+
+\begin{exercise} If for a measurement $\{M_m\}$ the measurement operators and the POVM elements $E_m = M_m^\dagger M_m$ agree,
+ \[
+  E_m = M_m^\dagger M_m = M_m\,,
+ \]
+ it follows that the measurement operators are self-adjoint, $M_m^\dagger = E_m^\dagger = (M_m^\dagger M_m)^\dagger = M_m^\dagger M_m = E_m = M_m\,,$ and so $M_m^2 = M_m^\dagger M_m = E_m = M_m$, they are projectors as well, and the completeness relation demands that $\sum_m M_m = I$, 
+ \[
+  I = I^2 = \left(\sum_m E_m\right)^2 = \sum_m E_m^2 + \sum_{m\ne n} E_m E_n = \sum_m E_m + \sum_{m\ne n} E_m E_n = I + \sum_{m\ne n}E_m E_n\,,
+ \]
+ and all $M_m = E_m$ are positive operators, therefore so is $E_m E_n$, from which $E_m E_n = 0$ ($m\ne n$) follows, i.e.,
+ they are mutually exclusive projectors, and so correspond to a projective operator.
+\end{exercise}
+
+\begin{exercise}
+ Let $\{M_m\}$ be a set of measurement operators. For each of these, $E_m=M_m^\dagger M_m$ is a positive self-adjoint operator, and therefore, its square root exists, and the polar decomposition of $M_m$ is $M_m = U_m \sqrt{E_m}$. The completeness relation reads $\sum_m E_m = I$. Thus, $E_m$ is a set of positive operators with the completeness property, i.e., a POVM.
+\end{exercise}
+
+\begin{exercise}
+ As the vectors $\psi_k$ ($k=1,\dots, m$) are linearly independent, for each vector, it is possible to find a normalised vector $\phi_k$ which is orthogonal to $\psi_j$ ($j\ne k$), and not orthogonal to $\psi_k$, and take
+ \[
+  E_k = |\phi_k \rangle\langle \phi_k|\ \ (k=1,\dots,m)\,,\text{\ and}\quad E_{m+1} = 1-\sum_{k=1}^m E_k\,.
+ \]
+ It is simple to verify that $E_k$ is positive, $\langle \psi_k|E_k|\psi_k\rangle\ne 0$, $\langle \psi_j | E_k |\psi_j\rangle=0$ ($k\ne j$) and $\sum_{k=1}^{m+1} E_k = I$, i.e., it is the POVM required.
+ 
+ To find this set of vectors, for each vector, move that one to the last position, apply the Gram-Schmidt procedure, and keep only the last vector. Equivalently, as the vectors are linearly independent, they span a subspace of the state space, and for each $k$, $\{\psi_j|j\ne k\}$ spans a different subspace. Let $P_k$ denote the orthogonal projector to this subspace, $\phi_k' = \psi_k - P_k \psi_k$ and $\phi_k = \phi_k/\|\phi_k\|$.
+\end{exercise}
+
+\begin{exercise}
+ In the basis
+ \[
+  |0'\rangle = \frac{|0\rangle + |1\rangle}{\sqrt{2}}\,,\quad |1'\rangle = \frac{|0\rangle + |1\rangle}{\sqrt{2}}
+ \]
+ the two vectors are $(1, 0)^T$ and $(0, 1)^T$, so not the same up to relative phases.
+\end{exercise}
+
+\begin{exercise}
+ Let us first use the action of the operators,
+ \[
+  X_1Z_2 \frac{|00\rangle + |11\rangle}{\sqrt{2}} = \frac{X_1 |0\rangle Z_2|0\rangle + X_1 |1\rangle Z_2|1\rangle}{\sqrt{2}} = \frac{|1\rangle |0\rangle + |0\rangle |1\rangle}{\sqrt 2}=\frac{|10\rangle + |01\rangle}{\sqrt 2}\,,
+ \]
+ and the following scalar products,
+ \[
+  \begin{aligned}
+   \langle 00|10\rangle = \langle 0|1\rangle \langle 0 |0\rangle = 0\times 1 =0\,,\quad &\langle 11|10\rangle = \langle 1|1\rangle\langle 1|0\rangle = 1\times 0=0\,,\\
+   \langle 00|01\rangle = \langle 0|0\rangle \langle 0| 1 \rangle = 1\times 0=0\,,\quad &\rangle 11|01\rangle = \langle 1|0\rangle \langle 1 |1\rangle = 0\times 1 =0\,,
+  \end{aligned}
+ \]
+ which yields
+ \[
+  \frac{(\langle 00| + \langle 11|) X_1 Z_2 (|00\rangle + |11\rangle)}{2} = 0\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Let us consider an orthonormal basis $e_i$ in $V$ such that $e_1$, $\dots$, $e_{\dim W}$ is in $W$, and the rest is in its orthogonal complement. As $f_i=Ue_i$, $i=1,\dots,\dim W$ are also orthonormal, it is possible to extend these to an orthonormal basis $f_i$ too, and define $Ue_i = f_i$ for $i>\dim W$. The operator such defined is defined on the whole space $V$ and preserves scalar products, therefore it is unitary.
+\end{exercise}
+
+\begin{exercise}
+ Any state of a composite system can be represented as a matrix of its coefficient in the basis $|i, j\rangle$, i.e., $|\psi\rangle = \psi_{i,j}|i, j\rangle$. For the state $\psi = (|00\rangle + |11\rangle)/\sqrt{2}$, we have $\psi_{0,0} = \psi_{1,1}=1/\sqrt{2}$. This is a rank-2 matrix. For any state $|a\rangle|b\rangle$, the resulting matrix is a rank-1 matrix, which can be shown by, e.g., choosing a basis in both spaces in which $|a\rangle$ and $|b\rangle$ are the first basis vectors, yielding $(|a\rangle|b\rangle)_{0,0}=1$ and all other elements 0. As the rank of a matrix is invariant to basis transformations, this proves that $\psi$ is not a product state.
+\end{exercise}
+
+\begin{exercise}\label{ex:Bellstates}
+ It is sufficient to show linear independence, as the space is four dimensional and there are four vectors. This follows from orthonormality, and that is shown as follows,
+ \[
+  \begin{aligned}
+   \langle 00'|00'\rangle &= \frac{1}{2}(\langle 00|00\rangle + \langle 00|11\rangle + \langle 11|00\rangle + \langle 11|11\rangle) = \frac{1}{2}(1+0+0+1)=1\,,\\
+   \langle 00'|01'\rangle &= \frac{1}{2}(\langle 00|00\rangle + \langle 11|00\rangle - \langle 00|11\rangle -\langle 11|11\rangle = \frac{1}{2}(1+0-0-1)=0\,,\\
+   \langle 00'|10'\rangle &= \frac{1}{2}(\langle 00 | 10\rangle + \langle 00|01\rangle + \langle 11|10\rangle + \langle 11|01\rangle)=\frac{1}{2}(0+0+0+0)=0\,,\\
+   \langle 00'|11'\rangle &= \frac{1}{2}(\langle 00|01\rangle - \langle 00|10\rangle + \langle 11|10\rangle - \langle 11|01\rangle)=\frac{1}{2}(0-0+0-0)=0\,,\\
+   \langle 01'|01'\rangle &=\frac{1}{2}(\langle 00|00\rangle - \langle 00|11\rangle -\langle 11|00\rangle + \langle 11|11\rangle)=\frac{1}{2}(1-0-0+1)=1\,,\\
+   \langle 01'|10'\rangle &= \frac{1}{2}(\langle 00|10\rangle +\langle 00|01\rangle - \langle 11|10\rangle - \langle 11|01\rangle)=\frac{1}{2}(0+0-0-0)=0\,,\\
+   \langle 01'|11'\rangle &= \frac{1}{2}(\langle 00|01\rangle - \langle 00|10\rangle -\langle 11|01\rangle + \langle 11|01\rangle)=\frac{1}{2}(0-0-0+0) =0\,,\\
+   \langle 10'|10'\rangle &= \frac{1}{2}(\langle 10|10\rangle + \langle 10|01\rangle + \langle 01| 10\rangle + \langle 10|10\rangle) = \frac{1}{2}(1+0+0+1)=1\,,\\
+   \langle 10'|11'\rangle &= \frac{1}{2}(\langle 01|01\rangle - \langle 01|10\rangle + \langle 10|01\rangle - \langle 10|10\rangle) = \frac{1}{2}(1-0+0-1)=0\,,\\
+   \langle 11'|11'\rangle &=\frac{1}{2}(\langle 01|01\rangle - \langle 01|10\rangle -\langle 10|01\rangle + \langle 10|10\rangle)=\frac{1}{2}(1-0-0+1)=1\,,
+  \end{aligned}
+ \]
+ where we used the notation $|i,j'\rangle$ to denote the Bell basis elements corresponding to the two classical bits $i,j$ as shown in eqs.\ (2.134-2.137).
+\end{exercise}
+
+\begin{exercise}\label{ex:Bellstates2}
+ Bell states each have the form (see the notation in Soln.~\ref{ex:Bellstates})
+ \[
+  \psi = \frac{|ij\rangle \pm |\bar{i}\bar{j}\rangle}{\sqrt{2}}\,,
+ \]
+ where we have used an overbar to denote the negation of the corresponding bit. As a result, evaluating an operator of the form $E\otimes I$ in such a state yields
+ \[
+  (E\otimes I)\psi = \frac{1}{\sqrt{2}}( E_{ii}|ij\rangle + E_{\bar{i}i}|\bar{i}{j}\rangle \pm E_{i\bar{i}}|i\bar{j}\rangle \pm E_{\bar{i}\bar{i}}|\bar{i}\bar{j}\rangle)\,,
+ \]
+ and when multiplying this vector with $\psi$, one obtains
+ \[
+  \langle\psi| E\otimes I|\psi\rangle = \frac{1}{2}(\langle ij| \pm \langle\bar{i}\bar{j}|)( E_{ii}|ij\rangle + E_{\bar{i}i}|\bar{i}{j}\rangle \pm E_{i\bar{i}}|i\bar{j}\rangle \pm E_{\bar{i}\bar{i}}|\bar{i}\bar{j}\rangle) = E_{ii} + E_{\bar{i}\bar{i}}\,,
+ \]
+ independently of $i$ and $j$ and the sign.
+ 
+ If Eve intercepts Alice's qubit, she can only perform local measurements, i.e.,  with operators of the form $\{M_m\otimes I\}$, and so the probabilities of the outcomes are
+ \[
+  p(m) = \langle \psi | M_m^\dagger M_m \otimes I |\psi\rangle\,,
+ \]
+ independent of which Bell state the system was in, therefore, she cannot distinguish the states.
+\end{exercise}
+ 
+\begin{exercise}
+ Let $\rho = \sum_j p_j |j\rangle\langle j|$ be the spectral decomposition of the density operator. As $\rho$ is positive and $\Tr \rho = \sum_j p_j = 1$, $0\le p_j \le 1$ for all $j$, so $p_j^2 \le p_j$, and either there is one $j=j_0$ for which $p_j=1$ and all of them are 0, or $p_j < 1$ for all $j$. In the latter case $p_j^2 < p_j$. Then
+ \[
+  \Tr \rho^2 = \Tr \sum_{j,k }p_j p_j |j\rangle\langle j| |k\rangle\langle k| = \Tr \sum_j p_j^2 |j\rangle\langle j| = \sum_j p_j^2 \le \sum_j p_j =1\,,
+ \]
+ and equality only holds when there is a $p_{j_0}=1$, i.e., when the state is pure, $\rho = p_{j_0}|j_0\rangle\langle j_0 |$.
+\end{exercise}
+
+\begin{exercise}
+ (1) Let $\rho$ be a density matrix, i.e., it is a positive operator with $\Tr \rho =1$. Then let $T = \rho -I/2$, so $\Tr T = \Tr \rho - \Tr I/2 =0$. A basis on the space of traceless Hermitian $2\times 2$ matrices is the set of the Pauli matrices, so it may be so expanded, $T = (1/2) \vec{r}\cdot\vec{\sigma}$, yielding
+ \[
+  \rho = \frac{I + \vec{r}\cdot\vec{\sigma}}{2}\,.
+ \]
+ The eigenvalues of $\vec{r}\cdot\vec{\sigma}$ are $\pm |r|$ (as seen, e.g., by writing the characteristic polynomial of the $2\times 2$ matrix $A$ as $\lambda^2 - \lambda \Tr A + \det A$), so $|r|\le 1$ must hold in order that $\rho$ is positive.
+ 
+ (2) To the state $\rho = I/2$ corresponds $\vec{r}=0$, i.e., it is represented by the centre of the Bloch sphere.
+ 
+ (3) Let $\rho$ correspond to a pure state, in which case $\Tr\rho^2 = 1$, and as
+ \[
+  \left(\frac{I+\vec{r}\cdot\vec{\sigma}}{2}\right)^2 = \frac{I+2 \vec{r}\cdot\vec{\sigma}+(\vec{r}\cdot\vec{\sigma})^2}{4} = \frac{(1+r^2)I+2\vec{r}\cdot\vec{\sigma}}{4}\,,
+ \]
+ $\Tr \rho^2 = (1+r^2)/2$ which is unity iff $r=|\vec{r}|=1$.
+ 
+ (4) In sec.\ 1.2, the pure states were parametrised in eq.\ (1.3). Let us extract the vector $\vec{v}$ by using the fact that $\Tr\sigma_i \sigma_j = 2\delta_{ij}$, so
+ $v_i = \Tr(\sigma_i \rho)$, yielding
+ \[
+  \begin{aligned}
+   v_1 &= \Tr \sigma_1 \rho = \langle \psi | \sigma_1 | \psi\rangle = \sin\vartheta\cos\varphi\,,\\
+   v_2 &= \Tr \sigma_2 \rho = \langle \psi | \sigma_2 | \psi\rangle = \sin\vartheta\sin\varphi\,,\\
+   v_3 &= \Tr \sigma_3 \rho = \langle \psi | \sigma_3 | \psi\rangle = \cos\vartheta\,,\\
+  \end{aligned}
+ \]
+ which shows that the two descriptions of the Bloch vector agree.
+\end{exercise}
+
+\begin{exercise}
+ Let $\rho = \sum_i \lambda_i |i\rangle\langle i|$ and $\psi = \sum_i c_i |i\rangle$. In this case, the generalised inverse is
+ \[
+  \rho^{-1} = \sum \lambda_i^{-1} |i\rangle\langle i|\,,
+ \]
+ and so
+ \[
+  \langle \psi | \rho^{-1} | \psi \rangle = \sum_i \langle \psi | i\rangle \lambda_i^{-1} \langle i | \psi \rangle = \sum_i |c_i|^2/\lambda_i\,.
+ \]
+ According to theorem 2.6, a set $\{p_j, \psi_j\}$ is an ensemble for $\rho$ iff there is a unitary matrix $u$ with which
+ \[
+  \sqrt{p_i}\psi_i = \sum_j u_{ij}\sqrt{\lambda_j}|j\rangle\,.
+ \]
+ Let $\psi_1 = \psi$. In this case,
+ \[
+  \sum_j \sqrt{p_1} c_j |j\rangle = \sqrt{p_1} \psi = \sum_j u_{1j} \sqrt{\lambda}_j |j\rangle\,,
+ \]
+ yielding
+ \[
+  u_{1j} = \frac{\sqrt{p_1}c_j}{\sqrt{\lambda_j}}\,,
+ \]
+ and from the unitarity of $u$ follows $uu^\dagger=I$, so
+ \[
+  \frac{1}{p} = \sum_j\frac{|c_j|^2}{\lambda_j}\,,\quad p = \frac{1}{\langle \psi | \rho^{-1}|\psi\rangle}\,.
+ \]
+ Constructing a minimal ensemble with $\psi_1 = \psi$ can be done as follows: first, we consider a matrix whose first row is $u_{1j} = c_j \sqrt{\lambda_j}/\sqrt{p_1}$, and extend this into a unitary $\Rank \rho \times \Rank \rho$ matrix (that this is possible can be shown using the vectors $e_i$ and the Gram-Schmidt orthogonalisation procedure), and let the remaining vectors in the set be the vectors given by eq.\ (2.167).
+\end{exercise}
+
+\begin{exercise}
+ If the composite system is in a state $|a\rangle |b\rangle$, its density operator is $\rho = |a\rangle |b\rangle \langle a |\langle b$, and the reduced density operator is, using eq.\ (2.178),
+ \[
+  \rho^A = \Tr_B \rho = |a\rangle\langle a| \Tr |b\rangle\langle b| = |a\rangle\langle a| \langle b | b\rangle = |a\rangle\langle a|\,,
+ \]
+ which is a pure state, given by the state vector $|a\rangle$.
+\end{exercise}
+
+\begin{exercise}
+ For the Bell state $|00'\rangle = (|00\rangle + |11\rangle)/\sqrt(2)$ (see the notation in Soln.~\ref{ex:Bellstates}), the density operator is
+ \[
+  \rho = |00'\rangle\langle00'| = \frac{1}{2}(|00\rangle + |11\rangle)(\langle 00|+\langle 11|) = \frac{1}{2}(|00\rangle\langle 00| + |00\rangle\langle 11| + |11\rangle \langle 00| + |11\rangle\langle 11|)\,,
+ \]
+ and so
+ \[
+  \rho^1 = \Tr_2\rho = \frac{1}{2}(|0\rangle\langle 0| + 0 + 0 + |1\rangle\langle 1|)= \frac{I}{2}\,,
+ \]
+ and, similarly, $\rho^2 = I/2$. For $|01'\rangle$,
+ \[
+  \rho = |01'\rangle\langle 01'| = \frac{1}{2}(|00\rangle\langle 00| - |00\rangle\langle 11| - |11\rangle\langle 00| + |11\rangle\langle 11|)\,,
+ \]
+ therefore $\rho^1=I/2 = \rho^2$. For $|10'\rangle$,
+ \[
+  \rho = |10'\rangle\langle10'| = \frac{1}{2}(|01\rangle\langle 01| + |01\rangle\langle 10| + |10\rangle\langle 01| + |10\rangle\langle 10|)\,,
+ \]
+ so
+ \[
+  \rho_1 = \Tr_2 \rho = \frac{1}{2}(|0\rangle\langle 0| + 0 + 0 + |1\rangle\langle 1|) = \frac{I}{2}\,,
+ \]
+ and
+ \[
+  \rho_2 = \Tr_1 \rho = \frac{1}{2}(|1\rangle\langle 1| + 0 + 0 + |0\rangle\langle 0|) = \frac{I}{2}\,,
+ \]
+ and we obtain the same result for $|11'\rangle$ by flipping the signs of terms 2 and 3 in the brackets.
+
+ Note, that the independence of the reduced density matrices on the Bell states also follows from Exercise~\ref{ex:Bellstates2}, as the measurement statistics of all operators on one of the subsystems must be the same for all the Bell states. For the $|00\rangle$ state the result is given by eq.\ (2.191).
+\end{exercise}
+
+\begin{exercise}
+ Let us assume that the dimensions of the state spaces of the two subsystems are $\dim H_A = n$, $\dim H_B = m$, $n < m$. Let us consider a larger state space $H_A'$ with $\dim H_A' = m$, and apply the theorem there.
+ 
+ The vectors $|j\rangle|k\rangle$ for $j>n$ do not appear in the expression of $\psi$, $a_{jk} = 0$ for $j>n$. As a result, $u_{ji}d_{ii} = 0$, and therefore in $\psi = \sum_i \lambda_i |i_A\rangle |i_B\rangle$, one can drop the zero eigenvalues, and for the non-zero eigenvalues have $|i_A\rangle = \sum_{j=1}{n} u_{ji}|j\rangle$, the sum run only over $1, \dots, n$, i.e., the vector is in the subspace corresponding to $H_A$ in $H_A'$.
+\end{exercise}
+
+\begin{exercise}
+ The question of a triple decomposition has been considered in Ref.~\cite{PeresHigherOrderSchmidt}. The main line of the argument is that if the eigenvalues are unequal, the decomposition is unique. On the one hand, the tripartite state space can be split into subsystem 1 and subsystems 2 and 3, one may apply the Schmidt decomposition, and find a decomposition of the form
+ \[
+  \psi = \sum_i \lambda_i |i_A\rangle|i_{BC}\rangle\,,
+ \]
+ and on the other hand, if the tripartite decomposition is possible,
+ \[
+  \psi = \sum_i \lambda_i |i_A\rangle|i_B\rangle|i_C\rangle\,,
+ \]
+ and the two must agree, i.e., $|i_{BC}\rangle$ must agree with $|i_B\rangle |i_C\rangle$. We may therefore construct the counterexample ``backwards'', by starting with a 1-(23) decomposition in which the vectors $|_{BC}\rangle$ are entangled states, e.g.,
+ \[
+  \psi = \alpha |0\rangle |01'\rangle + \beta |1\rangle |10'\rangle\,,
+ \]
+ using Bell states (see Soln.~\ref{ex:Bellstates} for the notation), and $\alpha\ne\beta$, $|\alpha|^2+|\beta|^2=1$.
+\end{exercise}
+
+\begin{exercise}
+ Let $\psi = |\psi_A\rangle|\psi_B\rangle$. This is already a Schmidt decomposition with Schmidt number 1. In the other direction, a state with Schmidt number one is
+ $\psi = \lambda_1 |1_A\rangle |1_B\rangle$ is also clearly a product state.
+
+ Also, if $\psi$ is a product state, clearly $\psi_A$ and $\psi_B$ are pure states. For the other direction, let us assume that $\psi$ has at least Schmidt number 2, i.e., in the sum
+ \[
+  \psi = \sum_i \lambda_i |i_A\rangle |i_B\rangle
+ \]
+ there are two or more nonzero $\lambda_i$'s. In this case, the reduced states are
+ \[
+  \begin{aligned}
+   \rho_A &= \Tr_B \sum_{i,j} \lambda_i\lambda_j |i_A\rangle |i_B\rangle \langle j_A|\langle j_B| = \sum_i \lambda_i^2 |i_A\rangle \langle i_A|\,,\\
+   \rho_B &= \Tr_A \sum_{i,j} \lambda_i\lambda_j |i_A\rangle |i_B\rangle \langle j_A|\langle j_B| = \sum_i \lambda_i^2 |i_B\rangle \langle i_B|\,,
+  \end{aligned}
+ \]
+ as $\Tr |i_B\rangle\langle j_B| = \langle j_B|i_B\rangle = \delta_{ij}$ and $\Tr |i_A\rangle\langle j_A| = \langle j_A|i_A\rangle = \delta_{ij}$. In order that the two $\rho_A$, $\rho_B$ are pure states, both $\rho_A$ and $\rho_B$ must be rank-1 matrices, there can neither be two different $|i_A\rangle$ nor $|i_B\rangle$ vectors.
+\end{exercise}
+
+\begin{exercise}
+ The Schmidt decomposition is found by extracting from the states the matrix $a$, and then performing an SVD on these matrices. The matrices are as follows,
+ \[
+   \psi_1 = \frac{|00\rangle + |11\rangle}{\sqrt{2}}\,,\quad a_1=\begin{pmatrix} 1 & \\ & 1\end{pmatrix}\\
+ \]
+ which is already in the Schmidt decompositon form ($a$ is diagonal),
+ \[
+  \begin{aligned}
+   \psi_2 = \frac{|00\rangle + |01\rangle + |10\rangle + |11\rangle}{2}&\,,\quad a_2=\begin{pmatrix}1 & 1 \\ 1 & 1 \end{pmatrix}\,,\\
+   \psi_3 = \frac{|00\rangle + |01\rangle + |10\rangle}{\sqrt{3}}&\,,\quad a_3 = \begin{pmatrix}1 & 1\\1 & 0\end{pmatrix}\,.
+  \end{aligned}
+ \]
+ The SVD of the matrices yields
+ \[
+   a_2 = U_2 D_2 V_2\,, D_2=\begin{pmatrix}0 & \\ & 2 \end{pmatrix} U_2 = V_2^\dagger = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ -1 & 1 \end{pmatrix}\,,
+ \]
+ yielding
+ \[
+  |0_A\rangle = \sum_j (U_2)_{j0} |j\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\,,\quad |1_A\rangle = \sum_j (U_2)_{j1} |j\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\,,
+ \]
+ and
+ \[
+  |0_B\rangle  = \sum_j (V_2)_{j0} |j\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\,,\quad |1_B\rangle = \sum_j (V_2)_{j1} |j\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\,,
+ \]
+ and similarly (by finding left and right eigenvalues)
+ \[
+  a_3 = U_3 D_3 V_3\,,\quad D_3 = \begin{pmatrix} \frac{\sqrt{5}+1}{2} & \\ & \frac{-\sqrt{5}+1}{2} \end{pmatrix}\,,
+ \]
+ and
+ \[
+  U_3 = V_3^\dagger = 
+  \begin{pmatrix}
+   \frac{2}{\sqrt{\frac{\sqrt{5}-5}{\sqrt{5}-3}}(\sqrt{5}-1)} & \frac{-\sqrt{2}}{\sqrt{\sqrt{5}+5}} \\
+   \sqrt{\frac{\sqrt{5}-3}{\sqrt{5}-5}} & \frac{\sqrt{5}+1}{\sqrt{2\sqrt{5}+10}}\,,
+  \end{pmatrix}
+ \]
+ and $|i_{A,B}\rangle$ ($i=0,1$) as above.
+\end{exercise}
+
+\begin{exercise}
+Te equations below eq.\ (2.204) defining the new bases on the two subsystem Hilbert spaces, $|i_A\rangle = \sum_j u_{ji} |j\rangle$ and $|i_B\rangle = \sum_k v_{ik}|k\rangle$ may be used to define 
+ unitary operators by
+ \[
+  |i_A\rangle = U(\psi)|i\rangle\,,\quad |i_B\rangle = V(\psi)|i\rangle\,.
+ \]
+ Let us apply the inverse to $\psi$,
+ \[
+  \begin{aligned}
+   (U(\psi)\otimes V(\psi))^\dagger |\psi\rangle &= \sum_i \lambda_{i} |i_A\rangle |i_B\rangle = \sum_i \lambda_i U(\psi)^\dagger|i_A\rangle \otimes V(\psi)^\dagger |i_B\rangle\\ &= \sum_i \lambda_i U(\psi)^\dagger U(\psi)|i\rangle \otimes V(\psi)^\dagger V(\psi)|i\rangle = \sum_j \lambda_j |i\rangle|i\rangle\,,
+  \end{aligned}
+ \]
+ which only depends on the Schmidt coefficients of the state $\psi$. This lets us define
+ \[
+  U = U(\psi)U(\varphi)^\dagger\,,\quad V = V(\psi)V(\varphi)^\dagger\,,
+ \]
+ so that
+ \[
+  \begin{aligned}
+   (U\otimes V)\varphi &= (U(\psi)\otimes V(\psi))(U(\varphi)^\dagger\otimes V(\varphi)^\dagger)\varphi\\
+   &= (U(\psi)\otimes V(\psi)) \sum_j \lambda_j |i\rangle|i\rangle = \psi\,.
+  \end{aligned}
+ \]
+ To verify that $U(\psi)$ and $V(\psi)$ are both unitary, note that they take orthonormal bases into orthonormal bases.
+\end{exercise}
+
+\begin{exercise}
+ Let us use that basis in the subsystem $A$ which diagonalises the density matrix $\rho$, i.e.,
+ \[
+  \rho = \sum_j p_j |j^A\rangle \langle j^A|\,,
+ \]
+ and write the purifications as
+ \[
+  \psi = \sum_{jk}\psi_{j,k}|j^A\rangle |k^R\rangle\,,\quad \varphi = \sum_{jk}\varphi_{j,k}|j^A\rangle |k^R\rangle\,.
+ \]
+ The condition for a purification is that
+ \[
+  \rho = \Tr_2 |\psi\rangle\langle\psi | = \Tr_2 \sum_{j,k,\ell,m} \psi_{j,k}\psi_{\ell, m}^* |j^A\rangle|k^R\rangle\langle \ell^A|\langle m^R| = \sum_{j,k,\ell} \psi_{j,k}\psi_{\ell,k}^* |j^A\rangle \langle \ell^A|\,,
+ \]
+ and similary for $\varphi$, yielding
+ \[
+  \sum_k \psi_{j,k} \psi_{\ell, k}^* = p_j \delta_{j, \ell} = \sum_k \varphi_{j,k } \varphi_{\ell, k}\,.
+ \]
+ Defining $u_{j,k} = p_j^{-1/2} \psi_{j, k}$, this yields $\sum_k u_{j, k} u_{\ell, k}^* = \delta_{j, \ell}$, i.e., $u$ is a unitary matrix, and so is $v$ defined as $v_{j, k} = p_j^{-1/2} \varphi_{j, k}$ and we may write
+ \[
+  \begin{aligned}
+   \psi &= \sum_{j,k} \sqrt{p_j}|j^A\rangle u_{j, k}|k^R\rangle  =\sum_j\sqrt{p_j}|j^A\rangle U|j_{R_1}\rangle = (I\otimes U)\sum_j \sqrt{p_j}|j^A\rangle|j_{R_1}\rangle\,,\\
+   \varphi &= \sum_{j,k} \sqrt{p_j}|j^A\rangle v_{j, k}|k^R\rangle=\sum_{j,k}\sqrt{p_j}|j^A\rangle U|j_{R_2}\rangle= (I\otimes V)\sum_j \sqrt{p_j}|j^A\rangle|j_{R_2}\rangle\,,
+  \end{aligned}
+ \]
+ The operator defined by $W|j_{R_2}\rangle = |j_{R_1}$ is also unitary, as it maps the elements of an orthonormal basis into those of another, so
+ \[
+  U_{R} = U W V^\dagger
+ \]
+ has the desired property, $(I\otimes U_R)\varphi = \psi$.
+\end{exercise}
+
+\begin{exercise}
+ (1) The proof is basically eqs.\ (2.207--2.2.211).
+ 
+ (2) Measuring $|i\rangle$ in the $R$-basis corresponds to a projective measurement with measurement operators $I\otimes P_i$ with $P_i = |i\rangle\langle i|$, yielding probabilities
+ \[
+  \begin{aligned}
+   p(i) &= \sum_{k,\ell} \sqrt{p_kp_\ell}\langle k | \langle \psi_k | (I\otimes P_i) | \psi_\ell \rangle |\ell\rangle = \sum_{k,\ell} \sqrt{p_kp_\ell}\langle k | \langle \psi_k | (I\otimes |i\langle\rangle i|) | \psi_\ell \rangle |\ell\rangle\\ &= \sum_{k,\ell}\sqrt{p_kp_\ell}\delta_{k,\ell}\delta_{i,\ell} = p_i\,.
+  \end{aligned}
+ \]
+ The corresponding state of system $A$ is
+ \[
+  \begin{aligned}
+   \frac{P_i \sum_k \sqrt{p_k}|\psi_k\rangle|k\rangle}{\sqrt{\sum_{k,l}\sqrt{p_kp_\ell}\langle k|\langle \psi_k|P_i|\psi_\ell\rangle|\ell\rangle}} &= \frac{(I\otimes |i\rangle\langle i|) \sum_k \sqrt{p_k}|\psi_k\rangle|k\rangle}{\sqrt{\sum_{k,l}\sqrt{p_kp_\ell}\langle k|\langle \psi_k|(I\otimes|i\rangle\langle i|)|\psi_\ell\rangle|\ell\rangle}}\\
+   &= \frac{\sum_k \sqrt{p_k}|\psi_k\rangle\delta_{ik}}{\sqrt{\sum_{k,\ell} \sqrt{p_kp_\ell}\delta_{k,\ell}\delta_{k,i}\delta_{i,\ell}}} = \psi_k\,.
+  \end{aligned}
+ \]
+
+ (3) If $|AR\rangle$ is any purification, we know that it is unitary equivalent, with an operator $I\otimes U_R$, to the purification condidered in (1), (2) (see Excer.\ 2.81). The measurement operators are then
+ \[
+  P_i' = (I\otimes U_R) P_i (I\otimes U_R^\dagger).
+ \]
+ These are also rank-1 projectors, i.e., $P_i' = |i'\rangle\langle i|$ and the sought states are $|i'\rangle$.
+
+\end{exercise}
+
+\begin{problem}
+ Let us expand the function $f$ in a Taylor series,
+ \[
+  f(x) = \sum_{k=0}^\infty \frac{1}{k!}f^{(k)}(0)x^k\,,
+ \]
+ and note that $\vec{n}\cdot\vec{\sigma}$ has the property that $(\vec{n}\cdot\vec{\sigma})^2 = (n_i\sigma_i)^2 = n_i n_k \sigma_i \sigma_k = n_i n_k (\delta_{ik} + \imagi \epsilon_{ik\ell}\sigma_\ell) = 1$, so
+ \[
+  f(\theta\vec{n}\cdot\vec{\sigma}) = \sum_k \frac{1}{(2k)!}f^{(2k)}(0)\theta^{2k} + \theta \vec{n}\cdot\vec{\sigma}\sum_k \frac{1}{(2k+1)!}f^{(2k+1)}(0) \theta^{2k+1}\,,
+ \]
+ and, similarly, $(-x)^{2k} = x^{2k}$, $(-x)^{2k+1} = -(-x)^{2k+1}$, so
+ \[
+  \frac{f(\theta) + f(-\theta)}2 = \sum_k \frac{1}{(2k)!}f^{(2k)}(0) \theta^{2k}\,,
+ \]
+ and
+ \[
+  \frac{f(\theta) - f(-\theta)}2 = \sum_k \frac{1}{(2k+1)!}f^{(2k+1)}(0) \theta^{2k+1}\,,
+ \]
+ therefore, comparison yields the desired result
+ \[
+  f(\theta\vec{n}\cdot\vec{\sigma}) = \frac{f(\theta)+f(-\theta)}{2}I + \frac{f(\theta)-f(-\theta)}{2}\vec{n}\cdot\vec{\sigma}\,.
+ \]
+\end{problem}
+
+\begin{problem}
+ (1) Let us work in the basis where $\psi$ is transformed to its Schmidt form,
+ \[
+  \psi = \sum_i \lambda_i |i_A\rangle|i_B\rangle\,,
+ \]
+ and compute the partial trace
+ \[
+  \rho_A = \Tr_2 |\psi\rangle\langle\psi| = \sum_{i,j} \lambda_i\lambda_j |i_A\rangle\langle i_A| \langle i_B| j_B\rangle = \sum_i \lambda_i^2 |i_A\rangle\langle i_A|\,,
+ \]
+ where we used $\langle i_B|j_B\rangle = \delta_{ij}$. It is clear that the rank of $\rho_A$ is the Schmidt number of $\psi$.
+
+ (2) By applying Gram-Schmidt orthogonalisation to the vectors $\alpha_j$ and to $\beta_j$ we obtain an orthonormal basis in the space spanned by them. The resulting expansion is of the form
+ \[
+  \psi = \sum_{i,j} a_{ij}|i\rangle|j\rangle\,,
+ \]
+ and the Schmidt-decomposition is obtaine from the singular value decomposition of the matrix $a$, and the number of non-zero singular values is maximally that of the smaller of the number of rows and columns of $a$, both of which are the number of linearly independent vectors among $\alpha_i$ and $\beta_i$, repsectively.
+
+ (3) Again, writing all the state vectors in the form
+ \[
+  \psi = \sum_{i,j}\psi_{i,j}|i\rangle|j\rangle\,,\quad \varphi = \sum_{i,j}\varphi_{i,j}|i\rangle|j\rangle\,,\quad \gamma=\sum_{i,j}\gamma_{i,j}|i\rangle|j\rangle\,,
+ \]
+ the Schmidt number becomes the number of the non-zero singular values of the corresponding matrices $\psi_{ij}$, $\varphi_{i,j}$ and $\gamma_{i,j}$. The rank is the dimension of the space spanned by the columns of the matrices, it is clear that the rank of the matrix $\gamma$ is $\Rank \gamma = \Rank \beta \gamma = \Rank (\psi-\alpha\varphi) \le \Rank \psi + \Rank \varphi$, yielding ${\rm Sch}(\gamma) \le {\rm Sch}(\psi) + {\rm Sch}\varphi$, or ${\rm Sch}(\psi)\ge {\rm Sch}(\gamma) - {\rm Sch}(\varphi)$. By exchanging the roles of $\varphi$ and $\gamma$ we obtain the desired inequality,
+ \[
+  {\rm Sch}(\psi) \ge |{\rm Sch}(\varphi) - {\rm Sch}(\gamma)|\,.
+ \]
+\end{problem}
+
+\begin{problem}
+ To calculate
+ \[
+  (Q\otimes S + R\otimes S + R\otimes T - Q\otimes T)^2\,,
+ \]
+ note that any of these operators square to $I$, as for any $\vec{v}$, $(\vec{v}\cdot\vec{\sigma})^2=v^2 I$, so the $4I$ equals the diagonal terms. To evaluate the cross term, note that
+ \[
+  (A\otimes B)(C\otimes D) = AC\otimes BD\,,
+ \]
+ and if the letter on one side of the tensor product agree, there an identity operator resutlts. These terms are, eq., $Q\otimes S R\otimes S = QR \otimes I$, and these drop out. The remaining terms are
+ \[
+  4 I + QR\otimes ST - RQ\otimes ST + RQ\otimes TS -QR \otimes TS\,,
+ \]
+ which are the terms arising when expanding $4I + [Q,R]\otimes [S, T]$, thereby prooving eq.\ (2.33).
+ 
+  For any operator $A$, $\langle A\rangle \le \lambda_{\rm max}(A)$. Applying this to the operator in the brackets in the expression we started with yields
+ \[
+  \langle (Q\otimes S + R\otimes S + R\otimes T - Q\otimes T)^2\rangle = \langle 4I + [Q,R]\otimes [S, T] \rangle \le 8\,,
+ \]
+  where we have used, e.g., that
+  \[
+   [Q, R] = [\vec{q}\cdot\vec\sigma, \vec{r}\cdot\vec{\sigma}] = 2\imagi (\vec{q}\times\vec{r})\cdot\vec{\sigma}\,,
+  \]
+  where $\vec{q}\times\vec{r}$ is the vector product of two unit vectors, therefore its length is at most 1, so the maximal eigenvalue of $[Q, R]$ is also at most 1.
+  
+  For any operator $A$, $\sigma_A^2 = \langle A^2\rangle - \langle A\rangle^2$, yielding
+  \[
+   \langle A\rangle \le |\langle A\rangle |\,,\quad \langle A\rangle^2 = \langle A^2\rangle -\sigma_A^2 \le \langle A^2\rangle\,,
+  \]
+  Applying this inequality to the operator $Q\otimes S + R\otimes S + R\otimes T - Q\otimes T$, and plugging in our result for its square yields Tsirelson's inequality.
+\end{problem}
+
+\section{Introduction to computer science}\label{sec:introductionToComputerScience}
+
+\begin{exercise}
+ I do not think it is possible to verify if a natural process evaluates a function non-computable with a Turing machine. We can only verify what it evaluates for a finite value of inputs, and there definitely exists a Turing machine which gives the same results for thos (e.g., with a lot of states containing a lookup table). We might conjecture that a process evaluates a non-computable function if we try to model it with Turing machines and then every time we test it on a new input the model has to be changed.
+\end{exercise}
+
+\begin{exercise}
+ Turing machines can be numbered as follows: we put them into a table, where in the $i$th column are Turing machines wiht an alphabet of length $i$ and in the $j$th row those of $j$ states, and in each cell of the table, behind one another those with their programs alphabetically sorted.
+ 
+ Inputs can also be assigned a number. If in the $k$th cell of the input tape there is the $a_k$th element of the alphabet for a machine, we assign that input the number $p_1^{a_1} p_2^{a_2} \cdot\dots\cdot p_n^{a_n}$ where $n$ is the length of the given input and $p_j$ is the $j$th prime number. This gives a natural number, and as the prime factorisation is unique it is a 1:1 mapping of possible inputs to real numbers.
+\end{exercise}
+
+\begin{exercise}
+ Let us construct the Turing machine as follows: we take a two-tape Turing machine, with states $r$, $\ell$ for moving left, $\ell'$ for rewinding tape 2 and $c$ for copying, and the following program:
+ \[
+  \begin{aligned}
+   &\langle q_s, \triangleright, \triangleright, r, \triangleright, x, +1, +1\rangle\,,\\
+   &\langle r, x, y, r, x, y, +1,0\rangle\,,\quad \forall x\ne b,y\\
+   &\langle r, b,y,\ell,b,y,-1,0\rangle\,,\quad \forall y\\
+   &\langle \ell, x,y,\ell, b, x, -1, 1\rangle\,,\quad\forall x\ne \triangleright, y\\
+   &\langle \ell,\triangleright,\triangleright, \ell',\triangleright,\triangleright,1,1\rangle\\
+   &\langle \ell', x, y, \ell', x, y, 0, -1 \rangle\,,\quad \forall x, y\ne \triangleright\\
+   &\langle \ell', x, \triangleright, c, x, \triangleright, 0, 1\rangle\\
+   &\langle c, x, y, c, y, b, +1, +1\rangle\,,\quad \forall x, y\ne b\\
+   &\langle  c, x, b, h, x, b, 0, 0\rangle\,,\quad \forall x
+  \end{aligned}
+ \]
+ The machine starts, it switches to state $r$, moves the first tape to the end of the input without moving the second tape, and when reaches a blank cell, switches to state $\ell$. In that state, it moves first tape left, the second one right, and copies the number on tape 0 to tape 1 backwards until it reaches the start position (marked $\triangleright$), also erasing the input. Then it switches to state $\ell$, and rewinds tape 2, until it reaches the start position on that one, and then switches to state $c$ copies tape 2 onto 1 until it reaches a blank on tape 2, and finally halts.
+\end{exercise}
+
+\begin{exercise}
+ Let us use a three tape Turing machine, get the input on tapes 1 and 2, both with the least significant bit first, and leave the result on tape 3, also in the same order. (In the previous exercise we have seen that it is possible to reverse the bits, and to copy the result from tape 3 to tape 1). The program is
+ \[
+  \begin{aligned}
+   &\langle q_s, \triangleright, \triangleright, \triangleright, q_{a}, \triangleright, \triangleright, \triangleright, 1, 1, 1\rangle\,,\\
+   &\langle q_a, x, y, z, q_a, x, y, x + y \text{\ mod\ } 2, 1, 1, 1\rangle\,,\quad \forall x\ne b, y\ne b\\
+   &\langle q_a, x, b, z, q_a, x, b, x, 1, 0, 1\rangle\,,\forall y\ne 0\\
+   &\langle q_a, b, y, z, q_a, b, y, y, 0, 1, 1\rangle\,,\forall x\ne 0\\
+   &\langle q_a, b, b, z, h, b, b, z, 0, 0, 0\rangle\,.
+  \end{aligned}
+ \]
+\end{exercise}
+
+\begin{exercise}
+ This is known as the blank space halting problem. The proof is indirect, we shall assume that there is a solution to the blanks pace halting problem, i.e., a function $h_b(x)$ which is 0 if the Turing machine with Turing number $x$ does not halt for an epty input, and 1 if it does. We shall show that if this was true then the function $h$ in Box 3.2 would also be computable. To show this, to any Turing number $x$ and input $w$ we construct a new Turing machine with the program:
+ \begin{verbatim}
+  T_w(x):
+    erase tape
+    write w
+    run T(x) on input w
+ \end{verbatim}
+ It is clear that this is a Turing machine, and if $h_b$ was computable, so was $h$.
+\end{exercise}
+
+\begin{exercise}
+ Let us construct the machine used in the construction in Box 3.2, replacing $h$ with $h_p$. If for this machine $h_p(x)$ is true, then in more then 1/2 of the runs, $y$ is true, and the machine runs forever, contradicting $h_p(x)$ being true. If $h_p(x)$ is false, then in more than 1/2 of the rund, $y$ is false, and the machine stops. Again, this contradicts $h_p(x)$ being true.
+\end{exercise}
+
+\begin{exercise}
+ No. We may use the same proof as for the Turing machine, i.e., construct an oracle machine, and replace $h(x)$ with the function that computes that the oracle machine number $x$ halts.
+\end{exercise}
+
+\begin{exercise}
+ To show that {\sc nand} can be used to simulate all other gates, let as proceed as follows: %let $n(x, y)$ be the {\sc nand} operation, and
+ note that
+ \[
+  x\text{\sc\,nand\,}x = \bar{x}\,,
+ \]
+ and $x \land x = x$. This may be used to show that
+ \[
+%  n(n(x, y), n(x, y))
+  (x\text{\sc\,nand\,}y)\text{\sc\,nand\,}(x\text{\sc\,nand\,}y)= x \land y\,,
+ \]
+ constructing the {\sc and} gate. To produce the {\sc xor} gate, note, that
+ \[
+ x \lor y = \overline{\bar x \land \bar y}
+ \]
+ and
+ \[
+  x \text{\sc\,xor\,} y = (x\lor y) \land \overline{(x\land y)}\,,
+ \]
+ and thes only contained operations that we have already constructed ({\sc and} and {\sc not} and {\sc or} in the latter case).
+\end{exercise}
+
+\begin{exercise}
+ 1. If $f(n)$ is $O(g(n))$, then there exist $n_0$ and $c>0$ such that for $n > n_0$, $f(n) \le c \cdot g(n)$. This, however, means that for the smae $n_0$, $g(n) \ge (1/c) f(n)$, i.e., $g(n)$ is $\Omega(f(n))$ with the constant $c'=1/c$.
+ 
+ 2. If, on the other hand, $g(n)$ is $\Omega(f(n))$, by definition, that means, that there are constants $n_0$ and $c>0$ such that for $n>n_0$, $g(n) \ge c f(n)$. This, however, means that for the same $n_0$, $n > n_0$, $f(n) \le (1/c) g(n)$, i.e., $f(n)$ os $O(g(n))$ with constant $1/c$.
+\end{exercise}
+
+\begin{exercise}
+Let $g(n) = a_k n^k + \dots + a_1 n + a_0$. What we need to show is that there exist $c$ and $n_0$ that for $n>n_0$, $f(n) \le c n^\ell$ for all $\ell > k$. 
+
+We shall first note that for any $m > 0$, and $n > 1$, $n^m > n^{m-1}$, so $a_m n^m + a_{m-1} n^{m-1} > (a_m + a_{m-1}) n^m$. This way, we may eliminate lower powers by induction, and see that $g(n) < (a_k + a_{k-1} + \dots + a_0) n^k < (a_k + a_{k-1} + \dots + a_0) n^\ell$ for $\ell > k$.
+\end{exercise}
+
+\begin{exercise}
+ It suffices to show that there is an $n_0$ that for $n>n_0$, $\log n < n$. This already holds for $n=2$, and we shall show that $\log n - n$ is monotonously decreasing (for large enough $n$), by looking at its derivative, $(\log x - x)' = 1/(x\ln 2) -1 < 0$ for $x>2$.
+\end{exercise}
+
+\begin{exercise}
+ As for $n>2^k$, $n^{\log n} > n^k$, $n^k$ is $O(n^{\log n})$. On the other hand, assuming that $n^{\log n}$ is $O(n^k)$ would mean assuming the existence of $n_0$, $k$ and $c$ such that $n^{\log n} \le c n^k$ for all $n>n_0$. On the other hand, for $n> 2^{k+1}$, $n^{\log n} > n^{k+1}$ and for large enough $n$, $n^{k+1} > c n^k$.
+\end{exercise}
+
+\begin{exercise}
+ As $n^{\log n} = 2^{(\log n)^2}$ and $c^n = 2^{n\log c}$, all we need to show is that $n\log c > (\log n)^2$ for $n$ large enough, or, equivalently, $2^{\log n} \log c > (\log n)^2$, which is clear from the fact that the Taylor series of an exponential contains all powers with positive coefficients.
+\end{exercise}
+
+\begin{exercise}
+ For $n > n_0'$, $e(n) \le c' f(n)$ and for $n> n_0''$, $g(n) \le c'' h(n)$. It follows that for $n > n_0 = {\rm max}\{n_0', n_0''\}$, $e(n) g(n) \ge c' c'' f(n) h(n)$.
+\end{exercise}
+
+\begin{exercise}
+ At each compare-and-swap operation we exchange or do not exchange 2 elements in the list. Let us assume that for a given algorithm finishing in at most $k$ steps, there exist such orderings of the list, that in each step, for one of them, the comparison results in a swap, and in the other one, no swap is done. This means, that running the steps backward, we started with the ordered list, and in each step, there is a branching, and therefore, in the first step, we obtain $2$ new orderings, in the second, $4$, and in the end, $2^k$. This means, that some of the $k! < 2^k$ orderings were not visited, the algorithm could not have sorted those in $k$ steps.
+\end{exercise}
+
+\begin{exercise}
+ The number of Boolean functions of $n$ bits is $2^{2^n}$, because the value of the most general function may be prescribed separately to each possible input, and this value may be either true or false.
+ 
+ Let us assume that we have a circuit with $k$ gates and $n$ wires. Then for each gate, we need to choose its input wires, either from one of the other gates or from the original $n$ wires, yielding $\sim (n+k)^2$ possibilities, and the type of the gate, which is the number of 2-bit functions, 4. So we have $(4 (n+k)^2)^k$ functions.
+ 
+ To be able to construct all the $2^{2^n}$ Boolean functions, we therefore need to satisfy
+ \[
+  [4(n+k)^2]^k \ge 2^{2^n}\,,
+ \]
+ or taking a logarithm and neglecting constants,
+ \[
+  k \ge \frac{2^n}{\log n}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ If we could find the factors of a number in polynomial time, all we needed to do was compare the smallest factor with the input $\ell$ to see if the number has a factor smaller than $\ell$.
+ 
+ If we could solve the factorisation decision problem in polynomial time, it would be possible to factorise the number in polynomial time by finding the smallest factor using a logarithmic search, dividing the number by that, and repeating this until all factors are found. The number of prime factors of a number are at most logarithmic (all factors are $\ge 2$, so dividing them at least halves the number).
+\end{exercise}
+
+\begin{exercise}
+ If {\bf P} agreed with {\bf NP} than for any {\bf NP} decision problem there was a polynomial time Turing machine that decided the problem. This machine can then be used to decide the relevant witness verification for both being in the language or for not being in the language by simply running it after a machine that just copies the input on a second tape and runs the machine on that one.
+\end{exercise}
+
+\begin{exercise}
+ A polynomial (actually, linear) time algorithm for the reachability problem can be constructed as follows: take one of the two vertices that need to be verified if they are reachable from each other. In each step, add one of their neighbours to a list, ad cross them off from the list of all vertices. When we ran out of neighbours, add the neighbours of the neighbours, and so on. If the second vertex is added, it is reachable. If at one point we run out of neighbours (i.e., all the neighbours of the vertices in the list of visited vertices are already crossed out from the list of all vertices) then the second point is not reachable. As in each step we add a vertex to the list of reachable vertices, the algorithm ends in at most as many steps as there are vertices in the graph.
+\end{exercise}
+
+\begin{exercise}
+ It is obvious that if the graph has an Euler cycle then all vertices are of even rank. Starting from one vertex along the cycle we leave that vertex, then move to another one, leave that one, move to another one, and so on. For each arrival at a vertex there is also a departure, each time adding two to the rank of the vertex.
+ 
+ If we have a connected graph with all vertices of even rank, we may construct the Euler cycle using Hierholzer's algorithm. We start from a vertex, and always move to a next one along an edge. It is not possible to get stuck as that would only be possible at a vertex with an odd rank. This is done as long as we reach the original vertex. After this has been done checks recursively, along this cycle, if there are edges left. Along those the algorithm is repeated, always inserting the new cycle into the old one. As in each step at least two edges are added, and the number of edges is $O(n^2)$, $n$ denoting the number of vertices, the algorithm is polynomial time.
+\end{exercise}
+
+\begin{exercise}
+ $L_1$ being reducible to $L_2$ means that there is a mapping $R_1$ such that for any string $x$ in the alphabet of $L_1$, $R_1(x)$ is in $L_2$ iff $x$ is in $L_1$, and $R_1$ is calculable with a Turing machine in polynomial time. In this case, the length of the string $R_1(x)$ must also be polynomial, otherwise printing it would take longer than polynomial time. The reducibility of  $L_2$ to $L_3$ means the existence of a similar mapping $R_2$. Therefore, $R := R_2 \circ R_1$ is a mapping reducing $L_1$ to $L_3$, and it is computable in polynomial time, as $R_1(x)$ is, and its length is polynomial, therefore $R_2(R_1(x))$ is computable in polynomial time in the length of $R_1(x)$, and a polynomial of a polynomial is polynomial, therefore, it is computable in polynomial time in the length of $x$ as well.
+\end{exercise}
+
+\begin{exercise}
+ Using the results in the previous exercise, if $L$ is complete, that means that for any $L_1$, there is a mapping $R_1$ reducing it to $L$. The reducibility of $L$ to $L'$ means that there is a mapping $R'$ reducing $L$ to $L'$. In that case, for the language $L_1$ is reduced to $L'$ using the mapping $R_1' := R' \circ R_1$.
+\end{exercise}
+
+\begin{exercise}
+ 1. To show that {\sc sat} is {\bf NP}, we need to show that a witness to it can be verified in polynomial time by a Turing machine. To do this, we construct a Turing machine that first evaluates the inner brackets, writes it on the tape next to the input, then the next brackets, and so on. As there are a finite number of operations in the formula, this ends in a polynomial time in the number of operations (number of such steps is linear, and there is bookkeeping to know where to get the results from).
+ 
+ 2. To show that {\sc sat} is {\bf NP}-complete, we need to reduce another {\bf NP}-complete problem to it. A Boolean circuit can be represented by a formula: each intermediate gate corresponds to a sub-expression in an inner bracket, and the last one is the result. This way, the equivalence of {\sc sat} and {\sc csat} is demonstrated.
+\end{exercise}
+
+\begin{exercise}
+ A $k$-variable formula in the 2-conjunctive normal form is
+ \[
+  (y_1 \lor y_2) \land \dots \land (y_{2n-1} \lor y_{2m})\,,
+ \]
+ where all the $y$'s may be taken from $x_1, \dots, x_k$ and $\bar{x}_1, \dots, \bar{x}_k$. The directed graph constructed encodes the relation ``$y_i$ being 0 means $y_j$ has to be 1 for the formula to be true''. If there is a path connecting $x_i$ to $\bar{x}_i$, that means the formula cannot be satisfied.
+ 
+ For a directed graph, reachability can be decided in polynomial time. We list the vertices $v_1, \dots, v_N$. We start with the starting vertex $v_m$, and in the first step, list the vertices  that are connected to it. We cross them out from the list. In the next steps, we list vertices connected to all vertices in our list of reachable vertices. The procedure ends, if either the vertex whose reachability is the question is reached or there are no vertices to be added. As in each step either at least one vertex is checked or the procedure ends, this ends in polynomial time.
+\end{exercise}
+
+\begin{exercise}
+ Let us first consider how an algorithm can take a given amount of time.  If the algorithm does stop, it has to take account of its progress, so the number of possible data stored in the space used multiplied by the number internal states must be at least as much as the number of steps.
+ 
+ If an algorithm is in {\bf PSPACE} then for an input of length $n$ it uses at most $p(n)$ bits of space, wher $p$ is some polynomial. The number of possible data values stored in $k$ bits of storage is $2^k$, so in this case, the number of possible data values is $2^{p(n)}$, and with $\ell$ internal states, the total number of (internal and storage) states is $\ell 2^{p(n)}$ which is exponential, if the polynomial is of order $N$, then the algorithm uses time $O((2^N)^n)$.
+\end{exercise}
+
+\begin{exercise}
+ Let us assume that the Turing machine has $\ell$ internal states. Another part of the full state of the machine is position of the input tape, this is $n$ states, and we have $k\log n$ bits on the second tape, which amounts to $2^{k\log n} = n^k$ states, so the total number of states is $\ell n n^k = \ell n^{k+1}$. The machine has to keep track of which step it is in, so the number of steps in the execution must be less than the number of total states. This way we have shown that ${\bf L}\subseteq {\bf P}$.
+\end{exercise}
+
+\begin{exercise}
+ It is clear that the algorithm constructs a vertex cover, as only such edges are removed from $E'$ that at least one of whose endpoints are in the cover. It also contains at most double the size of a minimal vertex cover as a vertex cover must include at least one endpoint of each edge, and this includes for some edges both.
+\end{exercise}
+
+\begin{exercise}
+ If correctly accepting or rejecting a word $x$ has probability $1/2 < k < 1$, then it is possible to repeat the test $\ell$ times and accept the majority as the result. This is only a constant multiplier. According to Condorcet's jury theorem the probability of the repeated runs yielding correct results is above $3/4$ for $\ell$ large enough, and what is large enough only depends on $k$, not the length of the input.
+ %
+ %The probability of an incorrect result for $\ell$ repeats is, according to Cramér's large deviation theorem,
+ %\[
+ % 1-p' < 2 \e^{-2(p-1/2)^2 \ell}\,,
+ %\]
+ %i.e., $\ell$ can be chosen small enough.
+\end{exercise}
+
+\begin{exercise}
+ The Fredkin gate can be expressed with the formulae
+ \[\begin{aligned}
+  a' &= (\bar{c}\land a) \lor (c\land b)\,,\\
+  b' &= (\bar{c}\land b) \lor (c\land a)\,,\\
+  c' &= c\,.
+ \end{aligned}\]
+ Applying another Fredkin gate with inputs $a', b', c'$ and outputs $a'', b'', c''$ we obtain
+ \[
+  c'' = c' = c\,,
+ \]
+so
+ \[\begin{aligned}
+  a'' &= \left[\bar{c}\land \left[ (\bar{c}\land a) \lor (c\land b)\right] \right] \lor \left[ c \land \left[(\bar{c}\land b) \lor (c\land a)\right]\right]\\
+  &= \bar{c}\land\bar{c}\land a  \lor \bar{c}\land c \land b \lor c\land\bar{c}\land b \lor c\land c\land a = \bar{c}\land a \lor c\land a = (\bar{c}\lor c)\land a = a\,,
+ \end{aligned}\]
+ and similarly
+ \[\begin{aligned}
+  b'' &= \left[\bar{c}\land \left[ (\bar{c}\land b) \lor (c\land a)\right] \right] \lor \left[ c \land \left[(\bar{c}\land a) \lor (c\land b)\right]\right]\\
+  &= \bar{c}\land\bar{c}\land b  \lor \bar{c}\land c \land a \lor c\land\bar{c}\land a \lor c\land c\land b = \bar{c}\land b \lor c\land b = (\bar{c}\lor c)\land b = b\,.
+ \end{aligned}\]
+\end{exercise}
+
+\begin{exercise}
+ Draw the possibilities, e.g., if $a=1$ and all others 0, it moves u,d,u,u,u,d,d,d, yielding $a'=1$, and all others 0 (as there is one ball).
+ 
+ If $a=1$, $b=0$ and $c=1$, the movements of the $a$ ball are u,d,u and the $c$ ball are u, d, d, d and then a collision happens, and they swap direction, $a$ ball moves d, $c$ moves u, d, another collision happens, $a$ moves d, u, $c$ moves u, d, another collision, $a$ moves d, u, $c$ moves u, d, another collision, $a$ moves d, u, d, u, u and exits at $b'$, $c$ moves u, u, u, and exits at $c'$.
+ 
+ The other possibilities may be analysed similarly.
+\end{exercise}
+
+\begin{exercise}
+ A (not necessarily optimal) solution is to express the outputs of the half-adder az $x\oplus y = (x\lor y)\land \overline{x\land y}$ and $c = x\land y$ and express the {\sc or} gates as in Fig.\ 3.16, and the {\sc or} and {\sc not} gates using $x\lor y = \overline{\bar{x} \land \bar{y}}$. We then apply {\sc cnot}s to extend it to add it to a fourth register, and then add the inverse of the half-adder part expressed with Fredkin gates. The inverse is easily constructed using the Fredkin gates in reverse order, as the reverse of the Fredkin is its inverse.
+\end{exercise}
+
+\begin{exercise}
+ The following two figures show the simulation of a Fredkin gate with 3 Toffoli gates, and that of a Toffoli gate with four Fredkins. Control bits are marked with dots, the exchange/cnot bits are marked with crosses/opluses.
+ \begin{center}
+  \begin{quantikz}
+   & \targ{}   & \ctrl{1}  & \targ{}   &\\
+   & \ctrl{-1} & \targ{}   & \ctrl{-1} &\\
+   & \ctrl{-2} & \ctrl{-1} & \targ{-2}
+  \end{quantikz}
+  \quad\text{and}\quad
+  \begin{quantikz}
+   &                     & \ctrl{4} & & &\\
+   & \ctrl{2}            &          & & &\\
+   \lstick{0} & \targX{} & \targX{} \\
+   \lstick{1} & \targX{} \\
+   \lstick{0} &          & \targX{} &          & \ctrl{3}\\
+              &          &          & \ctrl{2}\\
+   \lstick{0} &          &          & \targX{} & \targX{} &\\
+   \lstick{1} &          &          & \targX{} & \targX{}
+  \end{quantikz}
+ \end{center}
+% \noindent\hfil\raisebox{3.5em}{\includegraphics{fig/3.32a}}\hspace{4em}\includegraphics{fig/3.32b}
+\end{exercise}
+
+\begin{problem}
+ (1) Let us assume that $f(n)$ is a computable function, i.e., there is such a Turing machine that for the input $n$ on its tape it produced $f(n)$ on its tape when it halts. We wish to show that it is possible to evaluate this function on a Minsky machine.
+ 
+ The Turing machine has some internal states. We may enumerate the internal states, and store the state in one register. The interesting part is storing the values stored on an infinite amount of tape (but a finite alphabet) in a finite number of registers (capable of storing arbitrarily) large numbers. Let the alphabet consist of $k$ symbols $0$, $1$, $\dots$, $k-1$, then a finite word $a_1 a_2\dots a_\ell$ on the tape can be stored in a register as $a_1 + a_2 k + \dots + a_\ell k^{\ell-1}$. The position of the head may be stored in another register. For simulating the Turing machine what remains to be done is to implement as a Minsky machine the change of state and the writing on the tape as a change according to tape position.
+ 
+ (2) Representing the Minsky machine on a Turing machine: if we have $k$ registers, we choose a Turing machine with $k$ tapes and write the numbers on the tape in binary. What is needed is the program to increment/decrement.
+\end{problem}
+
+\begin{problem}
+ To simulate a Minsky machine with a vector game, in addition to the values of the registers we need to keep track of the state of the machine to enforce the right vector being used. To do this, we add two additional components to the vector. The ``increment'' instruction going from state $m$ to $n$ is encoded in the vector $(0,\dots, 0,1,0\dots,0,-m, n)$ where the 1 is in the component corresponding to the register to be incremented, and the decrement operation is encoded in two vectors, $(0,\dots,0,-1,0,\dots,0,-m, n)$ and $(0,\dots,0,-m,p)$. The vectors are then listed in the order of decreasing $m$. To the beginning of the list we add $(0,\dots,0,1,-1)$. See Ref.~\cite{conway, downey}.
+\end{problem}
+
+\begin{problem}
+ For a {\sc fractran} program, we may construct a vector game. The input $2^n$ corresponds to a vector $(n, 0, \dots, 0)$, and a multiplication with a rational $q_i$ to the vector $(k_1, k_2, \dots, 0)$ where $k_i$ are the exponents of the prime factors of the rational $q_i$. This way any vector machine can be represented as a {\sc fractran} program \cite{conway}
+\end{problem}
+
+\begin{problem}
+ The above problems show that an algorithm that would decide if a {\sc fractran} program reaches 1 would be equivalent to the decision problem.
+\end{problem}
+
+\begin{problem}
+ For any 2-bit reversible gate, the output part of a truth table is a permutation of the input part, and so, in any column, there are two zeros and two ones. This way, $\begin{pmatrix} 4 \\ 2 \end{pmatrix} = 6$ binary functions can be computed, and these may be listed: $x$, $y$, $x \text{\sc xor} y$ and their negations, i.e., the gates that one can construct are also constructable from the {\sc not} and {\sc xor} gates.
+ 
+ The {\sc not} and {\sc xor} gates do not form an universal set. By induction over the number of gates, one may show that the output of a network containing only these gates either does not depend on each input bit or becomes negated when that bit is negated. The logical or does not have this property, so that cannot be implemented with reversible two-bit gates.
+ 
+ The Toffoli gate is universal, therefore, if that could be implemented with reversible two-bit gates, then everything could be implemented with these too, and we have already seen that this is not the case.
+\end{problem}
+
+\begin{problem}
+ If the graph $G(V, E)$ has a Hamiltonian cycle, the length of that is $|V|$. A TSP optimal solution in the graph then has also length $|V|$. The approximator must return a TSP solution  which is at most $r$ times worse then the optimal, and just one edge chosen not in the original graph would yield a TSP solution at least of cost $\lceil r \rceil |V| + 1$. So if the approximator is in {\bf P}, it solves the {\bf NP}-complete {\sc hc} in polynomial time, which would prove ${\bf P} = {\bf NP}$.
+\end{problem}
+
+\begin{problem}
+ See Ref.\ \cite{bennett}. A three-tape Turing machine is constructed as the reversible extension of a single-tape machine. The bounds for time and space are $4t(x) + 4 o(x)+4$ and $s(x)$, $t(x)+1$ and $o(x)+2$ on the three tapes, where $o(x)\le s(x)$ is the size of the output. The main idea is to keep a history on the second tape, and a copy of the output on the third.
+\end{problem}
+
+\part{Quantum computation}\label{pt:quantumComputation}
+\section{Quantum circuits}\label{sec:quantumCircuits}
+\subsection{Quantum algorithms}\label{ssec:quantumAlgorithms}
+\subsection{Single qubit operations}\label{ssec:singleQubitOperatios}
+
+\begin{exercise}
+ We have calculated the normalised eigenvectors of the Pauli matrices in ex.~\ref{ex:pauliEig}. We shall now calculate the corresponding points on the Bloch sphere.
+ 
+ The case of $\sigma_0 =I$ is trivial, all vectors (all points) all eigenvectors. We may choose the two eigenvectors of $\sigma_3$, for example.
+ 
+ The case of $\sigma_3$ is as follows: the eigenvector corresponding to eigenvalue 1 is $|0\rangle$, which corresponds to $\cos(\theta/2) = 1$, so $\theta=0$ and $\phi$ arbitrary. The other eigenvector is $|1\rangle$, similarly corresponding to $\theta = \pi$, and, as the coefficient of $|0\rangle$ vanishes, the relative phase becomes an overall phase, $\phi$ is arbitrary again.
+ 
+ For $\sigma_1$ we have for the eigenvalue 1 $\cos(\theta/2) = \sin(\theta/2) = 1/\sqrt{2}$, i.e., $\theta=\pi/2$ and the relative phase is 1, $\phi=0$ and for the eigenvalue -1, we have $\cos(\theta/2) = 1/\sqrt{2}$, $\sin(\theta/2) = -1/\sqrt{2}$, yielding $\theta=-\pi/2$ and again $\phi=0$.
+ 
+ For $\sigma_2$ we have for the eigenvalue 1 $\cos(\theta/2) = \sin(\theta/2) = 1/\sqrt{2}$, i.e., $\theta=\pi/2$ and the relative phase is $\imagi$, $\phi=\pi/2$ and for the eigenvalue -1, we have $\cos(\theta/2) = 1/\sqrt{2}$, $\sin(\theta/2) = -1/\sqrt{2}$, yielding $\theta=-\pi/2$ and again $\phi=\pi/2$.
+\end{exercise}
+
+\begin{exercise}
+ Let $A$ be such a matrix that $A^2=I$, then for $x$ real
+ \[
+  \exp(\imagi A x) = \sum_{n=0}^\infty \frac{(\imagi A x)^n}{n!} = \sum_{k=0}^\infty \frac{(-1)^k x^{2k}}{(2k)!} +\imagi A \sum_{k=0}^\infty \frac{(-1)^k x^{2k+1}}{(2k+1)!} = I \cos(x) + \imagi A \sin(x)\,.
+ \]
+ As for all three Pauli matrices $X^2=Y^2=Z^2=1$ holds, this may be used with $A=X, Y, Z$ and $x=\theta/2$ to verify eqs.\ (4.4)-(4.6).
+\end{exercise}
+
+\begin{exercise} For the Pauli matrix $Z$ and the $\pi/8$ gate:
+ \[
+  R_{z}(\pi/4) = \begin{pmatrix} \e^{-\imagi\pi/8} & \\ & \e^{-\imagi\pi/8} \end{pmatrix} = \e^{-\imagi\pi/8} \begin{pmatrix} 1 & \\ & \e^{-\imagi\pi/4} \end{pmatrix} = \e^{-\imagi\pi/8} T\,,
+ \]
+ i.e.,
+ \[
+  T = \e^{\imagi\pi/8} T\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ We could try if two matrices suffice. In that case, depending on the order, either $R_z H$ or $R_x H$ should be such that it can be made proportional to $R_x$ or to $R_z$, respectively. It is easily seen that this is not the case, as either the 11 and 12 elements cannot be turned into a cosine and a sine or the off-diagonal ones cannot vanish. Next, one would consider the form $H = \e^{\imagi \alpha} R_x(\theta) R_z(\theta') R_x(\theta)$, where examining $R_x(-\theta)H R_x(-\theta)$, and solving for $\theta$ such that this is diagonal. The result is
+ \[
+  H = \imagi R_x(\pi/2) R_z(\pi/2) R_x(\pi/2)\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ \[
+(\vec{n}\cdot\vec{\sigma})^2 = (n_i \sigma_i)(n_j\sigma_j) = n_i n_j \sigma_i \sigma_j = n_i n_j (\delta_{ij}I+\imagi\epsilon_{ijk}\sigma_k) = n^2 I = I\,.  
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The state corresponding to the Bloch vector $\vec{\lambda}$ is given by the density matrix
+ \[
+  \rho = \frac{1+\vec{\lambda}\cdot\vec{\sigma}}{2}\,,
+ \]
+ which is transformed as
+ \[
+  \rho' = R_{\vec{n}}(\theta) \rho R_{\vec{n}}(\theta)^\dagger
+ \]
+ where
+ \[
+  R_{\vec{n}}(\theta) = \cos(\theta/2) I + \imagi \sin(\theta/2) (\vec{n}\cdot\vec{\sigma})\,,
+ \]
+ therefore what we need is to show that
+ \[
+  R_{\vec{n}}(\theta) \vec{\sigma} R_{\vec{n}}(\theta)^\dagger = R^{(3)}_{\vec{n}}(\theta) \cdot \vec{\sigma}\,,
+ \]
+ which is easily done by computer algebra, using the products of the Pauli matrices.
+\end{exercise}
+
+\begin{exercise}
+ Using the product rule of Pauli matrices,
+ \[
+  XYX = \imagi Z X = - Y\,,
+ \]
+ and using this and eq.\ (4.5) yields
+ \[
+  X R_y(\theta) X = X\left[\cos(\theta/2) I + \imagi \sin(\theta/2) Y\right] = \cos(\theta/2) I - \imagi \sin(\theta/2) Y = R_y(-\theta)\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Any $2\times 2$ matrix may be written as
+ \[
+  U = (\alpha + \imagi \beta) I + \imagi (\vec{u} + \imagi \vec{v})\cdot \vec{\sigma}\,,
+ \]
+ and for $U$ to be unitary $U^\dagger U = I$ must hold with
+ \[
+  U^\dagger = (\alpha - \imagi \beta) I - \imagi (\vec{u} - \imagi \vec{v})\cdot \vec{\sigma}\,,
+ \]
+ so
+ \[
+  U^\dagger U = (\alpha^2 + \beta^2 + u^2 + v^2) I + 2(\beta \vec{u} - \alpha \vec{v} - \vec{u}\times \vec{v})\cdot \vec{\sigma} = I\,.
+ \]
+ Unless $\vec{u}$ and $\vec{v}$ are collinear, together with $\vec{u}\times \vec{v}$ they form a basis, so the coefficient of $\vec{\sigma}$ can only vanish if all coefficients vanish. This is not a good solution, so they must be collinear. In this case the cross products vanish, and we may write $\vec{u} = \alpha \vec{w}$, $\vec{v} = \beta\vec{w}$, making the coefficients of the Pauli matrices vanish, and the coefficient of $I$ is then
+ \[
+  (\alpha^2 + \beta^2) (1+w^2)\,,
+ \]
+ which can be set to 1 if we choose
+ \[
+  \alpha = \cos\alpha \cos(\theta/2)\,,\quad
+  \beta = \sin\alpha \cos(\theta/2)\,,\quad
+  w^2 = \tan^2(\theta/2)\,,
+ \]
+ e.g., $\vec{w} = \tan{\theta/2}\vec{n}$, yielding
+ \[
+  u = \cos\alpha \sin(\theta/2) \vec{n}\,,\quad v=\sin\alpha \sin(\theta/2)\vec{n}\,,
+ \]
+ where $\vec{n}$ is a unit vector, and then
+ \[
+  U = \exp(\imagi \alpha) R_{\vec{n}}(\theta)\,.
+ \]
+ this completes the proof for (a).
+ 
+ (b) For the Hadamard gate, let us first separate the trace, $2\cos(\theta/2) = \Tr H = 0$ yielding $\theta/2 = \pm \pi/2$, $\theta=\pm \pi$. The decomposition may be obtained using $\Tr \sigma_a \sigma_b = 2\delta_{ij}$, so the coefficients are obtained as traces
+ \[
+  \begin{aligned}
+  \imagi \e^{\imagi\alpha}\sin(\theta/2) n_1 &= \frac{1}{2}\Tr \sigma_1 H = 1/\sqrt{2}\,,\\
+  \imagi \e^{\imagi\alpha}\sin(\theta/2) n_2 &= \frac{1}{2}\Tr \sigma_2 H = 0\,,\\
+  \imagi \e^{\imagi\alpha}\sin(\theta/2) n_3 &= \frac{1}{2}\Tr \sigma_3 H = 1/\sqrt{2}\,,\\
+  \end{aligned}
+ \]
+ yielding, e.g.,
+ \[
+  \theta = \pi\,,\quad n_1=n_3=1/\sqrt{2}\,,\quad n_2=0\,,\quad \alpha=-\pi/2\,.
+ \]
+
+ (c) We may read off $\alpha=\pi/4$, $\theta=-\pi/2$, $n_1=n_2=0$ and $n_3=1$.
+\end{exercise}
+
+\begin{exercise}
+ To understand why a single qubit unitary operator can be written in the form (4.12), note, that the columns of a unitary operator must be unit vectors, and a 2 element complex unit vector may be parametrised by an overall phase ($\delta$), a relative phase ($\beta$) and an angle giving the magnitude of the two components ($\theta$). This also determines the second column up to a relative phase ($\delta$ becomes the relative phase), and then there is a new overall phase ($\alpha$).
+\end{exercise}
+
+\begin{exercise}
+ If we multiply the matrices, we get $U=\exp(\imagi \alpha)R_x(\beta) R_y(\gamma) R_x(\delta)$, or in matrix form
+ \[
+  U=\begin{pmatrix}
+     \e^{\imagi(\alpha-(\beta+\delta)/2)}\cos\frac{\gamma}{2} & -\e^{\imagi(\alpha-(\beta-\delta)/2)}\sin\frac{\gamma}{2}\\
+     \e^{\imagi(\alpha+(\beta-\delta)/2)}\sin\frac{\gamma}{2} & \e^{\imagi(\alpha+(\beta+\delta)/2)}\cos\frac{\gamma}{2}
+    \end{pmatrix}\,.
+ \]
+ The argument that this covers all unitary matrices is similar to that in the previous exercise: the rows of a unitary matrix have to be normalised and unitary; a single 2-component unit vector has the following parameters: magnitude angle ($\gamma$), common phase ($\beta$) and relative phase ($\delta$), and this also determines the other row, the angle $\beta$ becomes the relative phase of the two rows, and there is a new common phase $\alpha$.
+\end{exercise}
+
+\begin{exercise}
+ First: see erratum to the exercise in the book! There is an infinite sequence of operators.
+ 
+ We may rephrase the Thm.\ 4.1 in the form that roations around two orthogonal axes generate all unitaries up to a phase. What we need is that we have two axes, and for that, we show via computation that
+ \[
+  R_{\vec{n}}(\pi)R_{\vec{m}}(\gamma)R_{\vec{n}}(\pi)R_{\vec{m}}(-\gamma)
+ \]
+ is a rotation with some angle around an axis $\vec{n}'$ such that $\vec{n}\cdot\vec{n}'=0$.
+ 
+ To show that arbitrary axes are OK in stead of $z, y$, we just need a unitary $V$ that takes $\vec{n}$ into $z$ and $\vec{n}'$ into $x$ and apply the decomposition to $V^\dagger U V$.
+\end{exercise}
+
+\begin{exercise}
+ Compare first the Hadamard operator,
+ \[
+  H = \frac{1}{\sqrt{2}} \begin{pmatrix}1 & 1\\ 1 & -1 \end{pmatrix}
+ \]
+ with the form in eq.\ (4.12),
+ \[
+  H = \begin{pmatrix}
+       \e^{\imagi(\alpha-\beta/2-\delta/2)}\cos\frac{\gamma}{2} & -\e^{\imagi(\alpha-\beta/2+\delta/2)}\sin\frac{\gamma}{2}\\
+       \e^{\imagi(\alpha+\beta/2-\delta/2)}\sin\frac{\gamma}{2} & \e^{\imagi(\alpha+\beta/2+\delta/2)}\cos\frac{\gamma}{2}
+      \end{pmatrix}
+ \]
+ and read off the parameters
+ \[
+  \alpha = \pi/2\,,\quad \beta=0\,,\quad \gamma=\pi/2\,,\quad \delta = \pi\,.
+ \]
+ Now, proceed as in the proof of Corollary 4.2, and set
+ \[
+  A = R_z(\beta) R_y(\gamma/2) =
+  \begin{pmatrix}
+   \e^{-\imagi\beta/2}\cos\frac{\gamma}{2} & -\e^{-\imagi\beta/2}\sin\frac{\gamma}{2} \\
+   \e^{\imagi\beta/2}\sin\frac{\gamma}{2} & \e^{\imagi\beta/2}\cos\frac{\gamma}{2}
+  \end{pmatrix}\,,
+ \]
+ \[
+  B = R_y(-\gamma/2) R_z(-(\delta+\beta)/2) =
+  \begin{pmatrix}
+   \e^{\imagi(\beta+\delta)/4}\cos\frac{\gamma}{2} & \e^{-\imagi(\beta+\delta)/4}\sin\frac{\gamma}{2} \\
+   -\e^{\imagi(\beta+\delta)/4}\sin\frac{\gamma}{2} & \e^{-\imagi(\beta+\delta)/4}\cos\frac{\gamma}{2}
+  \end{pmatrix}\,,
+ \]
+ and
+ \[
+  C = R_z((\delta-\beta)/2) =
+  \begin{pmatrix}
+   \e^{\imagi(\beta-\delta)/4} & \\ & \e^{-\imagi(\beta-\delta)/4}
+  \end{pmatrix}\,.
+ \]
+ It is easy to verify that $ABC=I$ and with the values of the angles $\alpha$, $\beta$, $\gamma$, and $\delta$  obtained above, $\exp(\imagi \alpha) AXBXC = H$.
+\end{exercise}
+
+\begin{exercise}
+ Simple computation (see computer algebra code).
+\end{exercise}
+
+\begin{exercise}
+ Simple computation (see computer algebra code). With the global phase included
+ \[
+  H T H = \e^{\imagi \pi/8} R_x(\pi/4)\,.
+ \]
+\end{exercise}
+
+\begin{exercise} See book errata!
+
+ (1) Direct calculation. See computer algebra code.
+ 
+ (2) Substitution.
+\end{exercise}
+
+\subsection{Controlled operations}\label{sec:controlledOperations}
+
+\begin{exercise}
+ Remember the numbering of states (page xxx): $0\dots00$, $0\dots01$ to $1\dots11$. With this, the matrix of the Hadamard gate on the $x_2$ (upper) wire yields
+ \[
+  I\otimes H =
+  \frac{1}{\sqrt{2}}
+  \begin{pmatrix}
+    1 &  1 & 0 &  0\\
+    1 & -1 & 0 &  0\\
+    0 &  0 & 1 &  1\\
+    0 &  0 & 1 & -1
+  \end{pmatrix}\,.
+ \]
+ In the case of putting the Hadamard gate on the $x_1$ (lower) wire, we obtain
+ \[ H\otimes I = 
+  %    00  01   10    11
+  % 00 1*1 1*0  1*1   1*0
+  % 01 1*0 1*1  1*0   1*1
+  % 10 1*1 1*0 -1*1  -1*0
+  % 11 1*0 1*1 -1*0  -1*1
+  \frac{1}{\sqrt{2}}
+  \begin{pmatrix}
+   1 & 0 &  1 & 0\\
+   0 & 1 &  0 & 1\\
+   1 & 0 & -1 & 0\\
+   0 & 1 & 0 & -1
+  \end{pmatrix}\,.
+ \]
+ Note that the first one is putting Hadamard matrices in the place of elements of the unit matrix, and the second one is placing unit matrices on the elements of the Hadamard gate's matrix.
+\end{exercise}
+
+\begin{exercise}
+ \[
+  {\rm CNOT} = (I\otimes H) {\rm CZ} (I\otimes H)\,.
+ \]
+ The control bit is, for both the CNOT and the CZ, the upper ($x_2$) one.
+\end{exercise}
+
+\begin{exercise}
+ The controlled $Z$-gate with the control bit on the upper ($x_2$) qubit has the matrix
+ \[
+  \begin{pmatrix}
+  %    00  01  10   11
+  % 00
+       1 & 0 & 0 &  0 \\
+  % 01
+       0 & 1 & 0 &  0 \\
+  % 10
+       1 & 0 & 1 &  0 \\
+  % 11
+       0 & 0 & 0 & -1
+  \end{pmatrix}
+ \]
+ which can be obtained by filling it columnwise, and keeping in mind that both bits are unchanged and there is a sign if bit 1 is 1 and the control bit is one. Similarly, putting the control bit on the lower ($x_1$) bit yields
+ \[
+  \begin{pmatrix}
+   %    00  01   10   11
+   % 00
+        1 &  0 & 0 &  0 \\
+   % 01
+        0 &  1 & 0 &  0 \\
+   % 10
+        0 &  0 & 1 &  0 \\
+   % 11
+        0 &  0 & 0 & -1
+  \end{pmatrix}
+ \]
+ The two matrixes agree.
+\end{exercise}
+
+\begin{exercise}
+ Let us write the elements of the density matrix as
+ \[
+  \rho =
+  \begin{pmatrix}
+   \rho_{00,00} & \rho_{00,01} & \rho_{00,10} & \rho_{00,11}\\
+   \rho_{01,00} & \rho_{01,01} & \rho_{01,10} & \rho_{01,11}\\
+   \rho_{10,00} & \rho_{10,01} & \rho_{10,10} & \rho_{10,11}\\
+   \rho_{11,00} & \rho_{11,01} & \rho_{11,10} & \rho_{11,11}\\
+  \end{pmatrix}\,.
+ \]
+ With $\rho$ above, the action of the CNOT gate is
+ \[
+  {\rm CNOT}\rho {\rm CNOT} =
+  \begin{pmatrix}
+   \rho_{00,00} & \rho_{00,01} & \rho_{00,11} & \rho_{00,10}\\
+   \rho_{01,00} & \rho_{01,01} & \rho_{01,11} & \rho_{01,10}\\
+   \rho_{11,00} & \rho_{11,01} & \rho_{11,11} & \rho_{11,10}\\
+   \rho_{10,00} & \rho_{10,01} & \rho_{10,11} & \rho_{10,10}
+  \end{pmatrix}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ It can be shown by multiplying the matrices, that
+ \[
+  (H\otimes H) {\rm CNOT}(H\otimes H) = {\rm CNOT}'\,,
+ \]
+ where in the case of the CNOT the control bit is the upper one, and for ${\rm CNOT}'$ it is the lower one.
+ 
+ This means, that CNOT has the same matrix in the $\pm$ basis as ${\rm CNOT}'$ in the original one, keeping $|+\rangle|+\rangle$, $|-\rangle|+\rangle$, and exchangging $|+\rangle|-\rangle$ and $|-\rangle|-\rangle$. The latter can also be verified by direct calculation.
+\end{exercise}
+
+\begin{exercise}
+ Let us consider the case when the top two qubits are 0, then the leftmost controlled $V$ does nothing, the left CNOT similarly does nothing, the controlled $V^\dagger$ does not act, neither does the second CNOT, and neither the last controlled $V$.
+ 
+ Now if the top qubits are $01$, then none of the CNOTs act, and neither does the rightmost controlled $V$, so the action on the lowest qubit is $VV^\dagger = I$.
+ 
+ If the top qubits are $10$, then the CNOTS both act, so between the two CNOTs the middle qubit becomes $I$ too, and so the controlled $V^\dagger$ and the right $V$ both act, and the effect on the lowest qubit is $V^\dagger V=I$.
+ 
+ If the two upper qubits are $11$ then both the CNOTs act, and the middle qubit is 0 between the two, so the action on the last qubit is $V^2=U$.
+\end{exercise}
+
+\begin{exercise}
+ We insert the $CV$ and $CV^\dagger$ gates from fig.\ 4.6 into fig.\ 4.8. In this way, we construct $C^2U$ using $3\times 4=12$ single qubit gates and $3\times2+2=8$ CNOT gates. We need to reduce this to 8 one qubit gates and 6 CNOTs. To this, let us notice the following:\\
+ \begin{quantikz}
+  &          &          &          &          & & 
+  \ctrl{1} &
+  &          &          &          &          & &
+  \ctrl{1} &
+%  &          & \ctrl{1} &          & \ctrl{1} & \gate{\begin{pmatrix} 1 & \\ & \e^{\imagi\alpha} \end{pmatrix}} &
+\cdots\\
+%
+  &          & \ctrl{1} &          & \ctrl{1} & \gate{\begin{pmatrix} 1 & \\ & \e^{\imagi\alpha} \end{pmatrix}} &
+  \targ{} &
+  &          & \ctrl{1} &          & \ctrl{1} & \gate{\begin{pmatrix} 1 & \\ & \e^{-\imagi\alpha} \end{pmatrix}} &
+  \targ{} &
+%  &          &          &          &          & &
+\dots\\
+%
+  & \gate{C} & \targ{}  & \gate{B} & \targ{}  & \gate{A} &
+          &
+  & \gate{A^\dagger} & \targ{}  & \gate{B^\dagger} & \targ{}  & \gate{C^\dagger} &
+  &
+%  & \gate{C} & \targ{}  & \gate{B} & \targ{}  & \gate{A} &          &
+  \dots \\
+  \dots    &          & \ctrl{2} &          & \ctrl{2} & \gate{\begin{pmatrix} 1 & \\ & \e^{\imagi\alpha} \end{pmatrix}} &\\
+  \dots   &          &          &          &          & &\\
+  \dots  & \gate{C} & \targ{}  & \gate{B} & \targ{}  & \gate{A} &
+ \end{quantikz}\\
+ in the circuit, the $AA^\dagger=I=C^\dagger C$, so 4 single qubit operators drop out, we are down to 8. We still need to save 2 CNOTs.
+ 
+ Notice that the phase gates commute with all CNOTs that use their qubit as control, so they may be moved to be juts before and after the CNOT third from the right.
+ 
+ On the top two lines, the CNOTS 3rd and 6th from the left cancel each other. The difference is that CNOTs 4 and 5 are controlled by the result of CNOT 3, i.e., parity of the two control lines, so they may be replaced by two CNOTs, controlling the third line, one controlled from line 1 the other from 2, left of the CNOT originally 6th from the left.
+ 
+ The block consisting now of the phase shifts and the CNOTs that were originally 3rd and 6th from the left is diagonal, so it may be moved around freely.
+ 
+ Next we notice that ${\rm CNOT}^2=I$, so there are 4 CNOTs that drop out. What remains is the following circuit:\\
+ \begin{quantikz}
+  &          &          &          & \ctrl{2} &
+                   &          &          & \ctrl{2} &
+           &
+  \gate{\begin{pmatrix} 1 & \\ & \e^{\imagi\alpha} \end{pmatrix}} & \ctrl{1} &
+  & \ctrl{1} &\\
+%
+  &          & \ctrl{1} &          &          &
+                   & \ctrl{1} &          &          &
+           &
+  \gate{\begin{pmatrix} 1 & \\ & \e^{\imagi\alpha} \end{pmatrix}} & \targ{}  &
+  \gate{\begin{pmatrix} 1 & \\ & \e^{-\imagi\alpha} \end{pmatrix}} & \targ{1} & \\
+%
+  & \gate{C} & \targ{}  & \gate{B} & \targ{}  &
+  \gate{B^\dagger} & \targ{}  & \gate{B} & \targ{}  &
+  \gate{A} &
+                &           & & &
+ \end{quantikz}\\
+ which consists of 8 single qubit gates and 6 CNOTs. See also \cite{CCUstackexchange}
+\end{exercise}
+
+\begin{exercise}
+ As
+ \[
+  R_x(\theta) = \e^{\imagi \alpha} R_z(\beta) R_y(\gamma) R_z(\delta)
+ \]
+ with $\alpha=0$, $\beta=-\pi/2$, $\gamma=\theta$, and $\delta=\pi/2$, the controlled $R_x(\theta)$ is given by fig.\ 4.6, with $A=R_z(\beta)R_y(\gamma/2)$, $B=R_y(-\gamma/2)R_z(-(\delta+\beta)/2)$, and $C=R_z((\delta-\beta)/2)$. This only includes 3 single qubit gates as $\alpha=0$. I haven't been able to find a representation with fewer gates.
+ 
+ For $R_y(\theta)$, the decomposition is trivial, $\alpha=\beta=\delta=0$ and $\gamma=\theta$, and so $A=R_y(\theta/2)$, $B=R_y(-\theta/2)$ an $C=I$, so one gate fewer is needed.
+ 
+ It is possible to show that we cannot do the same tric for $R_x(\theta)$, as that would require a decomposition $AB=I$,  $AXBX = R_x(\theta)$. The first of these means $B=A^\dagger$, and $A X A^\dagger X = R_x(\theta)$, $AXA^\dagger = R_x(\theta) X$. The left hand side is a Hermitean matrix, and the right is not, unless $\theta=0$.
+\end{exercise}
+
+\begin{exercise}
+ It is easy to verify what the circuit does on vectors of the form $|00\rangle |x\rangle$, $|01\rangle |x\rangle$, etc.
+ 
+ The simplest case is that of $|00\rangle |x\rangle$ in which case all the CNOTS do nothing, and so $x$ is acted on by the operator $TT^\dagger TT^\dagger H = I$.
+ 
+ In the case of vectors of the form $|01\rangle|x\rangle$, the operator $HTT^\dagger XTT^\dagger X H = I$ acts on $x$.
+ 
+ In the case of vectors of the form $|10\rangle |x\rangle$ the middle qubit becomes 1 after the first CNOT acting on it, then collects a phase $\exp(-\imagi \pi/4)$ from the $T^\dagger$ gate second from the left on it, and then becomes $|0\rangle$ with this phase again at the next CNOT, the top qubit collects a phase $\exp(\imagi \pi/4)$ from the $T$ gate on the top wire, the two cancel, so the operator $HTXT^\dagger TXT^\dagger H=I$ acts on $x$.
+ 
+ In the case of vectors of the form $|11\rangle |x\rangle$ similarly a phase $\exp(\imagi\pi/4)$ is collected by the top qubit, $\imagi \exp(-\imagi\pi/4)$ by the second, and so the operator $\imagi HTXT^\dagger XTXT^\dagger XH = X$ acts on $x$.
+ 
+ The above actions are identical to the action of the Toffoli gate.
+\end{exercise}
+
+\begin{exercise}
+ (1) In fig.\ 1.7, the swap gate was constructed from 3 cnots as
+ \begin{center}
+ \begin{quantikz}
+  & \ctrl{1} & \targ{}   & \ctrl{1} & \\
+  & \targ{}  & \ctrl{-1} & \targ{}  &\\
+ \end{quantikz}
+ \end{center}
+ and we know that all these gates can be controlled separately if we replace all cnots with Toffolis,
+ \begin{center}
+  \begin{quantikz}
+   & \ctrl{2} & \ctrl{1}  & \ctrl{2} &\\
+   & \ctrl{1} & \targ{}   & \ctrl{1} &\\
+   & \targ{}  & \ctrl{-1} & \targ{}  &
+  \end{quantikz}
+  =
+  \begin{quantikz}
+    & \ctrl{2} & \\[1.4ex]
+    & \targX{} & \\[1.4ex]
+    & \targX{} & 
+  \end{quantikz}\,.
+ \end{center}
+ By simple calculation, we can show that
+ \begin{center}
+  \begin{quantikz}
+   &          & \ctrl{1}  &          &\\
+   & \ctrl{1} & \targ{}   & \ctrl{1} &\\
+   & \targ{}  & \ctrl{-1} & \targ{}  &
+  \end{quantikz}
+  =
+  \begin{quantikz}
+    & \ctrl{2} & \\[1.4ex]
+    & \targX{} & \\[1.4ex]
+    & \targX{} & 
+  \end{quantikz}\,.
+ \end{center}
+ 
+ (2) If we insert $V=(1-\imagi)(I+\imagi X)/2$ and $V^\dagger = (1+\imagi)(I-\imagi X)/2$ into the circuit in fig.\ 4.8, we obtain an implementation of the Toffoli gate. Adding the two (leftmost and rightmost) CNOTs from the figure above, we obtain an implementation of the Fredkin gate. It contains he 2 CNOTs and 3 controlled $V$'s of fig.\ 4.8 and two additional CNOTs, i.e., 7 two-qubit gates.
+ 
+ (3) In the resulting circuit, the same (middle) qubit controls both the $V$s on the lowest qubit, i.e., we may save two additional two qubit gates if we replace the controlled $V$'s with a controlled $XV$ and a controlled $VX$.
+\end{exercise}
+
+\begin{exercise}
+ By examining the result of the circuit on states of the form $|0\rangle|0\rangle |x\rangle, |0\rangle|1\rangle|x\rangle, \dots$ the claim is verified, and the phases are
+ \[
+  \theta(0,0,0)=\theta(0,0,1)=\dots=\theta(1,1,1)=0\,,\quad \theta(1,0,1)=\pi\,.
+ \]
+
+\end{exercise}
+
+\begin{exercise}
+ There is a semi-systematic aproach based on the truth table of the circuit\cite{PPMstackexchange}. From the truth table, we may figure out the three output qubits as logical functions of the three input ones as
+ \[
+  o_3 = x_3 \oplus (x_2 x_1)\,,\quad o_2 = x_2 \oplus x_1\,,\quad o_1 = x_2 \oplus x_2 \oplus x_3 x_1 \oplus x_2 x_1\,.
+ \]
+ We recognise that $o_3$ is the result of a Toffoli gate controlled by the input qubits 1,2 and the target is the third, and $o_2$ is the output of a CNOT qubit 1 contolling 2. So we start the circuit with such a Toffoli and CNOT, and then note that the qubit 1 still has to be constructed. It contains $x_2$ and $x_1$, so we add two CNOTs, and as that still does not get the desired result, we add a Toffoli. Expanding the products shows that this yields the desired circuit:
+ \begin{center}
+  \begin{quantikz}
+   & \targ{}   &           & \ctrl{2} &          & \ctrl{2} &\\
+   & \ctrl{-1} & \targ{}   &          & \ctrl{1} & \ctrl{1} &\\
+   & \ctrl{-2} & \ctrl{-1} & \targ{}  & \targ{}  & \targ{}   &
+  \end{quantikz}
+ \end{center}
+\end{exercise}
+
+\begin{exercise}
+ The $C^5 U$ gate is implemented using $V$, such that $V^4 = U$. The circuit is the following \cite{BarencoEtalElem},
+ \begin{center}
+  \begin{quantikz}
+   & \ctrl{5} & \ctrl{1} &          & \ctrl{1} &          &
+   \ctrl{2}   &          & \ctrl{2} &          & \ldots \\
+   &          & \targ{}  & \ctrl{4} & \targ{}  & \ctrl{4} &
+              &          &          &          & \ldots \\
+   &          &          &          &          &          &
+  \targ{}     & \ctrl{3} & \targ{}  & \ctrl{3} & \ldots \\
+   &          &          &          &          &          &
+           &             &          &          & \ldots \\
+   &          &          &          &          &          &
+           &             &          &          & \ldots \\
+   & \gate{V} &  & \gate{V^\dagger} &          & \gate{V} &
+      & \gate{V^\dagger} &          & \gate{V} & \ldots
+  \end{quantikz}
+ \end{center}
+ The idea behind it is that
+ \[
+  \begin{aligned}
+  x_5 - (x_5 \oplus x_4) + x_4 - (x_5 \oplus x_4) + x_3 -(x_5 \oplus x_3) + x_2 &- \dots\\
+   + (x_5 \oplus x_4 \oplus x_3) &+ \dots = 4 x_5 x_4 x_3 x_2 x_1\,,
+  \end{aligned}
+ \]
+ where in the sum, we add 1 for a true and 0 for a false logical variable, and a positive power means an operator $V$ and a negative one a $V^\dagger$.
+\end{exercise}
+
+\begin{exercise}
+ Let us note that $V=(1-\imagi)(I+\imagi X)/2$ is such that $V^2=X$. Now the construction may be done recursively,
+ \begin{center}
+  \begin{quantikz}
+   & \ctrl{4} & \\
+   & \ctrl{3} & \\
+   \setwiretype{b} & \ctrl{2} & \\
+   & \ctrl{1} & \\
+   & \targ{} & 
+  \end{quantikz} =
+  \begin{quantikz}
+   &                 & \ctrl{3} &                  &
+   \ctrl{3} & \ctrl{4} &\\
+   &                 & \ctrl{2} &                  &
+   \ctrl{2} & \ctrl{3} &\\
+   \setwiretype{b} & & \ctrl{1} &                  &
+   \ctrl{1} & \ctrl{2} &\\
+   & \ctrl{1}        & \targ{}  & \ctrl{1}         &
+   \targ{}  &          &\\
+   & \gate{V}        &          & \gate{V^\dagger} &
+            & \gate{V} &
+  \end{quantikz}\,.
+ \end{center}
+ Let the cost for $n$ control qubit be $C_n$. It is clear that $C_n = O(n) + C_{n-1}$, resulting in $C_n=O(n^2)$ \cite{BarencoEtalElem}.
+\end{exercise}
+
+\begin{exercise}
+ See 4.29 and Ref.\ \cite{BarencoEtalElem}.
+\end{exercise}
+
+\begin{exercise}
+ All these circuit identities can be verified by calculating the matrices (e.g., using computer algebra). In some cases it may be worthwile to do it more by checking on the elements of a basis, e.g., eq.\ (4.32),
+ \begin{center}
+  \begin{quantikz}
+   & \targ{}  &          & \targ{}   &\\
+   & \ctrl{-1}& \gate{X} & \ctrl{-1} &
+  \end{quantikz}
+  =
+  \begin{quantikz}
+   & \gate{X} &\\
+   & \gate{X} &
+  \end{quantikz}
+ \end{center}
+ It is easy to verify that the results for the basis vectors with labels 00, 01, 10, 11 are the basis vectors 11, 10, 01, and 00, respectively.
+\end{exercise}
+
+\subsection{Measurement}\label{ssec:measurement}
+
+\begin{exercise}
+ A projective measurement with measurement operators $P_i$ gives the $i$th result with probability $p_i = \Tr P_i\rho$ and the resulting state is $\rho_i = P_i \rho P_i / \Tr (P_i \rho P_i) = P_i \rho P_i /p_i$. If the observer does not learn the outcome, i.e., an ensemble of systems is not separated according to the result, then after the measurement, the system is with probability $p_i$ in state $\rho_i$, i.e.,
+ \[
+  \rho' = \sum_i p_i \frac{P_i \rho P_i}{p_i} = \sum_i P_i \rho P_i\,,
+ \]
+ which is the statement to be prove, eq.\ (4.40).
+
+ In the case of a composite system and a measurement on subsystem 2, in the above formula, all projection matrices are of the form $P_i = P_i \otimes I$, where $P_i$ on the left acts on a product space and $P_i$ on the right acts on the Hilbert space of ststem 2. In the present case, the latter are $P_0 = |0\rangle\langle 0|$ and $P_1 = |1\rangle\langle 1|$.
+ 
+ The reduced density matrix of subsystem 1 before the measurement is $\rho_1 = \Tr_2 \rho$. After the measurement it is
+ \[
+  \rho_1' = \Tr_2 \rho' = \sum_i \Tr_2 (P_i \rho P_i)\,.
+ \]
+ Expanding the density matrix in a product basis,
+ \[
+  \rho = \sum_{ijk\ell} \rho_{ij,k\ell} |ij\rangle\langle k\ell|\,,
+ \]
+ and calculating the traces, as in eq.\ (2.178), and using the orthonormality of the basis,
+ \[
+  \rho_1 = \Tr_2 \rho = \sum_{i,j,k} \rho_{ij,kj}|i\rangle\langle k|\,,
+ \]
+ and similarly,
+ \[
+  \rho_1' = \Tr_2 \rho' = \sum_m \Tr_2 P_m \rho P_m\,,
+ \]
+ where, using $P_m = |m\rangle\langle m|$,
+ \[
+  P_m |ij\rangle \langle k\ell| P_m = (I\otimes |m\rangle\langle m|) |ij\rangle \langle k\ell| (I\otimes |m\rangle \langle m|) = \delta_{m,j} \delta_{\ell,m} |im\rangle\langle km|\,,
+ \]
+ therefore
+ \[
+  \rho_1' = \Tr_2 \sum_{ijk\ell}\sum_m \rho_{ij,k\ell} \delta_{m,j}\delta_{\ell,m} |im\rangle\langle km| = \sum_m \rho_{im,km} \Tr_2 |im\rangle\langle km| = \sum_m \rho_{im,km}|i\rangle\langle m| = \rho_1\,,
+ \]
+ so whe have demonstrated $\rho_1=\rho_1'$, i.e., that a measurement on subsystem 2 without learning the outcomes does not affect the reduced density matrix of subsystem 1.
+\end{exercise}
+
+\begin{exercise}
+ Measurement of the Bell states corresponds to the measurement operators
+ \[
+  B_{ij} = |\beta_{ij}\rangle\langle \beta_{ij}|
+ \]
+ where $\beta_{ij}$ denote the Bell states as given in eqs.\ (1.23)-(1.26). The circuit in the exercise first applies a unitary operator
+ \[
+  U = (H\otimes I) {\rm CNOT}
+ \]
+ and then performs the measurement using the projectors of the computational basis. Measurement of a pure state $\psi$ in the computational basis gives probability amplitudes $\langle i,j|\psi\rangle$, measurement on $U\psi$ yields
+ $\langle i,j| U\psi\rangle$, so the corresponding measurement operators are $U|\psi\rangle \langle \psi U^\dagger$, i.e., the measurement operators are now $UP_{ij}U^\dagger$, where $P_{ij}=|i,j\rangle\langle i,j |$ the measurement operators in the computational basis. What one needs to verify (matrix multiplication, may be done using computer algebra) is
+ \[
+  B_{ij} = U P_{ij} U^\dagger\,,
+ \]
+ which completes the proof.
+\end{exercise}
+
+\begin{exercise}\label{ex:4.34}
+ If $U$ has eigenvalues $\pm 1$, that means it is of the form
+ \[
+  U = \lambda_1 |\lambda_1\rangle\langle \lambda_1| + \lambda_2 |\lambda_2\rangle\langle \lambda_2|\,,\quad \lambda_i\in\{\pm 1\}\,.
+ \]
+ One possibility for its measurement would require to find an operator $V$ such that $V |0\rangle =\e^{\imagi \alpha_1}|\lambda_1\rangle$ and $V|1\rangle = \e^{\imagi\alpha_2}|\lambda_2 \rangle$, and then use the circuit
+ \begin{center}
+  \begin{quantikz}
+   & \gate{V} & \meter{}
+  \end{quantikz}\,.
+ \end{center}
+ We shall show that the corresponding measuring operators (see the previous solution) are the ones corresponding to $U$,
+ \[
+  P_0' = V |0\rangle\langle 0| V^\dagger = |\lambda_1\rangle\langle \lambda_1| = P_{\lambda_1}\,,
+ \]
+ and
+ \[
+  P_1' = V |1\rangle\langle 1| V^\dagger = |\lambda_2\rangle\langle \lambda_2| = P_{\lambda_2}\,.
+ \]
+ The operator $V$ is unitary and
+ \[
+  V = \e^{\imagi\alpha_1} |\lambda_1 \rangle \langle 0| + \e^{\imagi\alpha_2}|\lambda_2 \rangle \langle 1|\,.
+ \]
+ %and then we might calculate
+  %\[
+ %  V V^\dagger = (\e^{\imagi\alpha_1} |\lambda_1\rangle\langle 0| +\e^{\imagi\alpha_2} |\lambda_2\rangle\langle 1|)(\e^{-\imagi\alpha_1} |0\rangle\langle \lambda_1 | +\e^{-\imagi\alpha_2} |0\rangle\langle \lambda_2|) = |\lambda_1\rangle\lan
+ % \]
+ However, this is a rather different operator from $U$. From $U$ a controlled $U$ may be constructed, and from a controlled $U$ the circuit in the book. That circuit maps the incoming state into the following states,
+ \[
+  % (H\otimes I)|0\rangle|\psi\rangle = 
+  |0\rangle|\psi\rangle \to \frac{1}{\sqrt{2}}(|0\rangle +|1\rangle)|\psi\rangle \to \frac{1}{\sqrt{2}}(|0\rangle |\psi\rangle + |1\rangle U |\psi\rangle \to \frac{1}{\sqrt{2}}(|0\rangle (I+U)|\psi\rangle + |1\rangle (I-U)|\psi\rangle\,,
+ \]
+ and then in this final state is a measurement performed on the qubit 2. The corresponding measurement operators are $P_0 = |0\rangle\langle 0|\otimes I$ and $P_1 = |1\rangle\langle 1|\otimes I$. The probabilities are
+ \[
+  p_i = \Tr P_i \frac{1}{2}(|0\rangle|(1+U)\psi\rangle + |1\rangle (1+U) |\psi\rangle)(\langle 0 |\langle \psi| (1+U)+\langle 1|\langle \psi| (1-U)) = \left|\left\langle \psi\left| \frac{1\pm U}{\sqrt{2}} \right| \psi\right\rangle \right|^2\,.
+ \]
+ The resulting output state is
+ \[
+  \psi_{\rm out} = \frac{P_i \frac{1}{\sqrt{2}}(|0\rangle (I+U)|\psi\rangle + |1\rangle (I-U)|\psi\rangle}{\sqrt{p_i}} = \frac{\frac{I\pm U}{\sqrt{2}}|\psi\rangle}{\left|\left\langle \psi\left| \frac{1\pm U}{\sqrt{2}} \right| \psi\right\rangle \right|}\,,
+ \]
+ which is both the same as in the case of measuring $U$.
+ 
+ Note, that we have assumed that the operator has one positive and one negative eigenvalue, otherwise it would be the trivial operator $\pm I$.
+\end{exercise}
+
+\begin{exercise}
+ The first circuit first maps an input state $|0\rangle \otimes \psi_1 + |1\rangle \otimes \psi_2$ to $|0\rangle \otimes \psi_1 + |1\rangle \otimes \psi_2$, and then performs the measurement on the upper qubit, resulting in the probabilities
+ \[
+  p_0 = \|\psi_1\|^2\,,\quad p_1 = \|U \psi_2\|^2 = \|\psi_2\|^2\,,
+ \]
+ and the output states
+ \[
+  \frac{\psi_1}{\|\psi_1\|}\,,\quad \frac{U \psi_2}{\|U \psi_2\|} = \frac{U \psi_2}{\|\psi_2\|}\,.
+ \]
+ In the case of the second circuit, the measurement produces, with the same probabilities the post-measurement states
+ \[
+  \frac{\psi_1}{\|\psi_1\|}\,,\quad \frac{\psi_2}{\|\psi_2\|}\,,
+ \]
+ and then if the result was 1, the operator $U$ is applied to the second state, yielding the same output states as in the first case. This completes the proof that the measurement commutes with control.
+\end{exercise}
+
+\subsection{Universal quantum gates}\label{ssec:universalQuantumGates}
+
+\begin{exercise}
+ To construct the modulo 2 adder, $z=x+y\ {\rm mod} 4$, let us consider the bits of $z$, $z_0 = x_0 \oplus y_0$, this is implemented using a CNOT, and $z_1 = x_1 \oplus y_1 \oplus x_0 y_0$, where we may construct the $x_2 \oplus z_2$ part using a CNOT and the rest using a Toffoli gate, yielding
+ \begin{center}
+  \begin{quantikz}
+   \lstick{$x_1$} & \ctrl{2} &           &          & \rstick{$x_1$}\\
+   \lstick{$x_0$} &          & \ctrl{1}  & \ctrl{2} & \rstick{$x_0$}\\
+   \lstick{$y_1$} & \targ{}  & \targ{}   &          & \rstick{$z_1$}\\
+   \lstick{$y_0$} &          & \ctrl{-1} & \targ{}  & \rstick{$z_0$}
+  \end{quantikz}
+ \end{center}\,.
+\end{exercise}
+
+\begin{exercise}
+ We proceed as in the $3\times 3$ case constructing $U_1$, then $U_2$, and use a similar formula (with the nontrivial rows being the columns 1, 4) to construct $U_3$. Then the same formula is used to construct $U_4$ (nontrivial columns 2, 3), $U_5$ (2, 4) and finally $U_6$ is constructed as $U_3$ in the $3\times 3$ case. See computer algebra code for details.
+\end{exercise}
+
+\begin{exercise}
+ Let us consider the elements of the canonical basis of the $d$ dimensinal space. Let us assign the vertices of a graph to the basis vectors, so we have $d$ vertices. If we have a product of $k$ two-level matrices, for each of these, we link the vertices corresponding to the basis elements mixed by the two-level matrix. In this way, for $k$ matrices we get a graph of $k$ edges. In a graph of $d$ vertices, with less than $d-1$ edges all vertices cannot be linked. On the other hand, it is easy to construct a matrix that has no nonzero elements, i.e., in the image of any of the basis elements all others have a non-zero coefficient.
+\end{exercise}
+
+\begin{exercise}
+ The operator acts on basis vectors 2 (binary 010) and 7 (binary 111), so the Gray code is 010, 011, 111. We need to implement only one exchange, 010 to 011 with a C${}^2$NOT acting on bit 1 (rightmost) controlled by bit 2 and the inverse of bit 3, then the C${}^2$U controlled by 1 and 2 acting on 3 (the matrix looks the same but the element $b$ is shifted one to the right, $c$ one down and $a$ one down and one to the right). The corresponding circuit is
+ \begin{center}
+  \begin{quantikz}
+   & \octrl{2} & \gate{\tilde{U}} & \octrl{2} &\\
+   & \ctrl{1}  & \ctrl{-1}        & \ctrl{1}  &\\
+   & \targ{}   & \ctrl{-2}        & \targ{}   &
+  \end{quantikz}\,.
+ \end{center}
+\end{exercise}
+
+\begin{exercise}
+ The error
+ \[
+  E(U,V) = \max_{\psi:\|\psi\|=1}\|(U-V)\psi\|
+ \]
+ is invariant to unitary transformations, as if $T$ is unitary
+ \[
+  E(TUT^\dagger, TVT^\dagger) = \max_{\psi:\|\psi\|=1} \| T(U-V)T^\dagger \psi\| = \max_{T\phi}\|T(U-V)T^\dagger T\phi \| = E(U,V)\,
+ \]
+ where $\psi=T\phi$, and $\|T\phi\| = \|\phi\|$ and unitaries are bijective on the unit sphere, and for all vectors $\xi$, $\|T\xi\|=\|\xi\|$. We may therefore write $R_{\hat n}(\alpha) = UR_z(\alpha)U^\dagger$ where $R$ is any such rotation that rotates $\hat n$ into the $z$ axis.
+
+ In the case of the axis being the $z$ axis,
+ \[
+  R_z(\alpha) - R_z(\alpha+\beta) =
+  \begin{pmatrix}
+   \e^{-\imagi\alpha} - \e^{-\imagi(\alpha+\beta)} & \\
+   & \e^{\imagi\alpha} - \e^{\imagi(\alpha+\beta)}
+  \end{pmatrix}
+  =
+  R_z(\alpha)
+%  \begin{pmatrix}
+%   \e^{-\imagi\alpha/2} & \\
+%   & \e^{\imagi \alpha/2}
+%  \end{pmatrix}
+  \begin{pmatrix}
+   1 - \e^{-\imagi\beta/2} & \\
+   & 1 - \e^{\imagi\beta/2}
+  \end{pmatrix}\,,
+ \]
+ and as $R_z(\alpha)$ is unitary, we only need the norm of the rightmost matrix. For any vector $\psi=(\psi_0,\psi_1)^T$, this matrix maps it into the vector $((1-\e^{-\imagi\beta/2})\psi_0, (1-\e^{\imagi\beta/2})\psi_1)^T$ whose norm is $|1-\e^{-\imagi\beta/2}|\|\psi\|$.
+\end{exercise}
+
+\begin{exercise}
+ First, we calculate the state,
+ \[
+  \psi = (H\otimes H \otimes I){\rm Toffoli}(I\otimes I \otimes S){\rm Toffoli}(H\otimes H\otimes I)|0,0\rangle\otimes \psi\,,
+ \]
+ and then show that of we project using the operator
+ \[
+  |0\rangle\langle 0|\otimes |0\rangle\langle 0|\otimes I\,,
+ \]
+ The projected vector is
+ \[
+  \sqrt{\frac{5}{8}} \frac{1+\imagi}{\sqrt{2}}R_z(\theta) \psi\,,
+ \]
+ and the full vector is
+ \[
+  |0\rangle|0\rangle \sqrt{\frac{5}{8}} \frac{1+\imagi}{\sqrt{2}}R_z(\theta) \psi + \frac{\imagi}{2\sqrt{2}}\frac{1+\imagi}{\sqrt{2}} (-|0\rangle|1\rangle - |1\rangle|0\rangle + |1\rangle|1\rangle)Z \psi
+ \]
+ Consequently,  0, 0 is measured on qubits 3,2 with a probability $\sqrt{5/8}$, and in this case, the output state of the first (unmeasured) qubit is $R_z(\theta)\psi$ with a global phase.
+
+ Using $Z^2=1$, the procedure can be enhanced. If 0, 0 is measured, the output is used, if not, $Z$ is applied, and the procedure is repeated. In all steps, there is a $\sqrt{5/8}$ chance of getting the result, so the probability of not yet stopping in step $k$ is $q^k$ where $q=1-\sqrt{5/8}$. $q^k\to 0$, so the probability of not yet having the result vanishes.
+\end{exercise}
+
+\begin{exercise}
+ Let us note first that $\sin^2 \theta=1-\cos^2\theta=1-9/25=16/25$, so $\sin\theta=\pm 4/5$. We shall assume the positive sign (the negative sign case is similar).
+ 
+ (1) If $\theta$ given by $\cos\theta=3/5$ is a rational multiple of $\pi$, i.e., $\theta=\pi p/q$, where $p, q\in\mathbb{N}$, then $2 q \theta=2\pi p$, so
+ \[
+  1 = \e^{\imagi m \theta} = \left( \frac{3}{5} +\imagi\frac{4}{5}\right)^m\,,
+ \]
+ where $m=2q>0$, which may be recast as
+ \[
+  (3+4\imagi)^m = 5^m\,.
+ \]
+
+ (2) Let us proceed by induction. Assuming $(3+4\imagi)^k = 3+\imagi 4 ({\rm mod\ } 5)$, we have
+ \[
+  (3+5\imagi)^{k+1} = (3+4\imagi)^k (3+4\imagi) = (3+4\imagi)(3+4\imagi)\ ({\rm mod\ } 5) = (3+5\imagi)^2 = (3+4\imagi)\ ({\rm mod\ } 5)\,,
+ \]
+ and the last step is verified by computation. As a result, the $m$ obtained in the above sub-excercise (1) cannot exist, as $5^m = 0\ ({\rm mod\ } 5)$.
+\end{exercise}
+
+\begin{exercise}
+ In exer.\ 4.41 we have shown how to obtain $R_z(\theta)$, $\cos\theta=3/5$ using Hadamard, Toffoli and phase gates and measurements. As $\theta$ is an irrational multiple of $\pi$, any other angle may be approximated with powers (repeated application) of that circuit. In sec.\ 4.5.3, it was shown that Hadamard, phase, CNOT and $\pi/8$ are a universal set, so all that is to add is that the $\pi/8$ gate is approximated.
+\end{exercise}
+
+\begin{exercise}
+ If $\alpha$ is irrational, the C${}^2 \imagi R_x(\pi\alpha)$ gate is universal, as it can approximate then any $R_x(\theta)$.
+ 
+ For $\theta=\pi$ we get the Toffoli. Setting one control bit to 1 yields the CNOT.
+ 
+ Setting $\theta=\pi/2$ and the control qubits to 1 yields a Pauli $X$. The circuit
+ \begin{center}
+  \begin{quantikz}
+    &          & \targ{}   &          & \meter{} \\
+    & \gate{R_x(\pi/2)} & \ctrl{-1} & \gate{R_x(-\pi/2)} & &
+  \end{quantikz}
+ \end{center}
+ provides a state $|-\rangle$ when the measurement result is 1 (up to a phase of $\imagi$).
+ 
+ Inputting $|-\rangle$ on target bit, 1 on one control yields a $Z$ rotation on the other control qubit.
+
+ We know that CNOTs and 2-level gates are universal, so we need to approximate 2-level gates. These can be obtained using $R_x(\theta)$ and $R_z(\theta)$ gates. (See Ref.\ \cite{deutschgateuniv}.)
+\end{exercise}
+
+\begin{exercise}
+ The Hadamard gate has a matrix
+ \[
+  H=\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}\,,
+ \]
+ the matrix of the $S$ gate is
+ \[
+  S=\begin{pmatrix} 1 & \\ & \imagi \end{pmatrix}\,,
+ \]
+ the matrix of the CNOT is
+ \[
+  {\rm CNOT} =
+  \begin{pmatrix}
+   1 & & & \\
+     & 1 & & \\
+     &   & & 1\\
+     &   & 1 & 
+  \end{pmatrix}\,,
+ \]
+ and that of the Toffoli gate is
+ \[
+ {\rm Toffoli} =
+ \begin{pmatrix}
+  1 &   &   &   &   &   &   &   \\
+    & 1 &   &   &   &   &   &   \\
+    &   & 1 &   &   &   &   &   \\
+    &   &   & 1 &   &   &   &   \\
+    &   &   &   & 1 &   &   &   \\
+    &   &   &   &   & 1 &   &   \\
+    &   &   &   &   &   &   & 1 \\
+    &   &   &   &   &   & 1 & 
+ \end{pmatrix}\,,
+ \]
+ which are all matrices with either integer elements or integer times $1/\sqrt{2}$, so when multiplying such matrices, a matrix of the form $2^{-k/2} M$ results, where every Hadamard matrix contributes 1 to $k$.
+ 
+ The $\pi/8$ gate has a matrix
+ \[
+  T = \begin{pmatrix} 1 & \\ & \e^{\imagi\pi/4}\end{pmatrix} = \begin{pmatrix} 1 & \\ & (1+\imagi)/\sqrt{2} \end{pmatrix}\,,
+ \]
+ so in this case, $M$ may also include integer times $\sqrt{2}$ elements.
+
+\end{exercise}
+
+\subsection{Simulation of quantum systems}\label{ssec:simulationOfQuantumSystems}
+
+\begin{exercise}
+ The state vector of a single qubit has 2 complex components, for $n$ qubits, a tensor product is taken, so the state vector has $2^n$ (complex) components. The density matrix (an operator acting on this space) is therefore a complex $2^n\times 2^n$ matrix. This matrix is self-adjoint, so the main diagonal must be real, and the elements above the diagonal are complex conjugates of the ones below it, and there is one constraint (total probability of 1) that the trace is 1, so we have $4^n-1$ real parameters.
+\end{exercise}
+
+\begin{exercise} Using the fact that the operators $H_k$ commute, the terms in the series of the exponential may be reorganised as
+ \[
+  \begin{aligned}
+  \e^{-\imagi H t} &= \sum_{n=0}^\infty \frac{(-\imagi H t)^n}{n!} = \sum_n \frac{(-\imagi t\sum_k H_k)^n}{n!}\\ &= \sum_{n, m_1, m_2,\dots,m_{k-1}} \frac{(-\imagi t)^n}{n!}\frac{n!}{(n-m_1-m_2-\dots)! m_1! m_2!\dots}H_1^{m_1}H_2^{m_2}\dots \\
+  &= \sum_{m_1, m_2,\dots,m_k} \frac{(-\imagi t)^{\sum_i m_i}}{m_1! m_2!\dots m_k!}H_1^{m_1}H_2^{m_2}\dots H_k^{m_k}\\
+  &= \left(\sum_{m_1}\frac{(-\imagi H_1 t)^{m_1}}{m_1!}\right)
+  \left(\sum_{m_2}\frac{(-\imagi H_2 t)^{m_2}}{m_2!}\right)\dots
+  \left(\sum_{m_k}\frac{(-\imagi H_k t)^{m_k}}{m_k!}\right) \\
+  &= \e^{-\imagi H_1 t}\e^{-\imagi H_2 t}\dots \e^{-\imagi H_k t}\,.
+ \end{aligned}
+ \]
+\end{exercise}
+
+\begin{exercise}
+ If $H_k$ involves a maximum of $c$ particles out of $n$ then the different $H_k$ terms are given as
+ \[
+  \binom{n}{c} = \frac{n(n-1)\dots (n-c)}{c!} = O(n^{c+1})\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Use the power series of the exponential, e.g.,
+ \[
+  \e^{A\Delta t} = 1 + A\Delta t + \frac{1}{2}(A\Delta t)^2 + O(\Delta t^3)\,,
+ \]
+ so
+ \[
+  \e^{(A+B)\Delta t} = I + A\Delta t + B \Delta t + \frac{1}{2}(A^2 + AB + BA + B^2)(\Delta t)^2 + O(\Delta t^3)\,,
+ \]
+ and the other side of the equation is
+ \[
+  \begin{aligned}
+   e^{A\Delta t}e^{B\delta t}&\e^{-\frac{1}{2}[A,B](\Delta t)^2} \\
+   &= (I+A\Delta t+\frac{1}{2}A^2(\Delta t)^2)(I+B\Delta t+\frac{1}{2}B^2(\Delta t)^2)(I-\frac{1}{2}[A,B](\Delta t)^2) + O(\Delta t^3)\\
+   &=I+(A+B)\Delta t + \left(AB + \frac{1}{2}(A^2+B^2-[A,B] \right)(\Delta t)^2 + O(\Delta t^3)\\
+   &=I+(A+B)\Delta t + \frac{1}{2}\left( A^2 + AB+BA+B^2\right)(\Delta t)^2 + O(\Delta t^3)\,,
+  \end{aligned}
+ \]
+ and this agrees with the expansion of $e^{(A+B)\Delta t}$ above.
+
+ Similarly, to prove eq.\ (4.103), on the left hand side we have
+ \[
+  e^{\imagi(A+B)\Delta t} = I + \imagi(A+B)\Delta t+O(\Delta t^2)\,,
+ \]
+ and on the right
+ \[
+  e^{\imagi A\Delta t}\e^{\imagi B \Delta t} = (I+\imagi A\Delta t)(I+\imagi B\Delta t)+O(\Delta t^2) = I + \imagi (A+B)\Delta t+O(\Delta t^2)\,,
+ \]
+ and the two agree.
+ 
+ In the case of eq.\ (4.104), the left hand side is
+ \[
+  \e^{\imagi (A+B)\Delta t}=I + \imagi(A+B)\Delta t - \frac{1}{2}(A^2 + AB + BA+B^2)(\Delta t)^2 + O(\Delta t^3)\,,
+ \]
+ and the right one is
+ \[
+  \begin{aligned}
+   \e^{\imagi A\Delta t/2}&\e^{\imagi B\Delta t}\e^{\imagi A\Delta t/2}\\
+   &=(I+\frac{\imagi}{2}A\Delta t-\frac{1}{8}A^2 (\Delta t)^2)(I+\imagi B\Delta t-\frac{1}{2}B^2(\Delta t)^2)(I+\frac{\imagi}{2}A\Delta t-\frac{1}{8}A^2 (\Delta t)^2)+O(\Delta t^3)\\
+   &= I + \imagi(A+B)\Delta t -\frac{1}{2}\left( A^2 + AB +BA+ B^2 \right) (\Delta t)^2 + O(\Delta t^3)\,.
+ \end{aligned}
+ \]
+\end{exercise}
+
+\begin{exercise}
+ (a) With $H=\sum_{k=1}^L H_k$,
+ \[
+  \begin{aligned}
+   &U_{\Delta t}\\
+   &= \left[ \e^{-\imagi H_1 \Delta t}\e^{-\imagi H_2\Delta t}\dots \e^{-\imagi H_L\Delta t}\right]\left[ \e^{-\imagi H_L \Delta t}\e^{-\imagi H_{L-1}\Delta t}\dots \e^{-\imagi H_1\Delta t}\right]\\
+   &= \left[\left( I - \imagi H_1 \Delta t-\frac{1}{2}H_1^2 (\Delta t)^2\right) \left( I - \imagi H_2 \Delta t-\frac{1}{2}H_2^2 (\Delta t)^2\right)\dots \left( I - \imagi H_L \Delta t-\frac{1}{2}H_L^2 (\Delta t)^2\right)\right]\\
+   &\left[\left( I - \imagi H_L \Delta t-\frac{1}{2}H_L^2 (\Delta t)^2\right) \left( I - \imagi H_{L-1} \Delta t-\frac{1}{2}H_{L-1}^2 (\Delta t)^2\right)\dots \left( I - \imagi H_1 \Delta t-\frac{1}{2}H_1^2 (\Delta t)^2\right)\right]\\ &+O(\Delta t^2)\\
+   &= I -2\imagi H \Delta t-\left( 2\sum_k H_k^2 + \sum_{k\ne j}(H_k H_j + H_j H_k)\right) + O(\Delta t^3)\\
+   &= \e^{-2\imagi H \Delta t}+O(\Delta t^3)\,.
+  \end{aligned}
+ \]
+
+ (b) Let us note, that
+ \[
+  E(U_{\Delta t}^m, \e^{-2\imagi m H \Delta t}) = \| U_{\Delta t}^m -  (\e^{-2\imagi H \Delta t})^m \|\,,
+ \]
+ and for any operators $A$, $B$ with $C=A-B$, we have $A^m - B^m = (B+C)^m - B^m = B^m + CB^{m-1} + BCB^{m-2}+\dots - B^m$, and so $\|A^m - B^m\| = \|C B^{m-1} + BCB^{m-1}+\dots\| \le \|C B^{m-1}\| + \| BCB^{m-2}\| + \dots \le m \|B\|^{m-1}\|C\|$, so
+ \[
+  E(U_{\Delta t}^m, \e^{-2\imagi m H \Delta t}) \le m \|U_{\Delta t}^{m-1}\| E(U_{\Delta t}, \e^{-2\imagi H \Delta t})
+ \]
+ and from (a) we know (the definition of $O$) that there is a number $\alpha'$ such that $\|U_{\Delta t} - \e^{-2\imagi H \Delta t}\| \le \alpha' \Delta t^3$, so
+ \[
+  E(U_{\Delta t}^m, \e^{-2\imagi m H \Delta t}) \le m \|U_{\Delta t}\|^{m-1}\alpha' \Delta t^2 = m\alpha \Delta t^3
+ \]
+ with $\alpha=\|U_{\Delta t}\|^{m-1}\alpha'$. As $U_{\Delta t}$ is unitary, $\|U_{\Delta t}\|=1$.
+\end{exercise}
+
+\begin{exercise}
+ We may express the Pauli matrices $X$, $Y$ with $Z$ and single-qubit gates as follows:
+ \[
+  Y = R_x(-\pi/2)^\dagger Z R_x(-\pi/2)\,,
+ \]
+ and
+ \[
+  X = HZH\,,
+ \]
+ and then we apply the techniques used for the Hamiltonian in eq.\ (4.113),
+ \begin{center}
+  \begin{quantikz}
+                       &                           &
+                       \ctrl{3} &          &          &
+                       &
+                                &          & \ctrl{3} &
+                                &\\
+                       & \gate{R_x(\frac{\pi}{2})} &
+                                & \ctrl{2} &          &
+                       &
+                                & \ctrl{2} &       &
+                       \gate{R_x(-\frac{\pi}{2})} & \\
+                       & \gate{H}                  &
+                                &          & \ctrl{1} &
+                       &
+                       \ctrl{1} &          &       &
+                       \gate{H} &\\
+  \lstick{$|0\rangle$} &                           &
+                       \targ{}  & \targ{}  & \targ{}  &
+                       \gate{\e^{-\imagi Z\Delta t}} &
+                       \targ{}  & \targ{}  & \targ{}  & &
+  \end{quantikz}
+ \end{center}
+ We have used the fact that pairs of the form $UU^\dagger$ cancel.
+\end{exercise}
+
+\begin{problem}
+ Let $G$ be the gate computing the function $f$ reversibly using $T$ Toffoli gates, then the circuit
+ \begin{center}
+  \begin{quantikz}
+   \lstick[4]{$x$}& \gate[4]{G} & \ctrl{4} & & \ldots & & \gate[4]{G^{-1}}  & \rstick[4]{\ $\exp\left({-\frac{2\imagi \pi f(x)}{2^n}}\right)x$}\\
+   & & & \ctrl{3} & \ldots & & &\\
+   \vdots\setwiretype{n} &&{\vdots\ }& &\vdots & \vdots& & \vdots \\
+   & & & & \ldots & \ctrl{1} & &\\
+   \lstick{$|0\rangle$} & & \gate{\e^{-\imagi\pi}}& \gate{\e^{-\imagi \pi/2}} & \ldots & \gate{\e^{-\frac{\imagi \pi}{2^{n-1}}}} & &\\
+  \end{quantikz}
+ \end{center}
+ implements the mapping using $2T+n$ Toffoli and controlled phase shift gates.
+\end{problem}
+
+\section{The quantum Fourier transform and its applications}\label{sec:quantumFourierTransform}
+\subsection{The quantum Fourier transform}\label{ssec:quantumFourierTransform}
+
+\begin{exercise}\label{ex:FTunitary}
+ The operator defined by eq.\ (5.3) has the matrix
+ \[
+  F_{kj} = \frac{1}{\sqrt{N}}\e^{2\pi\imagi k j/N}\,,
+ \]
+ so what we need to show is $F^\dagger F=I$, and the matrix elements of $F^\dagger F$ are
+ \[
+  \sum_{k}F_{k\ell}^* F_{kj} = \frac{1}{N}\sum_{k=0}^{N-1} \e^{2\pi\imagi k(j-\ell)/N}=\delta_{\ell,j}\,,
+ \]
+ which can be seen as follows: if $\ell\ne j$, the sum is a geometric series, and the explicit summation formula gives zero due to the periodicity of $\e^{2\pi \imagi k/N}$ with a period $N$, and at $\ell=j$, all summands are 1.
+\end{exercise}
+
+\begin{exercise}
+ The Fourier transform of the state $|00\dots 0\rangle$ is
+ \[
+  \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} |k\rangle = \frac{1}{\sqrt{N}}\left[|00\dots 0\rangle + |0\dots01\rangle + \dots |11\dots 1\rangle\right]\,,
+ \]
+ where $N=2^n$ and $n$ is the number of qubits, which is obtained by setting $j=0$ in eq.\ (5.2).
+\end{exercise}
+
+\begin{exercise}
+ Eq.\ (5.1), in the case of $N=2^n$ requires the computation of $2^n$ sums, each sum containing $N$ summands, so the total number of operations is $N^2=2^{2n}$.
+ 
+ The number of operations may be reduced using the trick of eq.\ (5.4). What is given there is the contribution of $x_{j_1j_2\dots j_n}$ to $y_{k_1k_2\dots k_n}$, and we may note that as $\exp(2\pi\imagi 0.j_n)=\pm 1$, so the contributions to $y_{0k_2\dots k_n}$ and $y_{1k_2\dots k_n}$ are either the same if $j_1=0$ or differ by a sign if $j_1=1$. This can be used to split the transform in a half, and compute the steps separately. This way, in each step, the number of bits of the output index are reduced by one. The input indices, over which a loop is still needed, still range over $n$ bit numbers, so there will be $2^n$ steps, so the total number of steps is $n2^n$.
+\end{exercise}
+
+\begin{exercise}
+ We follow the procedure of Sec.\ 4.3. We first decompose the R-gate as $R=\e^{\imagi \alpha}AXBXCX$ where $ABC=I$, as follows,
+ \[
+  R_k = \begin{pmatrix} 1 & \\ & \e^{2\pi\imagi/2^k} \end{pmatrix}
+ \]
+ which when compared with eq.\ (4.12) yields $\gamma=0$, and $\alpha=\pi/2^k$, $\beta=2\pi/2^k$ and $\delta=0$ (note that $\alpha-\beta/2=0$ and $\alpha+\beta/2=2\pi/2^k$), yielding
+ $A=R_z(2\pi/2^k)$, $B=R_z(-\pi/2^k)$ and $C=R_z(-\pi/2^k)$.
+ We may now use the circuit in Fig.\ 4.6.
+\end{exercise}
+
+
+\begin{exercise}
+ One possibility for the inverse-FT is to put the gates in reverse order, and replace them by their adjoints. The adjoint of a controlled gate is the controlled version of the adjoint, $R_k^\dagger$ just shifts with the negative phase, and $H^\dagger=H$.
+ 
+ Another possibility is based on the following property of the classical Fourier-transformation: the inverse is given by the same formula as the original transformation just with the phases reversed. So, the mapping
+ \[
+  |k\rangle \mapsto \frac{1}{\sqrt{N}}\sum_{\ell=0}^{N-1}\e^{-\imagi 2\pi(k-\ell)/N}|\ell\rangle
+ \]
+ is the inverse, as in this case, with this transformation applied after the direct one,
+ \[
+  |j\rangle \mapsto \frac{1}{N}\sum_{k=0}^{N-1}\sum_{\ell=0}^{N-1}\e^{2\pi\imagi (j-\ell)k/N}|\ell\rangle = |j\rangle\,,
+ \]
+ where we have used the fact that the same sum has been evaluated in the case of the classical Fourier transformation, see ex.~\ref{ex:FTunitary}
+
+ As the formula above is the same as for the direct Fourier transform, with the phases reversed, the circuit implementing it is also the same, just replacing the controlled $S$-gates with controlled $S^\dagger$-gates (phase shift gates with negative phase).
+\end{exercise}
+
+\begin{exercise}
+ According to the calculation in box 4.1, if operators in a product of operators are approximated, the errors add up linearly. The depth of the circuit implementing the quantum Fourier transform scales as $n^2$, where $n$ is the number of qubits, so if the error of each operator scales as $1/p(n)$, the total error scales as $n^2/p(n)$.
+\end{exercise}
+
+\subsection{Phase estimation}\label{ssec:phaseEstimation}
+
+\begin{exercise}\label{ex:5.7}
+ Let us apply the operator implemented by the circuit in fig.\ 5.2 to a state of the form $|j\rangle \otimes \psi$, where $j=j_{t-1}2^{t-1} + \dots + j_1 2 + j_0$. If $j_k=1$, an operator $U^{2^k}$ is applied to $\psi$, so the result is
+ \[
+  |j\rangle \otimes \prod_{k:j_k=1}U^{2^k} \psi = |j\rangle \otimes U^{\sum_k j_k 2^k}\psi = |j\rangle\otimes U^j \psi\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ In the case of an initial state which is a superposition of the eigenstates of $U$, the derivation in sec.\ 5.2.1 may be repeated, but in eq.\ (5.23), the there is also a summation $\sum_u c_u$ in the front and in the exponent, $\phi$ is replaced by $\varphi_u$, $u$ running over the eigenvalues of $U$.
+ 
+ The formula in eq.\ (5.27) can now be used to obtain the formula for $P(|m-b|>e|u)$, i.e., the conditional probability, and then the total probability of such a ``wrong'' result is
+ \[
+  p(|m-b|>e) = \sum_{u'}P(|m-b|>r|u')P_{u'} \ge P_(|m-b|>e|u) P_u + \sum_{u'\ne u}P_|u'|\,,
+ \]
+ the rest of the derivation yields
+ \[
+  P(|m-b|>e|u) \le 1-\varepsilon\,,
+ \]
+ and so
+ \[
+  p(|m-b|>e) \le |c_u|^2 \varepsilon + \sum_{u'\ne u}|c_u|^2\,,
+ \]
+ so the probability
+ \[
+  p(|m-b|\le e) \ge 1 - |c_u|^2\varepsilon - \sum_{u'\ne u}|c_{u'}|^2 = |c_u|^2(1-\varepsilon)\,,
+ \]
+ where we have used $\sum_{u'}|c_{u'}|^2=1$.
+\end{exercise}
+
+\begin{exercise}
+ In this case, the phases to be measured, are $0$ and $\pi$, corresponding to the eigenvalues $1$ and $-1$, so they can be both exectly represented in the form $2\pi 0.b$ with $b=0,1$, as binary fractions. This means that in the circuit in fig.\ 5.2-5.3 we need one bit, $t=1$, no swap, and the quantum Fourier transform for 1 bit is the Hadamard operator, so the resulting circuit looks like
+ \begin{center}
+ \begin{quantikz}
+   \lstick{$|0\rangle$} & \gate{H} & \ctrl{1} & \gate{H} & \meter{} \\
+   \lstick{$\psi$}     &          & \gate{U} &          & & \rstick{$\psi$}
+  \end{quantikz}
+ \end{center}
+ Note that the circuit is the same as the one considered in ex.~\ref{ex:4.34}
+\end{exercise}
+
+
+\subsection{Applications: order-finding and factoring}\label{ssec:applications}
+
+\begin{exercise}
+ The powers of 5 mod 21 are: 5, 4, 20, 16, 17, 1, so the order of 5 is 6.
+\end{exercise}
+
+\begin{exercise}
+ According to Fermat's theorem, the order $r$ of any $x$ such that ${\rm gcd}(x, N)=1$ is a divisor of $\varphi(n)=\prod_j p_j^{\alpha_j-1}(p_j-1)$ where the prime factorisation of $N$ is $N=\prod_j p_j^{\alpha_j}$, so on one hand, $r|\varphi(N)$, so $r \le \varphi(N)$, and comparing the formula for $\varphi(N)$ with the factorisation of $N$, $\varphi(N) < N$.
+\end{exercise}
+
+
+\begin{exercise}
+ As ${\rm gcd}(x, N)=1$, the operator defined by eq.~(5.36) is a permutation of the basis vectors (it maps basis vectors onto basis vectors and has an inverse), therefore it preserves scalar products.
+\end{exercise}
+
+\begin{exercise} Substituting eq.~(5.37) into eq.~(5.44),
+ \[
+  \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}|u_s\rangle = \frac{1}{r}\sum_{k,s=0}^{r-1}\exp\left(-\frac{2\pi\imagi sk}{r}\right)|x^k\,({\rm mod}\ N)\rangle\,,
+ \]
+ and in the summation, when the summation over $s$ is performed, the sum calculated is a geometric series. When $k\ne 0$, the result vanishes due to periodicity of $\e^{2\pi\imagi m}$, and when $k=0$, the exponent is 1, and the sum is $r$ terms, each 1, canceling the $1/r$, and noting that $x^0=1$, the proof is complete.
+ 
+ The same argument proves eq.~(5.45). In this case, the summation index shall be $k'$, and the summation over $s$ gives a $r\delta_{kk'}$.
+\end{exercise}
+
+\begin{exercise}
+ Let us remember the derivation in the solution of ex.~\ref{ex:5.7}. We apply $H^{\otimes t}$ to the register holding $j$, so the circuit implements the mappings
+ \[
+  \begin{aligned}
+   |0\rangle \otimes |0\rangle &\xmapsto{H^{\otimes t}\otimes I}\frac{1}{2^{t/2}}(|0\rangle + |1\rangle)^{\otimes t}\otimes |0\rangle %= \frac{1}{2^{t/2}}\left( |00\dots 0\rangle + |0\dots 01\rangle + \dots + |11\dots 1\rangle\right)\otimes |0\rangle \\
+   = \frac{1}{2^{t/2}}\sum_j |j\rangle \otimes |0\rangle\\
+   &\xmapsto{V} \frac{1}{2^{t/2}}\sum_j |j\rangle |x^j\,({\rm mod}\ N)\rangle\,.
+  \end{aligned}
+ \]
+ To implement this $V$ usign $L^3$ gates, we first need a circuit that implements the mapping
+ \[
+  |y\rangle \mapsto |y+x^{2^k}\,({\rm mod}\ N)\rangle
+ \]
+ which we do as in box 5.2, using modular exponentiation, that requires $O(L)$ squaring operations (implemented as in reversible computing, $O(L^2)$ gates), and in each step we need a controlled addition, and there are $L$ steps, so the total cost is $O(L^2)$. The circuit is as follows:
+ \begin{center}
+  \begin{quantikz}
+   \lstick{$|j\rangle$} & \ctrl{2} &            & \ctrl{2} & \dots &\\
+   \lstick{$x$}         &          & \gate{x^2} &  & 
+   \dots &\\
+   \lstick{$|0\rangle$} & \gate{+} &            & \gate{+} &\dots & \rstick{$|x^j\rangle$}
+  \end{quantikz}
+ \end{center}
+\end{exercise}
+
+\begin{exercise}
+ %The least common multiple ${\rm lcm}(x, y)$ of $x$ and $y$ has the following properties: $x|{\rm lcm}(x, y)$, $y|{\rm lcm}(x, y)$ and it is minimal.
+ %
+ %It is clear that $xy$ is a common multiplier of $x$ and $y$, but non-minimal. Now, for $g={\rm gcd}(x, y)$, the following holds: $x=x' g$, $y=y'g$, and ${\rm gcd}(x',y)={\rm gcd}(x,y')=1$, so $xy=x' y' g^2$, so for $\ell=xy/{\rm gcd}(x, y) = x'y'g$ the following holds: $x|\ell$, $y'|\ell$ and if $x|n$ then $x'|n$ and $g|n$, similarly, if $y|n$ then $y'|n$. So if both $x,y|n$ then $x'y'g|n$ as these all divide it and their gcd is 1. As a result $n\ge x'y'g=xy/g$, i.e., it has the minimal property, $xy/g={\rm lcm}(x, y)$.
+ Let us write the prime factorisation of the two integers as
+ \[
+  x=p_1^{\alpha_1}p_2^{\alpha_2}\dots p_k^{\alpha_k}\,,\quad y=p_1^{\beta_1}p_2^{\beta_2}\dots p_k^{\beta_k}\,.
+ \]
+ The greatest common divisor of the two can be written as
+ \[
+  {\rm gcd}(x, y) = \prod_i p_i^{\min\{\alpha_i, \beta_i\}}\,,
+ \]
+ as this divides both, and any prime on any higher power does not divide the one with the lowest power. Similarly,
+ \[
+  {\rm lcm}(x, y) = \prod_i p_i^{\max\{\alpha_i, \beta_i\}}\,,
+ \]
+ and
+ \[
+  xy=\prod_i p_i^{\alpha_i + \beta_i}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ The integral is evaluated as follows,
+ \[
+  I_x=\int_x^{x+1}\frac{1}{y^2}\d y = \left[ -\frac{1}{y}\right]_{x}^{x+1}=\frac{1}{x}-\frac{1}{x+1}=\frac{1}{x(x+1)}\,,
+ \]
+ and so
+ \[
+  I_x-\frac{2}{3x^2} = \frac{x}{x^2(x+1)} - \frac{2(x+1)}{3x^2(x+1)}=\frac{x/3-2/3}{x^2(x+1)}\,,
+ \]
+ which is positive is $x>2/3$. (The denominator is positive, the numerator is an increasing function, and vanishes at $x=2$).
+ 
+ Now we may write $1/x^2 \le 3I_x/2$, and so
+ \[
+  \sum_{q\, \rm prime}\frac{1}{q^2} < \sum_{q=2}^\infty \frac{1}{q^2}\le \frac{3}{2}\int_{2}^\infty \frac{1}{y^2}\d y=\frac{3}{2}\left[-\frac{1}{y}\right]_{2}^\infty = \frac{3}{4}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}\label{ex:5.17}
+ (1) If $N$ is $L$ bit long, then $0\le N \le 2^L-1$, so if $N=a^b$, and $a\ge 2$, then from $a^L > 2^L-1$ follows that $b<L$ must hold.
+ 
+ (2) $y=\log_2 N$ is calculated with the following algorothm \cite{log2}: a, we divide $N$ by 2 enough times so that the result is between 1 and 2. If it is one, we are done, in 
+ $O(L)$ steps. If not, precision is enhanced, by squaring $y$ a couple of times till the result is between 2 and 4, and dividing that by 2, each time getting some additional bit of the fractional part of $y$, in the form $0\dots01$ after the previous digits, the number of zeros is the number of squarings necessary.
+ 
+ The number $x=y/b$ is calculated using the usual method of division on paper. We take some bits from the beginning of $y$, until the number made up by those is above $b$, write that divided by $b$ (know small multiples of $b$, $O(L)$ steps as $b<L$) to the beginning of $x$, and replace it at the beginning of $y$ with the remainder. As the length of $y$ is reduced in each step, the number of steps needed is $O(L)$ (length of $N$), each step required $O(L)$ operations, so the total is $O(L^2)$.
+ 
+  The integer part of $2^x$ may be calculated by multiplications by 2, as $N$ has $L$ bits, the integer part of $x$ is $O(L)$. Now we need to enhance the result by calculating $2^{x'}$ where $x'$ is the fractional part of $x$ to the precision where $1/2^{[x]}$. This can be done using Taylor-series, the number of terms needed is $O(L)$ because the precision of the $k$th term is $1/k!{}$, $\log k!~k\log k$, we need $2^L \sim k!{}$, so $k < O(L)$, and each term consist of $L$-bit multiplications.
+ 
+ (3) With repeated squaring we may compute $u_1^b$, where $m$ is a power of 3 close to $b$, and then add the remining few multiplications. We multiply numbers of length $L$, and the number of squarings is $\log_2 b\sim \log_2 L$. Using, e.g., Karatsuba multiplication, this is below $O(L^2)$.
+ 
+ (4) As $b<L$, we loop over $b$, multiplying the number of steps by $L$.
+\end{exercise}
+
+\begin{exercise}
+ Factoring $N=91$. The steps are as follows:
+ \begin{enumerate}
+  \item N is odd, proceed to step 2.
+  \item We need to check up to $b=\log_2 91\approx 6.5$. See ex.~\ref{ex:5.17}.
+  \item We choose the ``random'' number x=4. A quick calculation using Euclid's algorithm yields ${\rm gcd}(4, 91)=1$, so it is co-prime, we may proceed to order-finding.
+  \item The powers of 4 mod 91 are 1, 4, 16, 64, 74, 23, 1, so the order is $r=6$. $x^3=64\ne -1\,({\rm mod\ }91)$, we may proceed to gcd.
+  \item ${\rm gcd}(63, 91)=7$, a factor is found.
+ \end{enumerate}
+\end{exercise}
+
+\begin{exercise}
+ The numbers below 15 are: 2 even, 3 prime, $4=2^2$ and even, 5 prime, 6 even, 7 prime, $8=2^3$ and even, $9=3^2$, 10 even, 11 prime, 12 even, 13 prime, 14 even.
+\end{exercise}
+
+\subsection{General applications of the quantum Fourier transform}\label{ssec:generalApplicationsQFT}
+
+\begin{exercise}
+ Let us use the periodicity of $f$ as follows:
+ \[
+  \begin{aligned}
+  \hat{f}(\ell) &= \frac{1}{\sqrt{n r}} \sum_{x=0}^{N-1}\e^{-2\pi\imagi \ell x/N}f(x) = \frac{1}{\sqrt{N}}\sum_{m=0}^{n-1} \sum_{x'=0}^{r-1} \e^{-2\pi\imagi m \ell/n}\e^{-2\pi\imagi x' \ell/N}f(k)\\
+  &= \frac{1}{\sqrt{n}}\sum_{m=0}^{n-1} \e^{-2\pi\imagi \ell m/n}\frac{1}{\sqrt{r}}\sum_{x'=0}^{r-1}\e^{-2\pi\imagi \ell x'/N} f(x')\,.
+ \end{aligned}
+ \]
+ where $N=n r$ and we have written $x=mr + x'$. The first sum is the sum of a geometric series, and, unless $n | \ell m$, the sum formula shows that it vanishes. $n|\ell m$ for all $m$ if $n|\ell$, i.e., $\ell$ is an integer multiple of $n=N/r$, and then all the summands are 1, and the first sum contributes $n=N/r$, and the result is
+ \[
+  \hat{f}(\ell' n) = \frac{N}{r}\frac{1}{\sqrt{r}}\sum_{x'=0}^{r-1}\e^{-2\pi\imagi \ell' x'/r}f(x') = \frac{N}{r}\tilde{f}(\ell')\,,
+ \]
+ where $\tilde{f}$ is the Fourier transform of $f$ on the shorter interval $0\le x\le r-1$, or we may write
+ \[
+  \hat{f}(\ell) = \left\{
+  \begin{aligned}
+   \frac{N}{r}\tilde{f}\left(\frac{\ell}{N/r}\right)\,&\text{, if\ } N/r | \ell\,,\\
+   0\,\quad\quad\quad&\,\text{\ otherwise\,.} 
+  \end{aligned}
+  \right.
+ \]
+
+ In eq.\ (5.63) we use the inverse Fourier transform to express $f(x)$, using a single period of $f$. Note however that if $x$ is outside the single period, $x=mr+x'$ then $f(x)=f(x')$, and substituting into eq.\ (5.64) yields
+ \[
+  |f(x)\rangle = \frac{1}{\sqrt{r}}\sum_{\ell=0}^{r-1}\e^{2\pi\imagi \ell x/r}|\hat{f}(\ell)\rangle = \frac{1}{r}\sum_{\ell=0}^{r-1}\e^{2\pi\imagi \ell x'/r}|\hat{f}(\ell)\rangle = |f(x')\rangle\,,
+ \]
+ as $\exp(2\pi\imagi \ell x /r) = \exp[2\pi\imagi (\ell x'/r + \ell m]=\exp(2\pi\imagi \ell x'/r)$, i.e., the periodicity is recovered.
+\end{exercise}
+
+\begin{exercise}
+ (1) Let us apply $U_y$ to the state $|\hat{f}(\ell)\rangle$ defined in eq.\ (5.63),
+ \[
+  \begin{aligned}
+   U_y |\hat{f}(\ell)\rangle &= \frac{1}{\sqrt{r}}\sum_{x=0}^{r-1} \e^{-2\pi\imagi \ell x/r}U_y|f(x)\rangle = \frac{1}{\sqrt{r}}\sum_{x=0}^{r-1} \e^{-2\pi\imagi \ell x/r}|f(x+y)\rangle\\
+   &= \frac{1}{\sqrt{r}}\sum_{x'=y}^{y+r-1}\e^{-2\pi\imagi \ell (x'-y)/r}|f(x)\rangle = \e^{2\pi\imagi \ell y/r}\frac{1}{\sqrt{r}}\sum_{x=0}^{r-1}\e^{-2\pi\imagi \ell x/r}|f(x)\rangle\\
+   &= \e^{2\pi\imagi \ell y/r}|\hat{f}(\ell)\rangle\,.
+  \end{aligned}
+ \]
+ where we have shifted the summation variable, $x'=x+y$, used the fact that $\exp(2\pi\imagi \ell x/r)$ and $f(x)$ are both periodic, so the sum overlaps, and dropped the prime. The eigenvalue is $\lambda_\ell = \exp(2\pi\imagi\ell y/r)$.
+ 
+ (2) Let us express the given state $|f(x_0)\rangle$ with the Fourier transform as
+ \[
+  |f(x_0)\rangle = \frac{1}{\sqrt{r}}\sum_{\ell=0}^{r-1} \e^{2\pi\imagi \ell x_0/r}|\hat{f}(\ell)\rangle\,,
+ \]
+ and apply the black box part of the quantum phase estimation algorithm, implementing the mapping
+ \[
+  |j\rangle \otimes \psi \mapsto |j\rangle \otimes U_y^j \psi\,.
+ \]
+ At this point, the input to this mapping is
+ \[
+  \frac{1}{\sqrt{N}}\sum_j |j\rangle |f(x_0)\rangle\,,
+ \]
+ with $N=2^t$, so the output is
+ \[
+  \begin{aligned}
+   \frac{1}{\sqrt{N}}\sum_{j=0}^{N-1} |j\rangle U_y^j|f(x_0)\rangle &= \sum_{j=0}^{N-1} \sum_{\ell=0}^{r-1} \frac{1}{\sqrt{Nr}} \e^{2\pi\imagi \ell x_0/r}|j\rangle U_y^j |\hat{f}(\ell)\rangle = \frac{1}{\sqrt{Nr}}\sum_{j=0}^{N-1}\sum_{\ell=0}^{r-1}\e^{2\pi\imagi j\ell/r}\lambda_\ell^j |j\rangle|\hat{f}(\ell)\rangle\,,\\
+   &= \frac{1}{\sqrt{Nr}}\sum_{j=0}^{N-1}\sum_{\ell=0}^{r-1}\e^{2\pi\imagi j\ell/r}\e^{2\pi\imagi \ell j x_0/r}|j\rangle|\hat{f}(\ell)\rangle
+   =\frac{1}{\sqrt{r}}\sum_{\ell=0}^{r-1}\e^{2\pi\imagi j\ell/r} |\widetilde{N\ell x_0/r}\rangle |\hat{f}(\ell)\rangle\,.
+  \end{aligned}
+ \]
+ Applying the inverse Fourier transform to the first register allows us to measure $N\ell x_0/r$, and using the continued fraction method, therefore, $r$.
+\end{exercise}
+
+\begin{exercise}
+ Using the double periodicity of $f$,
+ \[
+  \begin{aligned}
+   |\hat{f}(\ell_1, \ell_2)\rangle &= \sum_{x_1=0}^{r-1}\sum_{x_2=0}^{r-1} \e^{-2\pi\imagi (\ell_1 x_1 + \ell_2 x_2)/r} |f(x_1, x_2)\rangle\\ &= \sum_{x_1=0}^{r-1}\sum_{x'=sx_1}^{sx_1 + r - 1}\e^{-2\pi\imagi [\ell_1 x_1 + \ell_2(x'-sx_1)]/r}|f(x_1, x'-\ell x_1)\rangle\,,
+  \end{aligned}
+ \]
+ where we have introduced the new summation variable $x'=s x_1+x_2$. Note that $f(x_1,x'-\ell x_1)=f(0, x')$. Also, as $f(x_1, x_2)=b^{x_1}a^{x_2}$ and $a^r=1\,({\rm mod\ }r)$, and the exponential is also periodic with period $r$, the summation variable may run from 0 to $r-1$, yielding
+ \[
+   |\hat{f}(\ell_1, \ell_2) = \sum_{x_1=0}^{r-1}\sum_{x_2=0}^{r-1}\e^{-2\pi\imagi[\ell_1 x_1 + \ell_2(x_2-s x_1)]/r}|f(0, x_2)\rangle\,,
+ \]
+ and this sum vanishes unless $\ell_1-s\ell_2$ is an integer multiple of $r$, as in the case where it is not, the sum over $x_1$ may be performed using the summation formula for a geometric progression, yielding zero. If $\ell_1 -s\ell_2$ is an integer multiple of $r$, the sum over $x_1$ yields $r$, and the result is
+ \[
+  |\hat{f}(\ell_1, \ell_2)\rangle = r\sum_{j=0}^r \e^{-2\pi\imagi j\ell_2/r}|f(0, j)\rangle\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Inserting formula (5.72) into (5.73), we need to evaluate four sums, of which the one over $\ell_1$, collecting the terms only depending on $\ell_1$ is, and replacing the summation variable $x_1$ with $x_1'$ in eq.\ (5.72), is
+ \[
+  \sum_{\ell_1=0}^{r-1}\e^{2\pi\imagi \ell_1(x_1-x_1')/r} = r\delta_{x_1,x_1'}\,,
+ \]
+ and similarly the summation over $\ell_2$ yields another Kronecker delta, so the resulting formula is
+ \[
+  \frac{1}{r^2}\sum_{\ell_1=0}^{r-1}\sum_{\ell_2=0}^{r-1}\e^{2\pi\imagi(\ell_1 x_1 + \ell_2 x_2)/r}|\hat{f}(\ell_1, \ell_2)\rangle = |f(x_1, x_2)\rangle\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ In order to obtain both $\ell_2 s/r$ and $\ell_2/r$, and to apply thm.~5.1, one needs to choose the number of bits such that $2^{-2L+1}\le 1/(2r^2)$. In that case, $s$ is obtained by dividing the two.
+\end{exercise}
+
+\begin{exercise}
+ One possibility is to construct using reversible computation the functions, and then uncomputation. The necessary number of gates is, for $L$ bits, $O(L)$ squarings to calculate one exponentiation, one squaring is $O(L^2)$, then $O(L)$ multiplications, again $O(L^2)$ cost, so a total of $O(L^3)$ is needed. 
+\end{exercise}
+
+
+\begin{exercise}\label{ex:hiddenSubgroup1}
+ Let $G=Z_{p_1}\times Z_{p_2}\times \dots Z_{p_N}$.
+ 
+ Any irreducible unitary representation of the cyclic group $Z_p$ is 1 dimensional, and so on the generating element has order $p$, and its representation is a phase, $\rho_\ell(1)=\e^{\imagi \phi_{\ell, 0}}$, such that $\rho_\ell(0)=\rho_\ell(1)^p=\e^{\imagi p\phi_{\ell,0}} = 1$, i.e., $\phi_{\ell,0}=2\pi\ell/p$, so the representation of an arbitrary element is
+ \[
+  \rho_\ell(g)=\e^{2\pi\imagi g \ell/p}\,,
+ \]
+ $0\le g < p$.
+  
+ For $G$, a group element is given as $G\ni g = (g_1,g_2, \dots, g_N)$ where $0\le g_i < p_i$. The representations are indexed by $\ell_1, \dots, \ell_N$, so
+ \[
+  \rho_{\ell_1,\dots, \ell_N}(g_1, \dots, g_N) = \e^{(2\pi\imagi/|G|) \sum_i g_i \ell_i}\,,
+ \]
+ where $|G|=p_1 \cdot \dots \cdot p_N$. The Fourier and inverse Fourier transform formulae are for such groups
+ \[
+  \hat{f}(\ell) = \frac{1}{\sqrt{|G|}}\sum_{g_i=0}^{p_i-1} f(g) \e^{(2\pi\imagi/|G|)\sum_i g_i \ell_i}\,,
+ \]
+ [see eq.~(A2.9)] and
+ \[
+  f(g) = \frac{1}{|G|} \sum_{\ell_i=0}^{p_i-1}\hat{f}(\ell_1,\dots,\ell_N) \e^{-(2\pi\imagi/|G|)\sum_i g_i \ell_i}\,,
+ \]
+ [see eq.~(A2.10)]. Comparing this with eq.~(5.75), we can see that Nielsen and Chuang have used $g\ell$ as the short form of $\sum_i g_i \ell_i$ where $g=(g_1,\dots,g_N)$.
+ 
+ If $K$ is a normal subgroup of $G$ it is of the form $K=Z_{p_{i_1}}\times \dots \times Z_{p_{i_M}}$ where $M\le N$ and $1\le i_k \le N$, and $\{p_{i_1}, p_{i_2}, \dots, p_{i_M}\} \subseteq \{ p_1, p_2, \dots p_N\}$. In this case, the sum in eq.~(5.76) may be rewritten as
+ \[
+  |\hat{f}(\ell)\rangle = \frac{1}{|G|}\sum_{j\ne i_k,g_j=0}^{p_j-1}\e^{-(2\pi\imagi/|G|)\sum_j g_j \ell_j}|f(g_j, j\ne i_k)\rangle \sum_{g_{i_k}=0}^{p_k-1}\e^{-(2\pi\imagi/|G|)\sum_k g_{i_k}\ell_{i_k}}\,,
+ \]
+ as $f$ being constant on cosets of $K$ is equivalent to $f$ being independent of $g_{i_k}$, $k=1,\dots,M$. The second sum in the last equation vanishes unless $\ell_{i_k}=0$, where these are defined by that for these values these sums evaluate to $|K|$, as due to the orthogonality relation of characters and the fact that the character of the trivial representation is 1,
+ so the result is
+ \[
+  |\hat{f}(\ell: \ell_{i_k}=0)\rangle = \frac{|K|}{|G|}\sum_{j\ne i_k,g_j=0}^{p_j-1}\e^{-(2\pi\imagi/|G|)\sum_j g_j \ell_j}|f(g_j, j\ne i_k)\rangle\,.
+ \]
+ By measuring $\ell_k$, the subgroup $K$ is the one defined by $i_k$ such that $\ell_{i_k}=0$, $K=\prod_k Z_{p_{i_k}}$.
+\end{exercise}
+
+\begin{exercise}
+ This is Mosca's algorithm \cite{mosca}. We shall start with a set of generators $\{a_1, \dots, a_k\}\subset G$. The aim is to find new generators, $\{b_1, \dots, b_\ell\}\subset G$, such that each of these generators alone generates a prime-order cyclic group.
+ 
+ The method is applying the known version of the hidden subgroup problem (ex.~\ref{ex:hiddenSubgroup1}). To this end, first we replace the generators with ones that have a prime order. Let us assume that the order of one of the generators, $a_i$ is $pq$, where $(p, q)=1$ then $a^{pq}=1$. In this case, according to the Euclidean algorithm, there are $r, s$ such that $rp+sq=1$, so $(a^p)^r(a^q)^s=a^{pq+rs}=a$. So, replacing $a_i$ with $a^p$ and $a^q$ (and hence increasing the number of generators) does not change the generated group.
+ 
+ We shall now consider a mapping
+ \[
+  g:\mathbb{Z}_q^k\to G\,,\quad (x_1, \dots, x_k) \mapsto a_1^{x_1} \cdot \dots \cdot a_k^{x_k}
+ \]
+ where $q$ is the maximum of the orders of the generators. The mapping $g$ may be used as an input to the variant of the hidden subgroup problem where the group is already assumed to be a subgroup of a product of prime-order cyclic subgroups, yielding a subgroup $K$. A set of generators $y_1, \dots, y_\ell \in \mathbb{Z}_q^k/K$ can also be computed, and so $\{g(y_i)| i=1,\dots, \ell\}$ is a set of generators of $G$ with the desired property.
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\section{Appendices}
+\subsection{Notes on probability theory}
+\numberwithin{exercise}{subsection}
+\begin{exercise} The proof of Bayes' rule starts with the definition of conditional probability,
+ \[
+  p(x|y) = \frac{p(x, y)}{p(y)} = \frac{p(y|x)p(x)}{p(y)} = p(y|x)\frac{p(x)}{p(y)}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ For a set of mutually exclusive events $x$,
+ \[
+  p(y) = \sum_x p(x, y) = \sum_x p(y|x) p(x)\,,
+ \]
+ where we have used the definitions of the conditional probabilities, $p(y|x) = p(x, y)/p(x)$.
+\end{exercise}
+
+\begin{exercise}
+ Let us assume the contrary, that for all values $x$ of $X$ such that $p(x) > 0$, $x< {\bf E}(X)$. Let $x_0$ the maximum of all these (as we are concerned with discrete variables taking one of a finite set of values, this exists), then
+ \[
+  {\bf E}(X) = \sum_x x p(x) \le \sum_x x_0 p(x) = x_0 < {\bf E}(x)\,,
+ \]
+ which is a contradiction.
+\end{exercise}
+
+\begin{exercise} Linearity:
+ \[
+  {\bf E}(\alpha X) = \sum_x \alpha x p(x) = \alpha \sum_x x p(x) = \alpha {\bf E}(X)\,,
+ \]
+ and
+ \[\begin{aligned}
+  {\bf E}(X + Y) &= \sum_{x, y} (x+y) p(x, y) = \sum_{x, y} x p(x, y) + \sum_{x, y} y p(x, y) = \sum_x x p(x) + \sum_y y p(y)\\ &= {\bf E}(X) + {\bf E}(Y)\,.
+ \end{aligned}\]
+\end{exercise}
+
+\begin{exercise} For independent variables $X$ and $Y$,
+ \[
+  {\bf E}(X Y) = \sum_{x, y} xy p(x, y) = \sum_{x, y} xy p(x)p(y) = \sum_x x p(x) \sum_y yp(y) = {\bf E}(X) {\bf E}(Y)\,.
+   \]
+\end{exercise}
+
+\begin{exercise}
+ Chebyshev's inequality is proven as follows:
+ \[\begin{aligned}
+  \Delta^2(X)  &= {\bf E}(|X - {\bf E}(X)|^2) = \sum_x |x - {\bf E}(X)|^2 p(x)\\
+  &= \sum_{x: |x-{\bf E}(X)| < \lambda \Delta(X)} |x - {\bf E}(X)|^2 p(x) + \sum_{x: |x-{\bf E}(X)| \ge \lambda \Delta(X)} |x - {\bf E}(X)|^2 p(x) \\
+  &\ge \sum_{x: |x-{\bf E}(X)| < \lambda \Delta(X)} |x - {\bf E}(X)|^2 p(x) + \sum_{x: |x-{\bf E}(X)| \ge \lambda \Delta(X)} \lambda^2 \Delta^2(X) p(x)\\
+  &\ge \sum_{x: |x-{\bf E}(X)| \ge \lambda \Delta(X)} \lambda^2 \Delta^2(X) p(x) = \lambda^2 \Delta^2(X) \sum_{x: |x-{\bf E}(X)| \ge \lambda \Delta(X)} p(x)\,,
+ \end{aligned}\]
+ which, upon division by $\lambda^2 \Delta^2(X)$ yields the desired result.
+\end{exercise}
+
+\subsection{Group theory}\label{app:groupTheory}
+
+\begin{exercise}
+ Let us assume that there is $g\in G$ such that $g^r\ne e$ for any non-zero integer $r$. In this case, all $g^r$ must be distinct (otherwise, if $g^{r_1} = g^{r_2}$, $r_1\ne r_2$, then $g^{r_2-r_1}=e$), and this is an infinite set, and subset of $G$, which is not possible, $|G|<\infty$.
+\end{exercise}
+
+\begin{exercise}
+ Let $H\subseteq G$, and $g_{1,2}\in G$. Then either $g_1H=\{g_1h|h\in H\}$ and $g_2H$ are disjoint or they are equal, as if $g_1H \cup g_2H \ne\empty$, then there is $h_1, h_2$ such that $g_1 h_1 = g_2 h_2$, so $g_1 h_1 h_2^{-1} = g_2$, so $g_2 H = g_1 h_2 h_2^{-1} H = g_1 H$ as $h_2\in H$. Also $g\in gH$ for all $g\in G$, so the cosets form a division of the total group.
+ 
+ All cosets have the same number of elements as $H$, as if it were not so, there would be $h_1, h_2\in H$, $h_1\ne h_2$, $g\in G$ such that $g h_1 = g h_2$, but that is not possible, as in this case $g h_1 h_2^{-1} = g$, multiplied by $g^{-1}$ yielding $h_1 h_2^{-1}  =e$, so $h_1 = h_2$.
+ 
+ As a result, the cosets have the same number of elements, $|gH| = |H|$, so $|H|$ is a divisor of $|G|$.
+\end{exercise}
+
+\begin{exercise}
+ The elements $\{1, g, g^2, \dots\}$ form a (cyclic) subgroup of $G$. The order of this subgroup is the order of $g$.
+\end{exercise}
+
+\begin{exercise}
+ If $y\in G_x$, then there is a $g\in G$ such that $y=g^{-1}xg$. In this case $G_y = \{h^{-1}yh|h\in G\} = \{h^{-1}g^{-1}xgh| h\in G\}=G_x$ as all elements of $g$ may be written as $gh$.
+\end{exercise}
+
+\begin{exercise}
+ In an Abelian group, for any $g,x\in G$, $g^{-1}xg=g^{-1}gx=x$, so $G_x\{g^{-1}xg| g\in G\} = \{x\}$.
+\end{exercise}
+
+\begin{exercise}
+ For any element $g\in G$, $\langle g\rangle=\{1,g,g^2,\dots\}\le G$ is a subgroup, so if $r$ is the order of $g$ then it is a divisor of $|G|$. If the latter is prime, they must agree.
+\end{exercise}
+
+\begin{exercise}
+ Let $G=\langle g\rangle$ be cyclic subgroup and $H\le G$ a subgroup. In this case, all elements of $h\in H$ are of the form of $h=g^k$, so $H=\{e, g^{k_1}, g^{k_2}, \dots\}$. If $H\ne \{1\}$, then there is a minimal non-zero $k$. $H$ is then generated by $g^k$, and is therefore cyclic with order $|G|/k$. To see this, note that taking any two elements $h_1, h_2 \in H$, and considering elements of the form $h_1^{n_1} h_2^{n_2}$ it is clear that what we get are all powers of the generator $g$ with exponent $n_1 k_1 + n_2 k_2$, mod $r=|G|$. Using the Euclidean algorithm, the greatest common divisor $d$ of $k_1$ and $k_2$ will be among the powers obtained, so $k_1=k_1' d$, $k_2=k_2' d$, and so $h_i= (g^d)^{k_i'}$.
+\end{exercise}
+
+
+\begin{exercise}
+ Let us assume that $g^n=g^m$, and for simplicity sake, assume $m>n$, and multiply the equation with $g^{-1}$ $n$ times, yielding $1=g^{m-n}$, which is only possible if $r|m-n$, and so $m=n({\rm mod} r)$.
+\end{exercise}
+
+\begin{exercise}
+ If $g_1, g_2 \in xH$, then $g_i=xh_i$, therefore $g_2 = xh_2$, $x=g_1h_1^{-1}$, so $g_2=g_1 h_1^{-1} h_2=g_1 h$ where $h=h_1^{-1}h_2$.
+\end{exercise}
+
+\begin{exercise}
+ As cosets define an equivalence relation on the group, each element belongs to a coset and only one. Each coset has the same number of elements as multiplication with a (sub)group element is a bijective mapping. Therefore the number of cosets is the number of all group elements divided by the elements of the subgroup whose cosets we are considering (and which is a divisor according to Lagrange's theorem), i.e., $G:H = |G|/|H|$ where the notation of $[G:H]$ is used for the number of cosets.
+\end{exercise}
+
+\begin{exercise}
+ (1) As a representation is a homomorphism, $\rho(e)=I$, therefore $\chi(I)=\Tr \rho(e)=\Tr I=n$.
+ 
+ (2) If $G$ is a finite group, then any element $g$ has finite order, $r$, such that $g^r=e$. Also, diagonalising the matrix of $\rho(g)$ with a unitary transformation does not change the trace, therefore the character. In this basis, the matrix satisfies $\rho(g)^r=I$, so all its eigenvalues must satisfy $\lambda_i^r=1$, therefore, they are complex numbers of unit magnitude, and the trace is their sum,
+ \[
+  |\chi(g)| = |\Tr \rho(g)| = |\sum_{k}\lambda_k| \le \sum_k |\lambda_k| = n\,.
+ \]
+ 
+ (3) If $|\chi(g)|=n$, the direction of the eigenvalues of $\rho(g)$ must be the same in the complex plane [see part (2)], and they have unit magnitude, so all eigenvalues are the same. Therefore, the matrix is diagonal, and the eigenvalue is $\e^{\imagi \theta}$, where $\theta=2\pi/r$, and so $\rho(g)=\e^{\imagi \theta}I$.
+
+ (4) $\chi(g^{-1}hg) = \Tr \rho(g)^{-1} \rho(h) \rho(g) = \Tr \rho(h)=\chi(h)$ using the cyclic property of the trace.
+ 
+ (5) As $g$ and $g^{-1}$ commute, the matrices $\rho(g)$ and $\rho(g^{-1})$ can be diagonalised with the same unitary transformation. In part (3) we have shown that the eigenvalues of the matrices are complex numbers of unit magnitude, and as $\rho(g^{-1})\rho(g)=I$, they are reciprocals, i.e., conjugates, $\lambda_k(g^{-1})=\lambda_k(g)^*$, therefore, the same holds for the character, which is their sum, the trace of the representation matrices.
+ 
+ (6) All the eigenvalues are algebraic numbers, as they satisfy $\lambda_k^r - 1=0$, and the sum of algebraic numbers is algebraic.
+\end{exercise}
+
+\begin{exercise}
+ Let us define another scalar product on the $n$-dimensional complex vector space by
+ \[
+  \langle x, y\rangle_G := \sum_{g\in G} \langle \rho(g) x, \rho(g) y\rangle\,.
+ \]
+ This scalar product is clearly invariant under the group action. Scalar products correspond to positive operators, i.e.,
+ \[
+  \langle x, y\rangle_G = \langle x, A^\dagger A y\rangle = \langle Ax, Ay\rangle\,,
+ \]
+ and the invariance reads
+ \[
+  \langle A\rho(g) x,  A \rho(g) y\rangle = \langle A x, A y\rangle\,,
+ \]
+ writing $x'=Ax$, $y'=Ay$,
+ \[
+  \langle A \rho(g) A^{-1}x', A\rho(g)A^{-1} y'\rangle = \langle x', y'\rangle\,,
+ \]
+ demonstrating that $A\rho A^{-1}$ is unitary.
+\end{exercise}
+
+\begin{exercise}
+ For a finite group, for all $g\in G$, $g^{|G|}=e$ (see excer.\ A2.6), so the same holds for the representation matrices, $\rho(g)^{|G|}=I$. Therefore, the representation consist of commuting diagonalisable matrices, so they can be diagonalised simultaneously. In the basis that diagonalised the representation, all the basis vectors correspond to 1-dimensional invariant subspaces, so for an irreducible representation there may be only one basis vector.
+ 
+ Note: finite order matrices, i.e., matrices $A$ such that there is an integer $k$, $A^k=I$ are diagonalisable, as the minimal polynomial of the matrix is a divisor of $x^k-1$, and this polynomial has simple roots.
+\end{exercise}
+
+\begin{exercise}
+ For any element $g\in G$ let $C(g) = \{ h^{-1}gh| g\in G\}$ denote the conjugacy class of the element. We shall also define the matrix $c(g) = \sum_{h\in C(g)} \rho(h)$.
+ 
+ We shall show that the matrix $c(g)$ commutes with the representation,
+ \[
+  \begin{aligned}
+   \rho(g') c(g) &= \sum_{h^{-1}gh\in C(g)} \rho(g')\rho(h^{-1}gh) = \sum_h \rho(g' h^{-1}gh) = \sum_h\rho( (hg'{}^{-1})^{-1} g hg'{}^{-1}g')\\ &= \sum_h \rho( h'{}^{-1}g h' g') = \sum_h' \rho(h'{}^{-1}gh') \rho(g') = c(g)\rho(g').
+  \end{aligned}
+ \]
+ According to Shur's lemma, therefore, $c(g)$ must be a constant times $I$, and using the fact that the trace of $\rho(g)$ is the character, constant on $C(g)$ (see excer.\ A2.11), $c(g) = c_g I$, $c_g = |C(g)| \chi(g)/ d_\rho$.
+ 
+ Considering the sum $\sum_{g\in G}\chi(g^{-1})\rho(g)$,  we may perform the sum by conjugacy class, and on each class insert the result from above, yielding
+ \[
+  \sum_g \chi(g^{-1}) \rho(g) = \frac{1}{d}\sum_i |C(g_i)| \chi(g^{-1}) \chi(g) I\,,
+ \]
+ where $g_i$ is a set of representative elements from all characteristic classes. The trace of this is, on one hand, using the fact that the character is a class function,
+ \[
+  \Tr \sum_g \chi(g^{-1}) \rho(g) = \sum_g \chi(g)^2 = |G|\,,
+ \]
+ therefore
+ \[
+  \frac{n}{d_\rho} = \sum_i |C(g_i)| \chi(g^{-1}) c_{g_i}\,.
+ \]
+ The rest is number theory. It is shown that the RHS is algebraic integer and rational, therefore, integer. See Ref.\ \cite{Hall}. For the algebraic integer, it is used, that characters are sums of roots of unity due to the fact that the order of an element of a finite group is finite.
+\end{exercise}
+
+\begin{exercise}
+ Setting $i=j$ and $k=l$ in eq.\ (A2.3) yields
+ \[
+  \sum_{g\in G} \chi^p(g^{-1})\chi^q(g) = |G|  \delta_{pq}\,.
+ \]
+ Also, according to excer.\ A2.11, characters are class function, and the sum over the group may be written as $\sum_{g\in G} = \sum_i \sum_{g\in C(g_i))}$ where $g_i$ are representatives from each conjugacy class, on each class, the character is constant, $\chi(g) = \chi(g_i)=\chi_i$ is $g\in C(g_i)$, and als $\chi(g^{-1})=\chi(g)^*$, yielding the relation
+ \[
+  \sum_i r_i \chi_i^{p*} \chi_i^q = |G|\delta_{p,q}\,.
+ \]
+ If we introduce the matrix $U_{iq} = \sqrt{r_i/|G|}\chi^p_q$, the above relation may be written as $U^\dagger U = I$, and then follows $UU^\dagger=I$, which has the matrix elements
+ \[
+  \sqrt{\frac{r_i}{|G|}}\sqrt{\frac{r_j}{|G|}} \sum_p \chi_i^p \chi_j^{q*} = \delta_{ij}\,.
+ \]
+
+\end{exercise}
+
+\begin{exercise}
+ Let us enumerate the perturbations as $p_0$ to $p_5$ corresponding to 123, 231, 312, 213, 132, 321, respectively. The multiplication table of the group is as follows:
+ \begin{center}
+  \begin{tabular}{c||c|c|c|c|c|c}
+         & $p_0$ & $p_1$ & $p_2$ & $p_3$ & $p_4$ & $p_5$ \\
+   \hline\hline
+   $p_0$ & $p_0$ & $p_1$ & $p_2$ & $p_3$ & $p_4$ & $p_5$ \\
+   $p_1$ & $p_1$ & $p_2$ & $p_0$ & $p_5$ & $p_3$ & $p_4$ \\
+   $p_2$ & $p_2$ & $p_0$ & $p_1$ & $p_4$ & $p_5$ & $p_3$ \\
+   $p_3$ & $p_3$ & $p_4$ & $p_5$ & $p_0$ & $p_1$ & $p_2$ \\
+   $p_4$ & $p_4$ & $p_5$ & $p_3$ & $p_2$ & $p_0$ & $p_1$ \\
+   $p_5$ & $p_5$ & $p_3$ & $p_4$ & $p_1$ & $p_2$ & $p_0$ \\
+  \end{tabular}
+ \end{center}
+ The trivial representation, $\rho(g)=1$ is clearly a representation, and it is easy to verify that $\rho = 1,1,1,-1,-1,-1$ is also a representation (sign, assigns +1 to cyclic and -1 to anti-cyclic permutations). The matrix representation is verified by computation, and its character (trace of the matrices is) 2, -1, -1, 0,0,0. Orthogonality is clearly satisfied.
+\end{exercise}
+
+\begin{exercise}
+ If the regular representation wasn't faithful there would be an element $g\ne e$ also represented by the identity matrix. However, that would mean that it maps all element $h\in G$ to themselves, and the action is also the group action, i.e., $gh=h$ for all $h\in G$. This only holds for $e$ in a group.
+\end{exercise}
+
+
+\begin{exercise}
+ For the regular representation, all matrix elements are either 1 or 0. A 1 in the $i,j$ element in the matrix $\rho(g)$ means that $g g_j = g_i$, so in the diagonal a 1 would mean that a group element leaves one invariant, which is only possible for the unit (if $g g' = g'$, this multiplied by $g'{}^{-1}$ yields $g=e$). So, all representation matrices have 0 diagonals except that of the unit, and the representation is $|G|$ dimensiona, so $\chi(e) = |G|$ and the rest is $\chi(g\ne e)=0$.
+\end{exercise}
+
+\begin{exercise}
+ Inserting the character of the regular representation (see excer.\ A2.18) into eq.\ (A2.6) yields
+ \[
+  c_p = \frac{1}{|G|}\sum_{i=1}^{r} r_i \chi_i^{{\rm reg}*} \chi_i^\rho = \chi^\rho_e = d_\rho\,,
+ \]
+ as only the conjugate class of $e$ contributes, as $h^{-1}eh=e$ for all $h \in G$, this class has 1 element, $r_e=1$, and on the unit element a character of a representation assumes the dimension of the representation (see excer.\ A2.11).
+\end{exercise}
+
+\begin{exercise}
+ As the regular representation contains all irreducible representations $d_\rho$ times, its matrices can be brought to a block-diagonal form, where each irrep is appears $d_\rho$ times, yielding
+ \[
+  \chi^{\rm reg} = \sum_{\rho \in \hat G} d_\rho \chi^\rho\,,
+ \]
+ and we know that $\chi^{\rm reg}(g) = |G| \delta_{ge}$.
+\end{exercise}
+
+\begin{exercise}
+ Evaluate the formula (A2.8) at $g=e$, and note that $\chi^
+ \rho (e) = d_\rho$, yielding the desired result.
+\end{exercise}
+
+\begin{exercise}
+ Substituting eq.\ (A2.10) into (A2.9) yields
+ \[
+  \hat{f}(\rho) = \sqrt{\frac{d_\rho}{|G|}}\sum_{g\in G} \rho(g) \frac{1}{\sqrt{|G|}} \sum_{\rho'\in \hat G} \sqrt{d_{\rho'}} \Tr \hat{f}(\rho') \rho'(g^{-1})\,.
+ \]
+ and exchanging summations, writing out indices yields
+ \[
+  [\hat{f}(\rho)]_{ij} = \sum_{kl}\sum_{\rho'} \frac{\sqrt{d_\rho d_{\rho'}}}{|G|} [\hat{f}(\rho')]_{kl} \sum_{g\in G} [\rho(g)]_{ij}[\rho'(g)]_{lk}
+ \]
+ and according to eq.\ (A2.3), the sum over $g\in G$ yields $(|G|/d_{\rho}) \delta_{ik}\delta_{jl}\delta_{\rho\rho'}$, and therefore the remaining sums yield $[\hat{f}(\rho)]_{ij}$.
+\end{exercise}
+
+\begin{exercise}
+ The representations are labelled by the coefficient $h$ in the exponent, and the value of the Fourier transform for the representation $\rho_h$ is
+ \[
+  \hat{f}(h) = \hat{f}(\rho_h)= \frac{1}{N}\sum_g f(g) \rho_h(g) = \frac{1}{N} f(g) \e^{-2\pi\imagi g h/N}\,,
+ \]
+ as $d_{\rho_h} = 1$, $|G|=N$, and
+ \[
+  f(g) = \frac{1}{\sqrt{N}}\sum_h \hat{f}(h) \e^{2\pi\imagi hg/N}\,,
+ \]
+ as for a 1d representation, the trace is not needed.
+ 
+ The representations for $h=0, 1, \dots, N-1$ are inequivalent (as their character is orthogonal), and there are no more representations, as for $h=N$ we get the same matrices as for $h=0$ due to the periodicity of the complex exponential. Also $\sum_h d_h^2 = \sum_h 1 = N$.
+ 
+ Note: the group is the addition with remainder.
+\end{exercise}
+
+\begin{exercise}
+ The elements of the Fourier transform are
+ \[
+  \begin{aligned}
+  \hat{f}_0 &= \frac{1}{\sqrt{6}}\sum_{i=0}^5 f_i\,,\\
+  \hat{f}_1 &= \frac{1}{\sqrt{6}}\sum_{i=0}^5 f_i (-1)^{p_i}\,,\\
+  \hat{f}_2 &= \begin{pmatrix} \frac{2f_0-f_1-f_2-2f_3+f_4+f_5}{2\sqrt{3}} & \frac{-f_1+f_2+f_4-f_5}{2} \\ \frac{f_1-f_2+f_4-f_5}{2} & \frac{2f_0-f_1-f_2+2f_3-f_4-f_5}{2\sqrt{3}} \end{pmatrix}
+  \end{aligned}
+ \]
+ where by $(-1)^{p_i}$ we denote the sign of a permutation (the 1st representation in excer.\ A2.16) and $f_i = f(p_i)$. Listing the elements of the matrix $\hat{f}_2$ row-wise the matrix of the Fourier-transformation is
+ \[
+  \begin{pmatrix}
+   \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} \\
+   %
+   \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} & -\frac{1}{\sqrt{6}} & -\frac{1}{\sqrt{6}} & -\frac{1}{\sqrt{6}} \\
+   %
+   \frac{1}{\sqrt{6}} & -\frac{1}{2\sqrt{6}} & -\frac{1}{2\sqrt{6}} & -\frac{1}{\sqrt{6}} & \frac{1}{2\sqrt{6}} & \frac{1}{2\sqrt{6}} \\
+   %
+   0 & -\frac{1}{2} & \frac{1}{2} &  0 & \frac{1}{2} &  -\frac{1}{2} \\
+   %
+   0 & \frac{1}{2} & -\frac{1}{2} & 0 & \frac{1}{2} & -\frac{1}{2}\\
+   %
+   \frac{1}{\sqrt{3}} & -\frac{1}{2\sqrt{3}} & -\frac{1}{2\sqrt{3}} & \frac{1}{\sqrt{3}} & -\frac{1}{2\sqrt{3}} & -\frac{1}{2\sqrt{3}} 
+  \end{pmatrix}
+ \]
+ The matrix of the inverse transformation is the transpose of the above matrix, and
+ \[
+  \begin{aligned}
+   f_0 &= \frac{1}{\sqrt{6}}(\hat{f}_0 + \hat{f}_1 +\sqrt{2}(\hat{f}_{2,11} + \hat{f}_{2,22}))\,,\\
+   %
+   f_1 &= \frac{1}{\sqrt{6}}(\hat{f}_0 + \hat{f}_1) - \frac{1}{\sqrt{12}}(\hat{f}_{2,11}+\hat{f}_{2,22}) -\frac{1}{2}(\hat{f}_{2,12}-\hat{f}_{2,21})\,,\\
+   %
+   f_2 &= \frac{1}{\sqrt{6}}(\hat{f}_0 + \hat{f}_1) - \frac{1}{\sqrt{12}}(\hat{f}_{2,11}+\hat{f}_{2,22}) +\frac{1}{2}(\hat{f}_{2,12}-\hat{f}_{2,21})\,,\\
+   %
+   f_3 &= \frac{1}{\sqrt{6}}(\hat{f}_0 + \hat{f}_1) - \frac{1}{\sqrt{3}}(\hat{f}_{2,11}-\hat{f}_{2,22})\,,\\
+   %
+   f_4 &= \frac{1}{\sqrt{6}}(\hat{f}_0 + \hat{f}_1) +\frac{1}{\sqrt{12}}(\hat{f}_{2,11}-\hat{f}_{2,22}) + \frac{1}{2}(\hat{f}_{2,12}+\hat{f}_{2,21})\,,\\
+   %
+   f_5 &= \frac{1}{\sqrt{6}}(\hat{f}_0 + \hat{f}_1) +\frac{1}{\sqrt{12}}(\hat{f}_{2,11}-\hat{f}_{2,22}) - \frac{1}{2}(\hat{f}_{2,12}+\hat{f}_{2,21})\,.
+  \end{aligned}
+ \]
+\end{exercise}
+
+
+\subsection{The Solovay-Kitaev theorem}\label{app:SolovayKitaevTheorem}
+
+\begin{exercise}\label{ex:3.1}
+ The newly defined distance function $D(U, V)$ is the sum of eigenvalues of $|U-V|$, whereas $E(U, V)=\|U-V\|$ is the absolute value of the maximal eigenvalue of $U-V$.
+
+ When calculating the eigenvalues of the matrix $M = R_{\hat{\bf n}}(\phi)-R_{\hat{\bf m}}(\theta)$, the eigenvalues are calculated as
+ \[
+  \lambda_{1,2} = -t \pm \sqrt{t^2 - d}\,,
+ \]
+ where $t=\Tr(R_{\hat{\bf n}}(\phi)-R_{\hat{\bf m}}(\theta))/2$ and $d=\det R_{\hat{\bf n}}(\phi)-R_{\hat{\bf m}}(\theta)$, and the term (1/4 of the discriminator) under the square root is
+ \[
+  t^2-d%=2 \sin\frac{\theta}{2}\sin\frac{\phi}{2}{\hat{\bf n}}\cdot{\hat{\bf m}} -\left(\sin^2\frac{\theta}{2}+\sin^2\frac{\phi}{2}\right)
+  = \left(\cos\frac{\theta-\phi}{2}-\cos\frac{\theta+\phi}{2}\right){\hat{\bf n}}\cdot{\hat{\bf m}}+\frac{\cos\theta+\cos\phi}{2}-1\,,
+ \]
+ which is negative, so the two eigenvalues are complex conjugates, their absolute values are equal, which completes the proof.
+\end{exercise}
+
+\begin{exercise}
+ Using the series expansion of the exponential to second order,
+ \[
+  \e^{-\imagi A} = I - \imagi A-\frac{1}{2}A^2+O(\varepsilon^3)\,,
+ \]
+ etc.,
+ \[
+  \left[\e^{-\imagi A}, \e^{\imagi B}\right] = \left[ I -\imagi A-\frac{1}{2}A^2,I -\imagi B-\frac{1}{2}B^2\right]+O(\varepsilon^3) = I-[A,B]+O(\varepsilon^3)\,,
+ \]
+ and
+ \[
+  \e^{-[A,B]} = I-[A,B]+O(\varepsilon^4)\,,
+ \]
+ and eq.\ (A3.9) follows from here.
+\end{exercise}
+
+\begin{exercise}
+ Let us note first, that the explicit form of the parametrisation follows from excer.~\ref{ex:PauliExponential},
+ \[
+  u({\bf a})=\exp\left(-\frac{\imagi}{2} {\bf a}\cdot \vec{\sigma}\right) = \cos \frac{a}{2} I -\imagi \hat{\bf a}\cdot\vec{\sigma}\sin\frac{a}{2}\,,
+ \]
+ where $a=|{\bf a}|$ and $\hat{\bf a} = {\bf a}/a$.
+ %, so
+ %\[
+ %  D(u({\bf x}), u({\bf y}))=\Tr \left| \left(\cos\frac{x}{2}-\cos\frac{y}{2}\right)I -\imagi \left(\hat{\bf x}\sin\frac{x}{2}-\hat{\bf y}\sin\frac{y}{2}\right)\cdot \vec{\sigma}\right|
+ % \]
+
+ We now use the results of excer.~\ref{ex:3.1}, and calculate $D(u({\bf x}, u({\bf y})) = 2E(u({\bf x}, u({\bf y}))$ as follows:
+ \[
+  E(u({\bf x}), u({\bf y})) = \max_{\rm \psi:\|\psi\|=1}\left\langle \psi \left|\left. \left(\e^{\imagi {\bf x}\cdot\vec{\sigma}}-\e^{\imagi {\bf y}\cdot\vec{\sigma}}\right)\left(\e^{-\imagi {\bf x}\cdot\vec{\sigma}}-\e^{-\imagi {\bf y}\cdot\vec{\sigma}}\right)\right.\right|\psi\right\rangle^{1/2}
+ \]
+ and simplify the operator whose expectation value is calculated as
+ \[
+  \begin{aligned}
+   \left(\e^{\imagi {\bf x}\cdot\vec{\sigma}}-\e^{\imagi {\bf y}\cdot\vec{\sigma}}\right)\left(\e^{-\imagi {\bf x}\cdot\vec{\sigma}}-\e^{-\imagi {\bf y}\cdot\vec{\sigma}}\right) &= 2-\left( \e^{\imagi {\bf x}\cdot\vec{\sigma}}\e^{-\imagi {\bf y}\cdot\vec{\sigma}} + \e^{\imagi {\bf y}\cdot\vec{\sigma}}\e^{-\imagi {\bf x}\cdot\vec{\sigma}}\right)\,,\\
+   &= 2\left[1-\cos\frac{x}{2}\cos\frac{y}{2} - \sin\frac{x}{2}\sin\frac{y}{2}\hat{\bf x}\cdot \hat{\bf y}\right] I\,,
+  \end{aligned}
+ \]
+ where we have used the explicit form of the parametrisation and $\hat{\bf x}\cdot \vec{\sigma} \hat{\bf y}\cdot \vec{\sigma} + \hat{\bf y}\cdot \vec{\sigma} \hat{\bf x}\cdot \vec{\sigma} = 2 \hat{\bf x}\cdot\hat{\bf y}$, yielding the desired result \cite{a33}.
+\end{exercise}
+
+\begin{exercise}
+ In the above formula setting $y=0$ and using $\cos(x/2) = 1-2\sin^2|x/4|$.
+\end{exercise}
+
+\begin{exercise}
+ When the two vectors are small enough, we use the following replacements: $\cos\frac{x}{2}=1-x^2/8 + O(\varepsilon^4)$, $\sin x/2 = x/2 + O(\epsilon^3)$ yielding
+ \[
+  D(u({\bf x}), u({\bf y})) = 2\sqrt{2}\left(\frac{x^2}{8} + \frac{y^2}{8}-\frac{1}{8}{\bf x}\cdot{\bf y}\right)^{1/2} + O(\epsilon^3)\,,
+ \]
+ and
+ \[
+  \|{\bf x}-{\bf y}\|=\left(x^2 + y^2 - 2{\bf x}\cdot{\bf y} \right)^{1/2}\,,
+ \]
+ which agrees.
+\end{exercise}
+
+\begin{exercise}
+ To approximate an element of $SU(2)$ with a sequence of elementary gates, i.e., words of a generating set $\mathcal{G}$, we use the following steps: if a zeroth approximation is needed, we choose the nearest element from $\mathcal{G}$. Assuming we have an $n$th approximation of the operator $U$ to be approximated, we construct the next approximation by writing the error in the form $\Delta=U U_n^\dagger$, and then decompose this as $\Delta=VWV^\dagger W^\dagger$ in such a way that the norm of $U$, $V$ is small enough, and approximate those to the $n$th level, and finally get $U_{n+1} = V_n W_n V_n^\dagger W_n^\dagger U_n$. For details, see Ref.\ \cite{SKapprox}.
+\end{exercise}
+
+
+\subsection{Number theory}\label{app:numberTheory}
+
+\begin{exercise}
+ If $a|b$ and $b|c$, this means that $\exists n,m$ such that $b=na$ and $c=mb$, so $c=nma$, and noting that $nm$ is an integer, this is the definition of $a|c$.
+\end{exercise}
+
+\begin{exercise}
+ If $d|a$ and $d|b$, this means that $\exists n,m$ such that $a=nd$, $b=md$, so $ax+by=ndx + mdy=(nx+my)d$, therefore $d|ax+by$.
+\end{exercise}
+
+\begin{exercise}
+ If $a|b$ then $\exists n$ such that $na=b$. If $a,b >0$, then so is $n$, and, as it is an integer, $n\ge 1$, so $a\le na =b$. Cosequently, if $a|b$ and $b|$, then $a\le b$ and $b\le a$, implying $a=b$.
+ 
+ Note that if the positivity condition is dropped, then $a=-b$ is also possible, but the above argument may be used for $|a|$ and $|b|$.
+\end{exercise}
+
+\begin{exercise}
+ $697=17\cdot 41$ and $36300=2^2 \cdot 3 \cdot 5^2 \cdot 11^2$.
+\end{exercise}
+
+\begin{exercise}
+ For $p$ prime, any integer $x$ in the range $1,\dots,p-1$ has ${\rm gcd}(x,p)=1$ as all divisors $d$ of $x$ are $d\le x$ and the divisors of $p$ are only $p>x$ and 1.
+ 
+ In the case of $n=p^2$, all $x\in\{1,\dots, n-1\}$ have ${\rm gcd}(x, n)=1$ except $p, 2p,\dots,p^2$, which have ${\rm gcd}(kp,p^2)=p$ for $p=1,2,\dots,p$, so the classes that have multiplicative inverses are
+ \[
+  \{1\le k\le p^2-1|{\rm gcd}(k,p^2)=1\}=\{1\le k\le p^2-1|p\not|k\}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Looping over the remainders from 1, $\dots$, 24: the result is $17^{-1} = 17\ ({\rm mod\ } 24)$.
+\end{exercise}
+
+\begin{exercise}
+ Note that $(n+1)(n-1)=n^2-1 \equiv -1\ ({\rm mod\ }n^2)$, so $n^2-(n-1)=n^2-n+1=n(n-1)+1$ is the inverse of $n+1$. Verification: $(n+1)(n^2-n+1) =n^3 + 1=n n^2+1\equiv 1\ ({\rm mod\ }n)$.
+\end{exercise}
+
+\begin{exercise}
+ If $ab=ab'=1\ ({\rm mod\ } n)$ then $ab=kn+1$ and $ab'=kn'+1$ so $a(b-b')=(k-k')n$, and as $a$ has a multiplicative inverse, its gcd with $n$ is 1, so the only way $n| a(b-b')$ is if $n|(b-b')$.
+\end{exercise}
+
+\begin{exercise}
+ Let us write the prime factorisations as $a=p_1^{j_1}p_2^{j_2}\dots p_n^{j_n}$ and $b=p_1^{k_1}p_2^{k_2}\dots p_n^{k_n}$ (we may write the same primes in both cases allowing 0 exponents). Then ${\rm gcd}(a, b)=p_1^{\min\{j_1, k_1\}}\cdot p_2^{\min\{j_2, k_2\}}\dots p_n^{\min\{j_n, k_n\}}$.
+ 
+ In the example: $6825=3\cdot 5^2 \cdot 7 \cdot 13$ and $1430=2\cdot 5 \cdot 11\cdot 13$, so ${\rm gcd}(6825, 1430) = 5\cdot 13=65$.
+\end{exercise}
+
+\begin{exercise}
+ As $187=11\cdot 17$, the Euler-function assumes the value $\varphi(187)=\varphi(11)\varphi(17)=10\cdot 16=160$.
+\end{exercise}
+
+\begin{exercise}
+ Let first $n=p^\alpha$, then the divisors of $n$ are $p^{\alpha'}$, $\alpha'=0,\dots,\alpha-1$. According to eq.\ (A4.23), $\varphi(p^\alpha)=p^{\alpha-1}(p-1)$, so the right side of eq.\ (A4.24) is
+ \[
+  \sum_{d|n}\varphi(d) = 1+\sum_{\alpha'=1}^\alpha p^{\alpha'-1}(p-1)= 1 + (p-1)\frac{p^\alpha-1}{p-1} = p^\alpha\,.
+ \]
+ For the general case, let us consider the prime factorisation of $n$ and its divisors, $n=p_1^{\alpha_1}\dots p_k^{\alpha_k}$. In this case, we have a multiple sum, in which we may use the multiplicative property, so
+ \[
+  \sum_{d|n}\varphi(d) = \sum_{\beta_1=0}^{\alpha_1}\dots \sum_{\beta_k=0}^{\alpha_k}\varphi(p_1^{\beta_1}\dots p_k^{\beta_k})=\sum_{\beta_1=0}^{\alpha_1} \varphi(p_1^{\beta_1}) \dots \sum_{\beta_k=0}^{\alpha_k} \varphi(p_k^{\beta_k})
+ \]
+ and use the case we have already shown to complete the proof.
+\end{exercise}
+
+\begin{exercise}
+ The elements of $\mathbf{Z}_n^*$ are
+ \[
+  \mathbb{Z}_n^* = \left\{\left. k\in \{1,\dots, n-1\} \right| {\rm gcd}(k,n)=1\right\}\,,
+ \]
+ so it is clear that $|\mathbb{Z}_n^*| = \varphi(n)$. It is a group, (1) if $k,\ell\in \mathbb{Z}_n^*$ then $k\ell\in \mathbb{Z}_n^*$, as if ${\rm gcd}(k\ell,n)\ne 1$ then there is a prime $p|{\rm gcd}(k\ell,n)$, so $p|n$ and $p|k\ell$, so either $p|k$ or $p|\ell$ which would lead to $p|{\rm gcd}(k,n)$ or $p|{\rm gcd}(\ell,n)$, leading to a contradiction with both gcd's being 1. (2) All elements have inverses (by definition). (3) There is a unit, $1\in\mathbb{Z}_n^*$.
+\end{exercise}
+
+\begin{exercise}\label{ex:cyclSG}
+ (1) It is generally true that the powers of any group element form a subgroup. It is obviously closed to multiplication, all elements have an inverse due to Thm.~A4.9, and the unit is included. (2) The size of the subgroup is the order of $a$, as higher powers simply repeat the sequence. (Note: this is a cyclic subgroup.)
+\end{exercise}
+
+\begin{exercise}
+ If $g\in \mathbb{Z}_n^*$ is a generator, $\langle g\rangle=\{1,g,g^2, \dots\}=\mathbb{Z}_n^*$, then according to ex.~\ref{ex:cyclSG}, the subgroup formed by the powers of $g$ is the full group. The order of the subgroup is the order of $g$, and the order of the full group is $\varphi(n)$, so the two must agree.
+\end{exercise}
+
+\begin{exercise}\label{ex:LagrangeOrder}
+ The order $r$ of any element $a\in\mathbb{Z}_n^*$ is the order of the subgroup formed by the powers of $a$ according to ex.~\ref{ex:cyclSG}. The order of the full group $\mathbb{Z}_n^*$ is $\phi(n)$, so according to Lagrange's theorem A2.1, $r|\varphi(n)$, i.e., $\exists k\in\mathbb{N}$ s.t.\ $rk=\varphi(n)$. In this case, $a^{\varphi(n)}=a^{rk}=(a^r)^k=1^k=1\ ({\rm mod\ }n)$, which is Lagrange's theorem A4.9.
+\end{exercise}
+
+
+\begin{exercise}
+ According to thm.~4.9, $x^{\varphi(N)} = 1\ ({\rm mod\ }N)$. The definition of the order is that it is the minimal positive integer $o$ such that $x^o=1\ ({\rm mod\ }N)$. Consequently, for any multiple $ko$ of $o$ holds that $x^{ko}=(x^o)^k=1\ ({\rm mod\ }N)$. If $\varphi{N}$ wasn't a multiple of $o$, then we could take the remainder of $\varphi(N)$ with $o$ as $\varphi(N)=ko+r$, and so $x^{\varphi(N)} = x^{ko+r}=x^{ko}x^r=x^r\ ({\rm mod} N)$ would hold, and so $x^r=1\ ({\rm mod\ }N)$ as well, which contradicts the minimality of $o$.
+ 
+ (Note: the fact that the order divides $\varphi(N)$ follows also from Lagrange's theorem, see ex.~\ref{ex:LagrangeOrder}.)
+\end{exercise}
+
+\begin{exercise}
+ Let us assume there is an efficient way to factor integers. Let $N=p_1^{\alpha_1}\dots p_n^{\alpha_n}$. The order of $x$ is as follows: we know that the order $r$ of $x$ is a divisor of $\phi(N)=\prod_k p_k^{\alpha_k-1}(p_k-1)$. Knowing the factors of $N$ and $\phi(N)=\prod_\ell q_\ell^{\beta_\ell}$, we only need to check its divisors, i.e., numbers with the same prime factors $q_\ell$ and exponents below or equal $\beta_\ell$.
+\end{exercise}
+
+\begin{exercise}
+ Following the split and invert technique
+ \[
+  \frac{19}{17}=1+\frac{1}{8+\frac{1}{2}}\,,
+ \]
+ and
+ \[
+  \frac{77}{65}=1+\frac{1}{5+\frac{1}{2+\frac{1}{2+\frac{1}{2}}}}\,.
+ \]
+\end{exercise}
+
+\begin{exercise}
+ Let us verify the equality for $n=1$, in this case $p_1=1+a_0 a_1$, $q_1=a_1$, $p_0=a_0$, $q_0=1$, so
+ \[
+  q_1p_0-p_1 q_0 = a_1 a_0 - (1+a_0 a_1)\cdot 1 = -1\,.
+ \]
+ Let us assume the equality has been proven for $n=1,\dots, N-1$ and perform the induction step, by inserting the recursive formulae (A4.41,42) for $p_N$ and $q_N$,
+ \[
+  \begin{aligned}
+   q_N p_{N-1} -p_N q_{N-1} &= (a_N q_{N-1} + q_{N-2}) - (a_N p_{N-1}-p_{N-1}q_{N-1})\\ &= a_N(q_{N-1}p_{N-1}-p_{N-1}q_{N-1}) + q_{N-2}p_{N-1}-p_{N-2}q_{N-1} = -(-1)^{N-1}\,,
+  \end{aligned}
+ \]
+ which completes the proof.
+\end{exercise}
+
+
+\subsection{Public key cryptography and the RSA cryptosystem}\label{app:RSA}
+
+\begin{exercise}
+ Let us encrypt the alphabet as follows: `a'$\mapsto 2$, `z'$\mapsto 27$, and store these numbers on 5 bits. Then ``quantum'' is encoded as 18, 22, 2, 15, 21, 22, 14. Now $p=3$, $q=11$, so $n=pq=33$ and $\varphi(n=33)=(p-1)(q-1)=20$. We need to choose and integer $e$ relative prime to this, such as $7$. The multiplicative inverse is $d=3$, as $7\cdot 3=21=1\ ({\rm mod\ }20)$. The encryption function is $x\mapsto x^{e}\ ({\rm mod\ }n)$ which yields for ``quantum'' 6, 22, 29, 27, 21, 22, 20. 
+ 
+ Note: we started the encoding from 2 because 0 and 1 are mapped into themselves.
+\end{exercise}
+
+\begin{exercise}
+ The order $r$ is a divisor of $\varphi(n)$, and we have $ed=1\ ({\rm mod\ }\varphi(n))$, so $ed=k\varphi(n)+1=k' r+1$, where $k'=k\varphi(n)/r$ is an integer. This means that $d$ is also a multiplicative inverse of $e$ mod $r$, so $d'=d\ ({\rm mod\ }r)$ as the multiplicative inverse in a group is unique.
+\end{exercise}
+
+
+\begin{thebibliography}{1}
+ \bibitem{PeresHigherOrderSchmidt} A.~Peres, ``Higher order Schmidt decompositions'',\ \ \ \doix{{\sl Phys.\ Lett.} {\bf A202}, 16--17 (1995)}{10.1016/0375-9601(95)00315-T}, \arxiv{quant-ph/9504006}.
+ 
+ \bibitem{conway} J.H.~Conway, ``Unpredictable iterations'', In: Number theory conference, University of Colorado Boulder, 1972, p.\ 49-52.
+ 
+ \bibitem{downey} R.~Downey, ``An invitation to structural complexity'', {\sl New Zealand J.\ Mathematics} {\bf 21}, 22-89 (1992).
+ 
+ \bibitem{bennett} C.H.~Bennett, ``Logical reversibility of computation'', {\sl IBM J. Research Development} {\bf 17}, 525-532 (1975).
+ 
+ \bibitem{CCUstackexchange}\url{https://quantumcomputing.stackexchange.com/questions/7082/how-to-reduce-circuit-elements-of-a-decomposed-c2u-operation}.
+ 
+ \bibitem{PPMstackexchange}\url{https://quantumcomputing.stackexchange.com/questions/16115/partial-cyclic-permutation-with-only-toffoli-and-cnot-gates/23311#23311}.
+ 
+ \bibitem{BarencoEtalElem} A.~Barenco, C.H.~Bennett, R.~Cleve, D.P.~DiVincenzo, N.~Margolus, P.~Shor, T.~Sleator, J.~Smolin, and H.~Weinfurter, ``Elementary gates for quantum computation'', \doix{{\sl Phys.\ Rev.} {\bf A\,52}, 3457 (1995)}{10.1103/PhysRevA.52.3457} \arxiv{quant-ph/9503016}.
+
+ \bibitem{Hall} M.~Hall, Jr., ``The theory of groups'' (AMS Chelsea Pub., Providence, RI, 1976).
+ 
+ \bibitem{deutschgateuniv}\url{https://quantumcomputing.stackexchange.com/questions/10216/why-is-deutschs-gate-universal}
+ 
+ \bibitem{a33}\url{https://enakai00.hatenablog.com/entry/2018/05/19/214521}
+ 
+ \bibitem{SKapprox} C.A.~Dawson, M.A.~Nielsen, ``The Solovay-Kitaev algorithm'', \arxiv[quant-ph]{0505030} (2005).
+ 
+ \bibitem{log2} J.C.~Majithia and D.~Levan, ``A note on base-2 logarithm computation'', \doix{{\sl Proc.\ IEEE}, {\bf 61}1519–1520 (1973)}{10.1109/PROC.1973.9318}.
+ 
+ \bibitem{mosca} K.K.H.~Cheung and M.~Mosca, ``Decomposing finite Abelian groupa'', \arxiv{cs/0101004}
+\end{thebibliography}
+\end{document}
