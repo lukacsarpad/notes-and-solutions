@@ -63,3 +63,12 @@ jobs:
           name: pdf-notes
           path: geomphys/geomphys.pdf
           retention-days: 2
+      - name: lacheck
+        working-directory: ./qcompqinf
+        run: |
+          lacheck nielsenchuang.tex
+      - name: latex
+        working-directory: ./qcompqinf
+        run: |
+          pdflatex -shell-escape nielsenchuang.tex
+          pdflatex -shell-escape nielsenchuang.tex

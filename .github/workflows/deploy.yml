@@ -46,6 +46,11 @@ jobs:
         run: |
           pdflatex compscal.tex
           pdflatex compscal.tex
+      - name: latex-qcompqinf
+        working-directory: ./qcompqinf
+        run: |
+          pdflatex -shell-escape nielsenchuang.tex
+          pdflatex -shell-escape nielsenchuang.tex
       - name: Checkout Webpage
         uses: actions/checkout@v2
         env:
@@ -68,6 +73,7 @@ jobs:
           cp ../stat/barlow.pdf notes
           cp ../laguerre/laguerre.pdf notes
           cp ../compscal/compscal.pdf notes
+          cp ../qcompqinf/nielsenchuang.pdf notes
           echo "ls -lR after"
           ls -lR
       - name: Deploy to page
