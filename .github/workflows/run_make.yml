@@ -28,7 +28,7 @@ jobs:
           pdflatex clfields.tex
           pdflatex clfields.tex
       - name: upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pdf-notes
           path: ClField/clfields.pdf
@@ -43,7 +43,7 @@ jobs:
           pdflatex barlow.tex
           pdflatex barlow.tex
       - name: upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pdf-notes
           path: stat/barlow.pdf
@@ -58,7 +58,7 @@ jobs:
           pdflatex geomphys.tex
           pdflatex geomphys.tex
       - name: upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pdf-notes
           path: geomphys/geomphys.pdf
